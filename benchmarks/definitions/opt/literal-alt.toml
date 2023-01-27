@@ -1,0 +1,60 @@
+analysis = '''
+These benchmarks demonstrate regex-automata's "literal alternation"
+optimization. Namely, the optimization proceeds by tranforming a regex like
+`zapper|z|zap` into `z(?:apper||ap)`. In effect, it pushes what is one very
+large alternation down as far as it can. When matching the regex, especially
+with an engine like the PikeVM, that initial large alternation can utterly
+trash perf because the regex engine is shuffling states around for the one big
+alternation for every byte of the haystack. But by pushing the branches down,
+most bytes of the haystack are dealing with a much smaller branch and thus less
+state shuffling.
+
+This has an **enormous** impact on perf. And in the two benchmarks below, we
+can observe the difference. In `one-pattern`, we join the dictionary into a
+single pattern with `|`. But in the `pattern-per-word` benchmark, we treat
+each word in the dictionary as its own pattern. The optimization described
+above doesn't apply in the latter case. (It hasn't been attempted and I'm not
+sure it's possible, since you need to preserve distinct match states for each
+pattern.)
+'''
+
+[[bench]]
+model = "count"
+name = "one-pattern"
+regex = { path = "dictionary/english/length-15.txt", per-line = "alternate" }
+unicode = true
+haystack = { path = "opensubtitles/en-tiny.txt", append = "Zoroastrianisms" }
+count = 1
+engines = [
+  # Maintains respectable speed (relative to what one can expect from the
+  # PikeVM). This is the main point of comparison here, as the same regex
+  # engine on what is essentially the same regex in the 'pattern-per-word'
+  # benchmark below executes very very slowly.
+  'rust/regex/pikevm',
+  # Seems to do okay. Probably due to memory/budget differences between it and
+  # RE2's lazy DFA.
+  'rust/regex/hybrid',
+  'rust/regex/meta',
+  # Perf is trashed because it uses the PikeVM
+  # and doesn't have this optimization.
+  'go/regexp',
+  # Appears to fall back to PikeVM. Perhaps because it exceeds the lazy DFA
+  # memory budget.
+  're2',
+]
+
+[[bench]]
+model = "count"
+name = "pattern-per-word"
+regex = { path = "dictionary/english/length-15.txt", per-line = "pattern" }
+unicode = true
+haystack = { path = "opensubtitles/en-tiny.txt", append = "Zoroastrianisms" }
+count = 1
+engines = [
+  # Perf is generally quite bad because it spends all of its time shuffling
+  # states around for one big alternation.
+  'rust/regex/pikevm',
+  # Currently uses an Aho-Corasick NFA and does well, but it builds an
+  # enormous prefilter and could use some love.
+  'rust/regex/meta',
+]

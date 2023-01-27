@@ -1,0 +1,130 @@
+analysis = '''
+This benchmark uses a regex that helped cause an [outage at
+Cloudflare][cloudflare-blog]. This class of vulnerability is typically called a
+"regular expression denial of service," or "ReDoS" for short. It doesn't always
+require a malicious actor to trigger. Since it can be difficult to reason about
+the worst case performance of a regex when using an unbounded backtracking
+implementation, it might happen entirely accidentally on valid inputs.
+
+The particular regex that contributed to the outage was:
+
+```
+(?:(?:"|'|\]|\}|\\|\d|(?:nan|infinity|true|false|null|undefined|symbol|math)|`|\-|\+)+[)]*;?((?:\s|-|~|!|\{\}|\|\||\+)*.*(?:.*=.*)))
+```
+
+As discussed in Cloudflare's post mortem, the specific problematic portion of
+the regex is:
+
+```
+.*(?:.*=.*)
+```
+
+Or more simply:
+
+```
+.*.*=.*;
+```
+
+We benchmark the original regex along with the simplified variant. We also
+split the simplified variant into one with a short haystack (about 100 bytes)
+and one with a long haystack (about 10,000 bytes). The benchmark results for
+the original and simplified short variant should be roughly similar, but the
+difference between the short and long variant is where things get interesting.
+The automata based engines generally maintain a similar throughput for both the
+short and long benchmarks, but the backtrackers slow way down. This is because
+the backtracking algorithm for this specific regex and haystack doesn't scale
+linearly with increases in the size of the haystack.
+
+The purpose of this benchmark is to show a real world scenario where the use of
+a backtracking engine can bite you in production if you aren't careful.
+
+We include Hyperscan in this benchmark, although it is questionable to do so.
+Hyperscan reports many overlapping matches from the regex used by Cloudflare
+because of the trailing `.*`, so it is probably not a great comparison.
+In particular, this regex was originally used in a firewall, so it seems
+likely that it would be used in a "is a match" or "not a match" scenario. But
+our benchmark here reproduces the analysis in the appendix of Cloudflare's
+port mortem. But the real utility in including Hyperscan here is that it
+demonstrates that it is not a backtracking engine. While its throughput is not
+as high as some other engines, it remains roughly invariant with respect to
+haystack length, just like other automata oriented engines.
+
+Note that `rust/regex` has very high throughput here because the regex is
+small enough to get compiled into a full DFA. The compilation process also
+"accelerates" some states, particularly the final `.*`. This acceleration works
+by noticing that almost all of the state's transitions loop back on itself, and
+only a small number transition to another state. The final `.*` for example
+only leaves its state if it sees the end of the haystack or a `\n`. So the DFA
+will actually run `memchr` on `\n` and skip right to the end of the haystack.
+
+[cloudflare-blog]: https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/
+'''
+
+[[bench]]
+model = "count-spans"
+name = "original"
+regex = '''(?:(?:"|'|\]|\}|\\|\d|(?:nan|infinity|true|false|null|undefined|symbol|math)|`|-|\+)+[)]*;?((?:\s|-|~|!|\{\}|\|\||\+)*.*(?:.*=.*)))'''
+haystack = 'math x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+count = [
+  { engine = '*', count = 107 },
+  { engine = 'hyperscan', count = 5757 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "simplified-short"
+regex = '.*.*=.*'
+haystack = 'x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+count = [
+  { engine = '*', count = 102 },
+  { engine = 'hyperscan', count = 5252 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "simplified-long"
+regex = '.*.*=.*'
+haystack = { path = "cloud-flare-redos.txt" }
+count = [
+  { engine = '*', count = 10000 },
+  { engine = 'hyperscan', count = 50004999 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]

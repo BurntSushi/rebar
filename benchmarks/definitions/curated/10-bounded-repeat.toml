@@ -1,0 +1,166 @@
+analysis = '''
+This group of benchmarks measures how well regex engines do with bounded
+repeats. Bounded repeats are sub-expressions that are permitted to match
+up to some fixed number of times. For example, `a{3,5}` matches 3, 4 or 5
+consecutive `a` characters. Unlike unbounded repetition operators, the regex
+engine needs some way to track when the bound has reached its limit. For this
+reason, many regex engines will translate `a{3,5}` to `aaaa?a?`. Given that
+the bounds may be much higher than `5` and that the sub-expression may be much
+more complicated than a single character, bounded repeats can quickly cause the
+underlying matcher to balloon in size.
+
+We measure three different types of bounded repeats:
+
+* A search for a number of consecutive letters, both ASCII only and Unicode
+aware.
+* A search for certain types of words surrounding a `Result` type in Rust
+source code.
+* A search for consecutive words, all beginning with a capital letter.
+
+We also include measurements for the compilation time of the last two.
+
+Hyperscan does unusually well here, particularly for an automata oriented
+engine. It's plausible that it has some specific optimizations in place for
+bounded repeats.
+
+`rust/regex` slows down quite a bit on the `context` regex. Namely, the
+`context` regex is quite gnarly and its `(?s:.)` sub-expression coupled with
+the bounded repeat causes a large portion of its transition table to get filled
+out. This in turn results in more time than usual being spent actually building
+the lazy DFA's transition table during a search. Typically, the lazy DFA's
+transition table is built pretty quickly and then mostly reused on subsequent
+searches. But in this case, the transition table exceeds the lazy DFA's cache
+capacity and results in the cache getting cleared. However, the rate at which
+new transitions are created is still low enough that the lazy DFA is used
+instead of falling back to a slower engine.
+'''
+
+[[bench]]
+model = "count"
+name = "letters-en"
+regex = '[A-Za-z]{8,13}'
+haystack = { path = "opensubtitles/en-sampled.txt", line-end = 5_000 }
+count = [
+  { engine = '*', count = 1833 },
+  { engine = 'hyperscan', count = 3724 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "letters-ru"
+regex = '\pL{8,13}'
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 5_000 }
+count = [
+  { engine = '*', count = 3475 },
+  { engine = 'hyperscan', count = 8570 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "context"
+regex = '[A-Za-z]{10}\s+(?s:.){0,100}Result(?s:.){0,100}\s+[A-Za-z]{10}'
+haystack = { path = "rust-src-tools-3b0d4813.txt" }
+count = [
+  { engine = '*', count = 53 },
+  { engine = 'hyperscan', count = 109 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "capitals"
+regex = '(?:[A-Z][a-z]+\s*){10,100}'
+haystack = { path = "rust-src-tools-3b0d4813.txt" }
+count = [
+  { engine = '*', count = 11 },
+  { engine = 'hyperscan', count = 237 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "compile"
+name = "compile-context"
+regex = '[A-Za-z]{10}\s+(?s:.){0,100}Result(?s:.){0,100}\s+[A-Za-z]{10}'
+haystack = 'abcdefghij blah blah blah Result blib blab klmnopqrst'
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "compile"
+name = "compile-capitals"
+regex = '(?:[A-Z][a-z]+\s*){10,100}'
+haystack = 'Crazy Janey Mission Man Wild Billy Greasy Lake Hazy Davy Killer Joe'
+count = [
+  { engine = '*', count = 1 },
+  { engine = 'hyperscan', count = 12 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]

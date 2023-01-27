@@ -1,0 +1,15 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "engines/hyperscan/Cargo.toml",
+    "engines/pcre2/Cargo.toml",
+    "engines/re2/Cargo.toml",
+    "engines/regress/Cargo.toml",
+    "engines/rust/aho-corasick/Cargo.toml",
+    "engines/rust/memchr/Cargo.toml",
+    "engines/rust/regex-automata/Cargo.toml",
+    "engines/rust/regex/Cargo.toml",
+    "engines/rust/regex-old/Cargo.toml",
+    "engines/rust/regex-syntax/Cargo.toml",
+    "Cargo.toml"
+  ]
+}

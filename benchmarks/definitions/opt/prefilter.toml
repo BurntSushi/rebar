@@ -1,0 +1,143 @@
+analysis = '''
+These benchmarks demonstrate the prefix prefilter optimization. This is
+the most "basic" of literal optimizations in that it looks for prefixes
+that occur in every match of a regex, and then looks for occurrences of
+those prefixes in the haystack. Occurrences are considered candidate matches
+and must be confirmed by the regex engine. Upon failure, the prefilter is
+usually restarted to look for more candidates. In general, this results is
+significant (sometimes by orders of magnitude) speed improvements in many
+cases. It can sometimes lead to slower searches if the false positive rate
+of candidate matches is high. (For those, see the `folly` benchmarks in the
+parent directory.)
+
+Despite the seeming simplicity of this optimization, regex engines vary
+in their sophistication. Some just look for a single byte prefix and use
+memchr in that case, and then otherwise don't do much. The regex crate tries
+quite hard to extract prefixes and has a couple different SIMD algorithms it
+can employ, including for handling cases where there are multiple distinct
+prefixes.
+
+The trick is generally knowing when to stop. For example, you could generate
+52 different prefixes all ending with `foo` for `[A-Za-z]foo\w+`, but that's
+unlikely to be effective because as you increase the number of prefixes you
+look for, you 1) generally do so at a slower speed and 2) risk the chance of
+increasing your false positive rate.
+
+Still... You don't necessarily want to find the fewest prefixes either. For
+example, given something like `foo[a-c]`, you might actually want to look for
+`{fooa, foob, fooc}`, as that set is still fairly small and might lead to a
+lower false positive rate than just `foo`.
+
+And still yet, you also want to generally prefer longer prefixes if you can.
+For example, given `Sherlock|Holmes`, you might be tempted to just look for
+occurrences of `S` and `H`. But if they are frequent in your haystack, that
+might lead to a substantially higher false positive rate than just looking
+for `{Sherlock, Holmes}`.
+
+In other words, this is basically a dark art and is really just a whole pile
+of heuristics that seem to work well empirically.
+'''
+
+[[bench]]
+model = "count"
+name = "literal-english"
+regex = 'Sherlock Holmes'
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'rust/memchr/memmem',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count"
+name = "literal-casei-english"
+regex = 'Sherlock Holmes'
+case-insensitive = true
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count"
+name = "literal-russian"
+regex = 'Шерлок Холмс'
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'rust/memchr/memmem',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+analysis = '''
+This measures a non-ASCII literal on a non-ASCII haystack. Regex engines that
+naively just feed the first byte to memchr get wrecked on this benchmark by a
+high false positive rate, because they wind up using a UTF-8 leading byte that
+occurs in almost every codepoint in the haystack.
+'''
+
+[[bench]]
+model = "count"
+name = "literal-casei-russian"
+regex = 'Шерлок Холмс'
+case-insensitive = true
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-captures"
+name = "rust-functions"
+regex = 'fn is_(\w+)|fn as_(\w+)'
+haystack = { path = "rust-src-tools-3b0d4813.txt" }
+count = 948
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/regex',
+]
+analysis = '''
+This is a mostly silly little benchmark that looks for a couple different
+functions. This mostly checks whether regex engines do a literal scan for both
+`fn is_` and `fn as_`, or just `fn `. (One doesn't seem obviously better than
+the other. The former will have a lower false positive rate, but the latter is
+likely to be much quicker at identifying candidates, depending on algorithm
+choice.)
+'''

@@ -1,0 +1,170 @@
+analysis = '''
+These benchmarks test the "reverse inner" literal optimization. This is very
+much like the "reverse suffix" literal optimization, except it works on
+literals that are neither prefixes or suffixes. It works by looking for a
+literal that *must* appear in all matches and then splitting the regex into
+pieces: a prefix regex, followed by the literal and then a suffix regex.
+
+Candidate matches are found by searching for the literal, then doing a reverse
+search from the start of the literal using the prefix regex and then finally a
+full forward scan to find the end of the match.
+
+This is quite a precarious optimization since quadratic behavior can occur
+just like in the reverse suffix optimization. However, the quadratic behavior
+can be more subtle because of the final forward scan to confirm the match.
+Namely, when a match is not found, you need to know how far that scan looked in
+the haystack to ensure you don't scan that region of the haystack again in a
+subsequent reverse scan.
+
+We test both forms of quadratic behavior below. In both cases, the regex engine
+detects it and bails out of the optimization.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "holmes"
+regex = '\w+\s+Holmes\s+\w+'
+haystack = { path = "sherlock.txt" }
+count = 2593
+engines = [
+  'rust/regex/meta',
+  # Does not do it. Included as a point of comparison.
+  'rust/regex/hybrid',
+  # Does not do it.
+  're2',
+  # Does not do it.
+  'go/regexp',
+  # Does not do it.
+  'pcre2/jit',
+]
+analysis = '''
+A regex that looks for any words preceding and following `Holmes`. The reverse
+inner literal scan is able to very quickly look for matches of `Holmes`, then
+do a reverse scan for `\w+\s+` to find the start of the match, and finally a
+foward scan for `\s+\w+` to find the end of the match.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "email"
+regex = '\w+@\w+'
+haystack = { path = "rust-src-tools-3b0d4813.txt" }
+count = 47
+engines = [
+  'rust/regex/meta',
+  # Does not do it. Included as a point of comparison.
+  'rust/regex/hybrid',
+  # Does not do it.
+  're2',
+  # Does not do it.
+  'go/regexp',
+  # Does not do it.
+  'pcre2/jit',
+]
+analysis = '''
+A very simple regex for matching things that might be email addresses. The
+"reverse inner" optimization shines here because `@` is pretty rare and there
+is no overlap between `\w` and `@`, so quadratic behavior is impossible.
+In this particularly ideal case, the regex crate absolutely screams. On my
+system, even though the hybrid engine is at a respectable ~800 MB/s throughput,
+this optimization bumps it up to ~80 GB/s, an improvement of two orders of
+magnitude.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "factored-prefix"
+regex = '\pL+herloc\pL+|\pL+olme\pL+'
+unicode = true
+haystack = { path = "sherlock.txt" }
+count = 3542
+engines = [
+  'rust/regex/meta',
+  'rust/regex/hybrid',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+]
+analysis = '''
+This benchmark also uses the reverse inner optimization, and does despite
+there not *appearing* to be a top-level concatenation. Namely, at the time of
+writing, the reverse inner literal detection is not supremely dumb, but also
+not particularly smart either. It only looks for a top-level concatenation, and
+in that concatenation, looks for required literals. But if the regex just has
+an alternation at the top, it bails out.
+
+The trick here is that the HIR smart constructors in the `regex-syntax` crate
+will notice that each branch of the alternation has a common prefix and factor
+it out. So the regex gets rewritten as `\pL+(?:herloc\pL+|olme\p+)`. (Common
+suffix factoring doesn't exist at the time of writing.) This transforms
+the regex from one with a top-level alternation to one with a top-level
+concatenation, and thus amenable to the not-so-smart reverse inner literal
+extraction.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "no-quadratic-backward"
+regex = '[A-Z].*bcdefghijklmnopq[a-z]+'
+haystack = { contents = "bcdefghijklmnopq", repeat = 500 }
+count = 0
+engines = [
+  # This should run at some reasonable speed, ideally in a similar ballpark
+  # as hybrid.
+  'rust/regex/meta',
+  'rust/regex/hybrid',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+]
+analysis = '''
+This benchmark checks that the reverse inner optimization does not result
+in quadratic behavior within a single search. This specifically looks for
+quadratic behavior that occurs from the reverse search after finding a literal
+candidate backs up too far (past the previous literal candidate).
+
+The mitigation technique is to detect the quadratic behavior and bail out of
+the reverse inner optimization and use a normal forward search instead.
+
+See also the `opt/reverse-suffix/no-quadratic` benchmark for a bit more
+explanation. The optimization is a little different but the mechanism for
+quadratic behavior is very similar.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "no-quadratic-forward"
+regex = '.efghijklmnopq[a-z]+[A-Z]'
+haystack = { contents = "bcdefghijklmnopq", repeat = 500 }
+count = 0
+engines = [
+  # This should run at some reasonable speed, ideally in a similar ballpark
+  # as hybrid.
+  'rust/regex/meta',
+  'rust/regex/hybrid',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+]
+analysis = '''
+This benchmark also checks that quadratic behavior does not occur. Unlike
+the backward case above, this checks that a *second* way quadratic behavior
+*could* occur. Namely, in this case, the problem isn't the reverse scan,
+but the forward scan that occurs following the reverse scan. (Remember, the
+opptimization works by finding literal candidates, then a reverse scan to find
+the start position and finally a forward scan to find the end position. This
+benchmark is about that final forward scan.)
+
+Namely, it is possible that the forward scan looks ahead to the end of the
+haystack but then doesn't find a match. And indeed, that's exactly how we craft
+our benchmark here. Without a mitigation in place, this would find many literal
+candidates that also match the reverse scan, but then don't match the forward
+scan only after scanning to the end of the haystack. This then repeats itself
+and you wind up with quadratic behavior.
+
+The way we prevent this is to track how far the forward scan gets to when it
+fails. Then, after we find our next literal candidate, we instruct the reverse
+scan to avoid scanning past the previous position at which the forward scan
+fails. If it does reach that position, then we know we've potentially triggered
+quadratic behavior.
+'''

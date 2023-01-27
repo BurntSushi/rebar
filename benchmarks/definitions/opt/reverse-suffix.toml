@@ -1,0 +1,75 @@
+analysis = '''
+These benchmarks test the "reverse suffix" optimization. This works by looking
+for a suffix literal that must occur at the end of every match, searching for
+that literal and then doing a reverse DFA scan to confirm any candidates that
+were found from the literal scan.
+
+The main downside of this approach is that it opens you up to quadratic
+behavior. The `no-quadratic` benchmark below demonstrates that we mitigate
+against that.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "holmes"
+regex = '\w+\s+Holmes'
+haystack = { path = "sherlock.txt" }
+count = 4073
+engines = [
+  'rust/regex/meta',
+  # Does not do it. Included as a point of comparison.
+  'rust/regex/hybrid',
+  # Does not do it.
+  're2',
+  # Does not do it.
+  'go/regexp',
+  # Does not do it.
+  'pcre2/jit',
+]
+analysis = '''
+A regex that looks for any words preceding `Holmes`. The reverse suffix
+literal scan is able to very quickly look for matches of `Holmes`, then do a
+reverse scan for `\w+\s+` to find the start of the match.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "no-quadratic"
+regex = '[A-Z].*bcdefghijklmnopq'
+haystack = { contents = "bcdefghijklmnopq", repeat = 500 }
+count = 0
+engines = [
+  # This should run at some reasonable speed, ideally in a similar ballpark
+  # as hyrbid.
+  'rust/regex/meta',
+  'rust/regex/hybrid',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+]
+analysis = '''
+This benchmark checks that the reverse suffix optimization does not result in
+quadratic behavior within a single search. Namely, this benchmark is designed
+such that the suffix literal matches many times, and at each point, the reverse
+scan to confirm that match will continue all the way back to the beginning of
+the haystack. Without some kind of mitigation for this, it would result in
+quadratic behavior in the size of the haystack.
+
+There is no real way to get a point of reference for this. The only way to see
+the difference is to remove the mitigation within the meta regex engine and
+re-run the benchmark. Indeed, it shows a perf reduction by about two orders of
+magnitude.
+
+Currently, the mitigation is that the reverse search will stop itself before it
+reaches any point in the haystack that has already been scanned. In that case,
+the optimization will fail and a normal forward search will be used.
+
+Another possible mitigation is to analyze the regex to check that there is no
+way for the literal search to overlap with the reverse scan to confirm the
+match. Indeed, this regex would fail that test since `.*` will happily match
+the literal `bcdefghi...`. The problem with that approach in general is that
+even if there is overlap, that doesn't mean a search will result in quadratic
+behavior. There isn't too much downside to just trying and bailing out when we
+detect it, other than code complexity. But the upside is that the optimization
+will apply even when there is overlap.
+'''

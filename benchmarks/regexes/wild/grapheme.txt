@@ -1,0 +1,24 @@
+(?x)
+\p{gcb=CR} \p{gcb=LF}
+|
+\p{gcb=Control}
+|
+\p{gcb=Prepend}*
+(
+  (
+    (\p{gcb=L}* (\p{gcb=V}+ | \p{gcb=LV} \p{gcb=V}* | \p{gcb=LVT}) \p{gcb=T}*)
+    |
+    \p{gcb=L}+
+    |
+    \p{gcb=T}+
+  )
+  |
+  \p{gcb=RI} \p{gcb=RI}
+  |
+  \p{Extended_Pictographic} (\p{gcb=Extend}* \p{gcb=ZWJ} \p{Extended_Pictographic})*
+  |
+  [^\p{gcb=Control} \p{gcb=CR} \p{gcb=LF}]
+)
+[\p{gcb=Extend} \p{gcb=ZWJ} \p{gcb=SpacingMark}]*
+|
+\p{Any}

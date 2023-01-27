@@ -1,0 +1,193 @@
+# These benchamrks are somewhat explicitly crafted for Hyperscan because
+# it diverges from most other regex engines in that it reports every match
+# location. We also in particular focus on the impact of asking Hyperscan for
+# the start of each match (SOM). Namely, the 'count' model only requires the
+# engine to count all matches which doesn't require finding the SOM of any
+# match at all, but the 'count-spans' model does require finding the SOM of a
+# match.
+
+[[bench]]
+model = "count"
+name = "literal-english-nosom"
+regex = 'Sherlock Holmes'
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "literal-english-som"
+regex = 'Sherlock Holmes'
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 15
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "literal-casei-english-nosom"
+regex = 'Sherlock Holmes'
+case-insensitive = true
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "literal-casei-english-som"
+regex = 'Sherlock Holmes'
+case-insensitive = true
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 15
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "literal-russian-nosom"
+regex = 'Шерлок Холмс'
+haystack = { path = "opensubtitles/ru-huge.txt" }
+unicode = true
+count = 1
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "literal-russian-som"
+regex = 'Шерлок Холмс'
+haystack = { path = "opensubtitles/ru-huge.txt" }
+unicode = true
+count = 23
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "literal-casei-russian-nosom"
+regex = 'Шерлок Холмс'
+case-insensitive = true
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 1
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "literal-casei-russian-som"
+regex = 'Шерлок Холмс'
+case-insensitive = true
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 23
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+# The 'literal-suffix' benchmarks test how Hyperscan does with a literal at
+# the end of a regex.
+[[bench]]
+model = "count"
+name = "literal-suffix-nosom"
+regex = '\w+\s+Holmes'
+haystack = { path = "sherlock.txt" }
+count = 319
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "literal-suffix-som"
+regex = '\w+\s+Holmes'
+haystack = { path = "sherlock.txt" }
+count = 4073
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+# The 'literal-inner' benchmarks test how Hyperscan does with a literal that is
+# neither in the prefix or suffix of a regex. We slap word boundaries around
+# the regex to ensure the match counts are the same, otherwise the trailing \w+
+# can cause Hyperscan to produce many additional matches.
+[[bench]]
+model = "count"
+name = "literal-inner-nosom"
+regex = '\b\w+\s+Holmes\s+\w+\b'
+haystack = { path = "sherlock.txt" }
+count = 137
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "literal-inner-som"
+regex = '\b\w+\s+Holmes\s+\w+\b'
+haystack = { path = "sherlock.txt" }
+count = 2593
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+# The 'fixed-length-words' benchmarks are specifically designed to omit any
+# literals and force the actual regex engine to be used.
+[[bench]]
+model = "count"
+name = "fixed-length-words-nosom"
+regex = '\w{5}\s\w{6}\s\w{7}'
+haystack = { path = "sherlock.txt" }
+count = 120
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "fixed-length-words-som"
+regex = '\w{5}\s\w{6}\s\w{7}'
+haystack = { path = "sherlock.txt" }
+count = 2400
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+
+# This one enables Unicode mode, which slows Hyperscan down quite a bit.
+#
+# We don't have a 'som' variant of this because Hyperscan considers the pattern
+# too big. (Hyperscan's limits seem kind of small? But... Unicode is hard.)
+[[bench]]
+model = "count"
+name = "fixed-length-words-unicode-nosom"
+regex = '\w{5}\s\w{6}\s\w{7}'
+unicode = true
+haystack = { path = "sherlock.txt" }
+count = 120
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]

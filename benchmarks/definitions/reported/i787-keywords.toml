@@ -1,0 +1,136 @@
+analysis = '''
+These benchmarks came from: https://github.com/rust-lang/regex/issues/787
+
+This regex is a common sort of occurrence where someone puts a bunch of
+literals in an alternation and wraps them in word boundary assertions. The main
+issue for the regex crate is the Unicode case (which is the default). Namely,
+Unicode word boundaries can't be handled by the DFAs on non-ASCII haystacks,
+so perf can get trashed because the regex crate has to fall back to a slower
+engine (like the PikeVM).
+
+In the old regex crate, this was made doubly worse because the PikeVM isn't
+great at dealing with large alternations. But in the rewrite, literal
+alternations are rewritten in a more optimized way that pushes the branching
+down more. (See the `opt/literal-alt` benchmarks for more on that.)
+
+Another problem in the old regex crate is that it had trouble with prefilters
+in regexes surrounded by look-around assertions, primarily because its internal
+engine APIs were not principled about separating "search the haystack" and
+"search the haystack at this range while taking the surrounding context into
+account in order to correctly compute look-around assertions."
+
+So in the regex crate rewrite, these things were all fixed. And now both
+cases will use Teddy because of the extracted prefilter... But... Ug. Sadly,
+Teddy doesn't do so hot on this particular benchmark. Profiling suggests it
+gets stuck in its verification step, which is quite unfortunate, because an
+Aho-Corasick DFA (or even lazy DFA) do much better here.
+
+Unless we can fix Teddy, the ideal scenario here is that we just use the lazy
+DFA for the ASCII case and an Aho-Corasick DFA prefilter for the Unicode case.
+Why the difference? Because without the prefilter for the Unicode case, the
+lazy DFA will quit once it sees a non-ASCII byte in the haystack, and there are
+a number of them here. The prefilter avoids that quitting problem and instead
+just uses lazy DFA for confirming the match. (Which could still quit, but it's
+far less likely to because the alternation is just a bunch of ASCII words.)
+Unfortunately, it seems tricky to figure out a good heuristic that selects our
+ideal scenario.
+
+The Teddy engine may be difficult to fix in this particular case because the
+match count is pretty high.
+'''
+
+[[bench]]
+model = "compile"
+name = "compile"
+regex = { path = "reported/i787-keywords.txt", per-line = "alternate", prepend = '\b(', append = ')\b' }
+haystack = "f64"
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/nfa',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "ascii"
+regex = { path = "reported/i787-keywords.txt", per-line = "alternate", prepend = '\b(', append = ')\b' }
+haystack = { path = "bstr-ext-slice-65993b58.txt" }
+count = 5_674
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "unicode"
+regex = { path = "reported/i787-keywords.txt", per-line = "alternate", prepend = '\b(', append = ')\b' }
+unicode = true
+haystack = { path = "bstr-ext-slice-65993b58.txt" }
+count = 5_674
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'pcre2/jit',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "opt-ascii"
+regex = '\b(Self|a(?:bstract|s)|b(?:ecome|o(?:ol|x)|reak)|c(?:har|on(?:st|tinue)|rate)|do|e(?:lse|num|xtern)|f(?:32|64|alse|inal|n|or)|i(?:1(?:28|6)|32|64|mpl|size|[8fn])|l(?:et|oop)|m(?:a(?:cro|tch)|o(?:d|ve)|ut)|override|p(?:riv|ub)|re(?:f|turn)|s(?:elf|t(?:atic|r(?:(?:uct)?))|uper)|t(?:r(?:ait|ue|y)|ype(?:(?:of)?))|u(?:1(?:28|6)|32|64|8|ns(?:afe|ized)|s(?:(?:(?:iz)?)e))|virtual|wh(?:(?:er|il)e)|yield)\b'
+haystack = { path = "bstr-ext-slice-65993b58.txt" }
+count = 5_674
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+analysis = '''
+This is the "optimized" variant of the regex as posted in the GitHub issue
+linked above. I believe this isn't quite a correct transformation, since the
+program that produced this variant gets rid of preference order. Nevertheless,
+it's interesting to benchmark this and compare it to others. (Note that the
+regex crate does its own internal rewriting of literal alternations like this,
+but in a way that preserves preference order.)
+'''
+
+[[bench]]
+model = "count-spans"
+name = "opt-unicode"
+regex = '\b(Self|a(?:bstract|s)|b(?:ecome|o(?:ol|x)|reak)|c(?:har|on(?:st|tinue)|rate)|do|e(?:lse|num|xtern)|f(?:32|64|alse|inal|n|or)|i(?:1(?:28|6)|32|64|mpl|size|[8fn])|l(?:et|oop)|m(?:a(?:cro|tch)|o(?:d|ve)|ut)|override|p(?:riv|ub)|re(?:f|turn)|s(?:elf|t(?:atic|r(?:(?:uct)?))|uper)|t(?:r(?:ait|ue|y)|ype(?:(?:of)?))|u(?:1(?:28|6)|32|64|8|ns(?:afe|ized)|s(?:(?:(?:iz)?)e))|virtual|wh(?:(?:er|il)e)|yield)\b'
+unicode = true
+haystack = { path = "bstr-ext-slice-65993b58.txt" }
+count = 5_674
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'pcre2/jit',
+  'python/regex',
+]
+analysis = '''
+Same as `opt-ascii`, but with Unicode mode enabled.
+'''

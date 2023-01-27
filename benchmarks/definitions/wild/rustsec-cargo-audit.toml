@@ -1,0 +1,90 @@
+analysis = '''
+This group of benchmarks comes from the `cargo audit` tool out of the [rustsec]
+project. It was [reported by Shnatsel][shnatsel-report] to the Rust regex
+crate.
+
+This regex attempts to extract dependencies and their versions from a
+compiled Rust program. The actual issue reported here was that Shnatsel, for
+performance, split the regex into a Unix and Windows version, and runs them
+separately. The reason for this was that combining them into one regex was
+slower. Indeed, when they're combined (and we measure two differents ways
+of doing that below), the heuristics in the old regex crate wind up doing a
+multiple substring search instead of a search for `cargo`, which is a common
+prefix. This slows things down quite a bit.
+
+[rustsec]: https://github.com/rustsec/rustsec
+[shnatsel-report]: https://github.com/rust-lang/regex/discussions/960#discussioncomment-5099839
+[rustsec-dep-regex]: https://github.com/rustsec/rustsec/blob/26a04a409da94c30b67f45878461998df68d4108/quitters/src/lib.rs#L28-L29
+'''
+
+[[bench]]
+model = "count-captures"
+name = "original-unix"
+regex = 'cargo/registry/src/[^/]+/([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-Za-z+.-]*)/'
+haystack = { path = "wild/rg-13.0.0-x86_64-unknown-linux-musl.bin" }
+count = 471
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-captures"
+name = "original-windows"
+regex = 'cargo\\registry\\src\\[^\\]+\\([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-Za-z+.-]*)\\'
+haystack = { path = "wild/rg-13.0.0-x86_64-pc-windows-msvc.bin" }
+count = 462
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-captures"
+name = "both-slashes"
+regex = 'cargo[\\/]registry[\\/]src[\\/][^\\/]+[\\/]([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-Za-z+.-]*)[\\/]'
+haystack = { path = "wild/rg-13.0.0-x86_64-unknown-linux-musl.bin" }
+count = 471
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-captures"
+name = "both-alternate"
+regex = 'cargo/registry/src/[^/]+/([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-Za-z+.-]*)/|cargo\\registry\\src\\[^\\]+\\([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-Za-z+.-]*)\\'
+haystack = { path = "wild/rg-13.0.0-x86_64-unknown-linux-musl.bin" }
+count = 471
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]

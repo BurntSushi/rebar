@@ -1,0 +1,117 @@
+analysis = '''
+This group benchmarks a "lexer" where it combines a whole bunch of different
+patterns that identify tokens in a language into a single regex. It then uses
+capture groups to determine which branch of the alternation actually matched,
+and thus, which token matched. We also benchmark a variant of this that asks
+the regex engine to search for each pattern individually (most regex engines
+don't support this mode).
+
+This is used by the [Veryl] project by way of the [Parol] parser generator. The
+regex was [extracted by the Parol maintainers upon my request][parol-issue].
+
+We use this regex to represent the "lexing" use case, where sometimes folks
+will build a pretty big regex with a bunch of small regexes for identifying
+tokens. Usually the idea is that the lexer matches literally everything in the
+haystack (indeed, the last branch in this regex is a `.` and the first is any
+newline), and thus these sorts of regexes tend to be quite latency sensitive.
+Namely, it really matters just how much overhead is involved in reporting
+matches. This is likely one of the reasons why most regex engines are overall
+pretty slow here.
+
+The other aspect of this that's quite difficult is the sheer number of
+capturing groups. There's several dozen of them, which means regex engines have
+to keep track of a fair bit of state to handle it.
+
+You might think this would be bad for backtrackers and good for automata
+engines, since automata engines are *supposed* to be able to handle large
+alternations better than backtrackers. But that's not the case here. Even for
+example Python's regex engine (backtracker) beats RE2 (automata). My hypothesis
+for why this is, is latency. Automata engines tend to have multiple engines
+internally and therefore tend to have higher latency, and sometimes multiple
+engines run to service one search. Backtrackers tend to have one engine that
+handles everything. But still, shouldn't the huge alternation be disastrous for
+the backtracker? Perhaps, unless many of the matches occur in an early branch,
+which is likely the case here. Namely, the second alternation matches a ` `
+(single ASCII space), which is probably the most frequently occurring byte in
+the haystack. An automata engine that doesn't use a DFA (which might be the
+case here, because the regex is so big), will wind up spending a lot of time
+keeping track of all branches of the alternation, even if it doesn't need to
+explore all of them. In contrast, a backtracker will try one after the other,
+and if most cases match an early branch, the backtracker is likely to take less
+overall time.
+
+Most regex engines are stuck in the 1 MB/s (or less) range. The regex crate and
+PCRE2's JIT get up to about 10 MB/s, with PCRE2 edging out the regex crate.
+
+Note that the regex was lightly modified from the original to increase
+portability across different regex engines. For example, the `[\s--\r\n]` class
+was changed to `[\t\v\f ]`.
+
+As for the second benchmark, `multiple`, it uses the same patterns from each
+alternation in the `single` benchmark, but treats each one as a distinct
+pattern. Doing this requires explicit support for searching multiple regex
+patterns. (RE2's and Rust's regex crate "regex set" functionality is not enough
+for this, as it only reports which patterns match a haystack, and not where
+they match. That's why the lower level `regex/automata/meta` engine is used,
+which exposes a more powerful but more complex API.)
+
+In the `multiple` case, the `rust/regex/meta` does very well and the key reason
+is the abdication of capture groups as a necessary tool to determine which
+token matched. Namely, now we can simply use a pattern ID from the match to
+determine which "branch" in the original regex was taken. We no longer need to
+ask for or inspect capture groups. This gives a critical benefit to automata
+engines that support searching for multiple patterns, because it no longer
+requires them to use slower engines for resolving capturing groups.
+
+[Veryl]: https://github.com/dalance/veryl
+[Parol]: https://github.com/jsinger67/parol
+[parol-issue]: https://github.com/jsinger67/parol/issues/56
+'''
+
+[[bench]]
+model = "count-captures"
+name = "single"
+regex = { path = "wild/parol-veryl.txt", per-line = "alternate" }
+haystack = { path = "wild/parol-veryl.vl" }
+count = 124_800
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+analysis = '''
+Note that we don't include Hyperscan here because it doesn't support the
+`count-captures` benchmark model. It is included in the `multiple` benchmark
+below, which doesn't require capture groups.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "multi"
+regex = { path = "wild/parol-veryl.txt", per-line = "pattern" }
+haystack = { path = "wild/parol-veryl.vl" }
+count = [
+  { engine = '*', count = 150_600 },
+  { engine = 'hyperscan', count = 669_500 },
+]
+engines = [
+  'rust/regex/meta',
+  'hyperscan',
+]
+analysis = '''
+Hyperscan reports everything that matches, including overlapping matches,
+and that's why its count is higher. It is likely still serviceable for
+this use case, but might in practice require changing the regex to suit
+Hyperscan's match semantics. Still, it's a decent barometer to include it here,
+particularly because of its multi-regex support.
+
+Most regex engines do not support searching for multiple patterns and finding
+the corresponding match offsets, which is why this benchmark has very few
+entries.
+'''

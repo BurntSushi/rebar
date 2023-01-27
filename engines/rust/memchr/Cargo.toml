@@ -1,0 +1,36 @@
+[package]
+name = "rust-memchr-memmem"
+version = "2.5.0"
+edition = "2021"
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+[dependencies]
+anyhow = "1.0.69"
+bstr = { version = "1.2.0", default-features = false, features = ["std"] }
+lexopt = "0.3.0"
+# We use an '=' here to force a specific version. It is okay to update it,
+# but if you do, change the version of this Cargo package as well. This way,
+# the version of the runner matches the version of engine, which makes it
+# convenient to get the version number.
+#
+# Is this really the best way to do this? The main constraint here is that we
+# want "got a version number" to mean "can run the engine." So for example,
+# parsing the Cargo.lock file would be inappropriate as that doesn't mean the
+# engine is available to run. Otherwise, it would be fine to just rely on
+# 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
+memchr = "=2.5.0"
+
+[dependencies.klv]
+path = "../../../shared/klv"
+[dependencies.regexredux]
+path = "../../../shared/regexredux"
+[dependencies.timer]
+path = "../../../shared/timer"
+
+[profile.release]
+debug = true
+codegen-units = 1
+lto = "thin"

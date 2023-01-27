@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# This script downloads a specific release of PCRE2, extracts it and copies
+# the necessary files to $dest. The actual compilation of PCRE2 happens in
+# build.rs. Note that a new release of PCRE2 may require more changes than
+# simply updating the version. Namely, we exhaustively enumerate the files that
+# need to be copied below. This way, we only vendor into source control what is
+# actually necessary for building PCRE2.
+
+dest="engines/pcre2/upstream"
+version="10.42"
+dir="pcre2-$version"
+archive="$dir.tar.gz"
+url="https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$version/$archive"
+work="tmp/updates/pcre2-$version"
+
+mkdir -p "$work"
+curl -L "$url" > "$work/$archive"
+(cd "$work" && tar xf "$archive")
+
+upstream="$work/$dir"
+rm -rf "$dest"/{src,include}
+mkdir -p "$dest"/{src,include}
+
+needed=(
+  pcre2_auto_possess.c
+  pcre2_compile.c
+  pcre2_config.c
+  pcre2_context.c
+  pcre2_convert.c
+  pcre2_dfa_match.c
+  pcre2_error.c
+  pcre2_extuni.c
+  pcre2_find_bracket.c
+  pcre2_jit_compile.c
+  pcre2_jit_match.c
+  pcre2_jit_misc.c
+  pcre2_maketables.c
+  pcre2_match.c
+  pcre2_match_data.c
+  pcre2_newline.c
+  pcre2_ord2utf.c
+  pcre2_pattern_info.c
+  pcre2_script_run.c
+  pcre2_serialize.c
+  pcre2_string_utils.c
+  pcre2_study.c
+  pcre2_substitute.c
+  pcre2_substring.c
+  pcre2_tables.c
+  pcre2_ucd.c
+  pcre2_ucptables.c
+  pcre2_valid_utf.c
+  pcre2_xclass.c
+
+  pcre2_internal.h
+  pcre2_intmodedep.h
+  pcre2_jit_neon_inc.h
+  pcre2_jit_simd_inc.h
+  pcre2posix.h
+  pcre2_ucp.h
+)
+for name in "${needed[@]}"; do
+  cp "$upstream/src/$name" "$dest/src/"
+done
+cp "$upstream/src/pcre2_chartables.c.dist" "$dest/src/pcre2_chartables.c"
+cp -a "$upstream/src/sljit" "$dest/src/"
+cp "$upstream/src/config.h.generic" "$dest/include/config.h"
+cp "$upstream/src/pcre2.h.generic" "$dest/include/pcre2.h"

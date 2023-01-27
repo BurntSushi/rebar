@@ -1,0 +1,118 @@
+analysis = '''
+This [measures a regex][pypi-aws-secrets-regex] for [detecting AWS keys in
+source code][pypi-aws-secrets-regex][aws-key-blog]. In particular, to reduce
+false positives, it looks for both an access key and a secret key within a few
+lines of one another.
+
+We also measure a "quick" version of the regex that is used to find possible
+candidates by searching for things that look like an AWS access key.
+
+The measurements here demonstrate why the [pypi-aws-secrets] project splits
+this task into two pieces. First it uses the "quick" version to identify
+candidates, and then it uses the "full" version to lower the false positive
+rate of the "quick" version. The "quick" version of the regex runs around
+an order of magnitude faster than the "full" version across the board. To
+understand why, let's look at the "quick" regex:
+
+```
+((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))
+```
+
+Given this regex, every match starts with one of `ASIA`, `AKIA`, `AROA` or
+`AIDA`. This makes it quite amenable to prefilter optimizations where a regex
+engine can look for matches of one of those 4 literals, and only then use the
+regex engine to confirm whether there is a match at that position. Some regex
+engines will also notice that every match starts with an `A` and use `memchr`
+to look for occurrences of `A` as a fast prefilter.
+
+We also include compilation times to give an idea of how long it takes
+to compile a moderately complex regex, and how that might vary with the
+compilation time of a much simpler version of the regex.
+
+Note that in all of the measurements for this group, we search the CPython
+source code (concatenated into one file). We also lossily convert it to UTF-8
+so that regex engines like `regress` can participate in this benchmark. (The
+CPython source code contains a very small amount of invalid UTF-8.)
+
+[pypi-aws-secrets]: https://github.com/pypi-data/pypi-aws-secrets
+[pypi-aws-secrets-regex]: https://github.com/pypi-data/pypi-aws-secrets/blob/903a7bd35bc8d9963dbbb7ca35e8ecb02e31bed4/src/scanners/mod.rs#L15-L23
+[aws-key-blog]: https://tomforb.es/i-scanned-every-package-on-pypi-and-found-57-live-aws-keys/
+'''
+
+[[bench]]
+model = 'grep-captures'
+name = 'full'
+regex = '''(('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|").*?(\n^.*?){0,4}(('|")[a-zA-Z0-9+/]{40}('|"))+|('|")[a-zA-Z0-9+/]{40}('|").*?(\n^.*?){0,3}('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|"))+'''
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
+count = 0
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = 'grep'
+name = 'quick'
+regex = '((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))'
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
+count = 0
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = 'compile'
+name = 'compile-full'
+regex = '''(('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|").*?(\n^.*?){0,4}(('|")[a-zA-Z0-9+/]{40}('|"))+|('|")[a-zA-Z0-9+/]{40}('|").*?(\n^.*?){0,3}('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|"))+'''
+haystack = '"AIDAABCDEFGHIJKLMNOP""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"'
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = 'compile'
+name = 'compile-quick'
+regex = '((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))'
+haystack = 'AIDAABCDEFGHIJKLMNOP'
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]

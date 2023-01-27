@@ -1,0 +1,59 @@
+# These benchmarks attempt to search for occurrences of words in varying
+# dictionary sizes. Engines like PCRE2 can't handle any of these. Some
+# backtrackers, like python/re and regress, can at least execute some of
+# the smaller dictionaries but they are quite slow. The regex crate generally
+# does pretty well as it has a specific optimization for large literal
+# alternations: it just diverts to Aho-Corasick.
+
+[[bench]]
+model = "count-spans"
+name = "english"
+regex = { path = "dictionary/english/sorted-by-length.txt", per-line = "alternate" }
+unicode = true
+haystack = { path = "opensubtitles/en-medium.txt" }
+count = 45_315
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+]
+
+[[bench]]
+model = "count-spans"
+name = "english-tiny"
+regex = { path = "dictionary/english/sorted-by-length.txt", per-line = "alternate" }
+unicode = true
+haystack = { path = "opensubtitles/en-tiny.txt" }
+count = 87
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+]
+
+[[bench]]
+model = "count-spans"
+name = "english-10"
+regex = { path = "dictionary/english/length-10.txt", per-line = "alternate" }
+unicode = true
+haystack = { path = "opensubtitles/en-medium.txt" }
+count = 690
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  're2',
+]
+
+[[bench]]
+model = "count-spans"
+name = "english-15"
+regex = { path = "dictionary/english/length-15.txt", per-line = "alternate" }
+unicode = true
+haystack = { path = "opensubtitles/en-medium.txt" }
+count = 15
+engines = [
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'python/re',
+]

@@ -1,0 +1,136 @@
+analysis = '''
+This group of benchmarks measures regex patterns that are simple literals. When
+possible, we also measure case insensitive versions of the same pattern. We do
+this across three languages: English, Russian and Chinese. For English, Unicode
+mode is disabled while it is enabled for Russian and Chinese. (Which mostly
+only matters for the case insensitive benchmarks.)
+
+This group is mainly meant to demonstrate two things. Firstly is whether the
+regex engine does some of the most basic forms of optimization by recognizing
+that a pattern is just a literal, and that a full blown regex engine is
+probably not needed. Indeed, naively using a regex engine for this case is
+likely to produce measurements much worse than most regex engines. Secondly is
+how the performance of simple literal searches changes with respect to both
+case insensitivity and Unicode. Namely, substring search algorithms that work
+well on ASCII text don't necessarily also work well on UTF-8 that contains many
+non-ASCII codepoints. This is especially true for case insensitive searches.
+
+Notice, for example, how RE2 seems to be faster in the `sherlock-casei-ru`
+benchmark than in the `sherlock-ru` benchmark, even though the latter is "just"
+a simple substring search where as the former is a multiple substring search.
+In the case of `sherlock-ru`, RE2 actually attempts a literal optimization that
+likely gets caught up in dealing with a high false positive rate of candidates.
+Where as in the case of `sherlock-casei-ru`, no literal optimization is
+attempted and instead its lazy DFA is used. The high false positive rate in the
+simpler literal case winds up making it overall slower than it likely would be
+if it would just use the DFA.
+
+This is not in any way to pick on RE2. Every regex engine that does literal
+optimizations (and most do) will suffer from this kind of setback in one way
+or another.
+'''
+
+[[bench]]
+model = "count"
+name = "sherlock-en"
+regex = 'Sherlock Holmes'
+haystack = { path = "opensubtitles/en-sampled.txt" }
+count = 513
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-casei-en"
+case-insensitive = true
+regex = 'Sherlock Holmes'
+haystack = { path = "opensubtitles/en-sampled.txt" }
+count = 522
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-ru"
+regex = 'Шерлок Холмс'
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt" }
+count = 724
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-casei-ru"
+regex = 'Шерлок Холмс'
+case-insensitive = true
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt" }
+count = 746
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-zh"
+regex = '夏洛克·福尔摩斯'
+unicode = true
+haystack = { path = "opensubtitles/zh-sampled.txt" }
+count = 30
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]

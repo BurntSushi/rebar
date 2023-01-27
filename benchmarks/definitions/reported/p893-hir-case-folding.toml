@@ -1,0 +1,73 @@
+analysis = '''
+This benchmark comes from: https://github.com/rust-lang/regex/pull/893
+
+Specifically, the `subtract-empty` regex is what came out of that PR. The regex
+is a delightfully pathological case, where the `--` (difference) character
+class set operator is repeated over and over again. It repeatedly subtracts the
+empty class from the one we started with, `[[:^spance:]]`. The crucial bit is
+that case insensitive mode is enabled, and case folding is re-applied for every
+single difference operation. Since case folding is not exactly cheap, this
+results in quite a bit of time to parse a regex for a pattern that is not so
+long.
+
+The bottleneck lay in the AST->HIR translation layer, which takes a structured
+representation of the concrete syntax and converts it into a high-level
+intermediate representation. This is the point at which character classes are
+flattened into ranges of non-overlapping codepoints. And of course, part of
+that is doing Unicode case folding.
+
+We fixed the particular case reported in PR #893 by adopting a technique from
+the PR: we track whether an interval set has been case folded or not. Since
+this property is preserved through all class operations (e.g., subtracting a
+case folded set from another case folded set produces a case folded set), this
+can actually save us from redoing case folding when applying the binary set
+operations in a number of cases.
+
+We also benchmark a different case, `repeated`, where the same (giant) class
+is repeated over and over again. In this case, each class *has* to be case
+folded individually. There is no opportunity (in the current implementation)
+to avoid redoing case folding because the underlying interval set used to
+combine character classes doesn't actually know that `\pL` is already case
+folded.
+
+In this case, we really just need to make case folding faster, which we did by
+reducing the number of case folding table lookups. (Another idea from the patch
+in PR #893.)
+
+For the `repeated` case, since we are just repeating `\pL` over and over again,
+it is in theory possible to introduce a sort of caching mechanism where you
+recognize sets that have been case folded before and just reuse the result.
+It's not actually totally clear how much this would help, and would likely be a
+little tricky to do correctly. More to the point, even if you had a cache, the
+regex crate supports enough distinct Unicode classes that you could just write
+a distinct class instead of repeating the same one.
+
+There's probably still some room for improvement here.
+'''
+
+[[bench]]
+model = "compile"
+name = "subtract-empty"
+regex = '(?i:[[:^space:]------------------------------------------------------------------------])'
+unicode = true
+haystack = 'a'
+count = 1
+engines = ['rust/regex/hir']
+
+[[bench]]
+model = "compile"
+name = "subtract-non-empty"
+regex = '(?i:[[:^space:]--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a--a])'
+unicode = true
+haystack = 'b'
+count = 1
+engines = ['rust/regex/hir']
+
+[[bench]]
+model = "compile"
+name = "repeated"
+regex = '(?i:[\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL\pL])'
+unicode = true
+haystack = 'b'
+count = 1
+engines = ['rust/regex/hir']

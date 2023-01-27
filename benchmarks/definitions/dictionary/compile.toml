@@ -1,0 +1,59 @@
+# These benchmarks test how long it takes to build a regex for a large
+# dictionary of words as a single alternation. Overall, the compile times here
+# are pretty brutal and are in the milliseconds on my machine.
+#
+# If you really do know that you just have an alternation of literals you
+# really probably should use the 'aho-corasick' Rust crate directly. But such
+# things might be unknown unknowns or you might not even know you're running
+# a huge alternation of literals, in which case, the regex crate will do its
+# best.
+
+[[bench]]
+model = "compile"
+name = "english"
+regex = { path = "dictionary/english/sorted-by-length.txt", per-line = "alternate" }
+haystack = "zygotes"
+unicode = true
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/nfa',
+  'rust/regexold',
+]
+
+[[bench]]
+model = "compile"
+name = "english-10"
+regex = { path = "dictionary/english/length-10.txt", per-line = "alternate" }
+haystack = "Zubeneschamali's"
+unicode = true
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/nfa',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+]
+
+[[bench]]
+model = "compile"
+name = "english-15"
+regex = { path = "dictionary/english/length-15.txt", per-line = "alternate" }
+haystack = "Zubeneschamali's"
+unicode = true
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/nfa',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+]

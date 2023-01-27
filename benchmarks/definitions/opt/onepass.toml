@@ -1,0 +1,150 @@
+analysis = '''
+These benchmarks test the "one-pass" DFA optimization. A one-pass NFA (before
+being turned into a one-pass DFA) has the special property that at any point
+during matching, there is at most one NFA state that can be transitioned to
+from the current state. (Typically there may be many.) When this property
+holds, the state shuffling done by the PikeVM to guarantee linear time can
+be omitted entirely. We then capitalize on this absence of state shuffling
+by turning the NFA into a DFA. It results in more memory usage but a much
+faster search. And in particular, because of the one-pass property, there is at
+most one DFA state for every NFA state. So there is no worst cast exponential
+time/space complexity to worry about here that would otherwise apply to general
+NFA-to-DFA conversion.
+
+Note that RE2 calls this a "one-pass NFA" internally where as the regex crate
+calls it a "one-pass DFA." Both are correct in some sense. One-pass NFA more
+precisely refers to the formulation of the property, but I chose to call it a
+DFA because its execution model more closely resembles that of a DFA. Namely,
+every state transition is executed in a constant number of instructions, where
+as this is generally not true for an NFA. (I'm being a bit hand-wavy here, bit
+parallel NFAs would like to have a word with that generalization.)
+
+The one-pass DFA occupies an important niche in the regex crate. Namely, it
+has two critical powers that lazy and full DFAs do not have: it can match
+Unicode word boundaries on all haystacks and it can resolve capture groups.
+Normally, if we need to match Unicode word boundaries on non-ASCII text or
+resolve capture groups, then we would otherwise be forced to resort to the
+PikeVM or the bounded backtracker. Both of them are generally slower than the
+one-pass DFA. Indeed, the benchmarks here include the PikeVM and the bounded
+backtracker to demonstrate the difference.
+
+Note that we benchmark the one-pass DFA explicitly to ensure that it
+always works. If the regex in a benchmark changes or something about the
+implementation changes to make the regex no longer one-pass, then the benchmark
+will fail. In contrast, the regex crate API will not fail. It will just
+silently not use the onepass DFA. We want the failure to surface and smack us
+in the face.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "fn-predicate"
+regex = '^\s*fn\s+(is_([^\(]+))\(([^)]+)\) -> bool \{$'
+haystack = { path = "rust-src-tools-3b0d4813.txt" }
+count = 916
+engines = [
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+]
+analysis = '''
+This benchmark just tries to extract some properties of a subset of functions
+from a pile of Rust source code. We use capture groups to get the function name
+and parameters.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "first-three-words-english"
+regex = '^ *(\w+) +(\w+) +(\w+)'
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 35_128
+engines = [
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+]
+analysis = '''
+This benchmark looks for the first three "words" in each line, and captures
+each word. This is a bit of a higher match count than `fn-predicate`, so its
+throughput is overall lower.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "first-three-words-russian"
+regex = '^ *(\w+) +(\w+) +(\w+)'
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 19_224
+engines = [
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'pcre2/jit',
+  'python/regex',
+]
+analysis = '''
+This is the same as `first-three-words-english`, but enables Unicode and runs
+it on a Russian corpus. Engines like the PikeVM tend to slow down here because
+the `\w` class is much bigger and requires more state shuffling.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "word-boundary-english"
+regex = '^(\S{8})(\S)\b'
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 579
+engines = [
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  # 'regress', # different count, probably different Unicode version?
+  'pcre2/jit',
+  'python/regex',
+  'rust/regexold',
+]
+analysis = '''
+This benchmark uses an ASCII word boundary to find all 9 letter words that
+occur at the beginning of a line, while capturing the first 8 letters and last
+letter separately. Mostly this is meant to serve as an interesting comparison
+point to to `word-boundary-russian`, which is Unicode aware.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "word-boundary-russian"
+regex = '^(\S{8})(\S)\b'
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 873
+engines = [
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'pcre2/jit',
+  'python/regex',
+  'rust/regexold',
+]
+analysis = '''
+This is the same as the English counterpart, but enables Unicode mode and thus
+uses Unicode-aware word boundaries. This demonstrates that the one-pass DFA
+works with Unicode word boundaries on non-ASCII text. (It is the only DFA in
+the regex crate that can do so.)
+'''

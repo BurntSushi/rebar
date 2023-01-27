@@ -1,0 +1,28 @@
+[package]
+name = "main"
+version = "1.7.1"
+edition = "2021"
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+[dependencies]
+anyhow = "1.0.69"
+bstr = { version = "1.2.0", default-features = false, features = ["std"] }
+lexopt = "0.3.0"
+# We pin this to the version of the regex crate that was released before its
+# major overhaul.
+regex = "=1.7.1"
+
+[dependencies.klv]
+path = "../../../shared/klv"
+[dependencies.regexredux]
+path = "../../../shared/regexredux"
+[dependencies.timer]
+path = "../../../shared/timer"
+
+[profile.release]
+debug = true
+codegen-units = 1
+lto = "thin"

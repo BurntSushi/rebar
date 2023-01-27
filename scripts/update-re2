@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# This script downloads a specific release of re2, extracts it and copies the
+# necessary files to $dest. The actual compilation of RE2 happens in build.rs.
+# Note that a new release of RE2 may require more changes than simply updating
+# the version. Namely, we exhaustively enumerate the files that need to be
+# copied below. This way, we only vendor into source control what is actually
+# necessary for building RE2.
+
+dest="engines/re2/upstream"
+version="2023-03-01"
+dir="re2-$version"
+archive="$dir.tar.gz"
+url="https://github.com/google/re2/archive/refs/tags/$version.tar.gz"
+work="tmp/updates/re2-$version"
+
+mkdir -p "$work"
+curl -L "$url" > "$work/$archive"
+(cd "$work" && tar xf "$archive")
+
+upstream="$work/$dir"
+rm -rf "$dest"/{re2,util}
+mkdir -p "$dest"/{re2,util}
+
+needed_re2=(
+  bitmap256.cc
+  bitmap256.h
+  bitstate.cc
+  compile.cc
+  dfa.cc
+  filtered_re2.cc
+  mimics_pcre.cc
+  nfa.cc
+  onepass.cc
+  parse.cc
+  perl_groups.cc
+  pod_array.h
+  prefilter.cc
+  prefilter.h
+  prefilter_tree.cc
+  prefilter_tree.h
+  prog.cc
+  prog.h
+  re2.cc
+  regexp.cc
+  regexp.h
+  set.cc
+  simplify.cc
+  sparse_array.h
+  sparse_set.h
+  stringpiece.cc
+  tostring.cc
+  unicode_casefold.cc
+  unicode_casefold.h
+  unicode_groups.cc
+  unicode_groups.h
+  walker-inl.h
+
+  filtered_re2.h
+  re2.h
+  set.h
+  stringpiece.h
+)
+needed_util=(
+  logging.h
+  mix.h
+  mutex.h
+  rune.cc
+  strutil.cc
+  strutil.h
+  utf.h
+  util.h
+)
+for name in "${needed_re2[@]}"; do
+  cp "$upstream/re2/$name" "$dest/re2/"
+done
+for name in "${needed_util[@]}"; do
+  cp "$upstream/util/$name" "$dest/util/"
+done
+echo "pub(crate) const VERSION: &str = \"$version\";" > "$dest"/../version.rs

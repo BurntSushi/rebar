@@ -1,0 +1,94 @@
+analysis = '''
+The regex benchmarked here comes from the [Ruff project][ruff], which is a
+Python linter written in Rust. The project uses many regexes, but [we pluck
+one out in particular][noqa] that is likely to be run more frequently than the
+others:
+
+```
+(\s*)((?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)
+```
+
+This is a regex that looks for `# noqa` annotations on each line. The `noqa`
+annotation generally causes the linter to ignore those lines with respect to
+warnings it emits. The regex also tries to extract annotations following the
+`noqa` that permit ignoring only specific rules in the linter.
+
+This benchmark has a few interesting characteristics worth pointing out:
+
+* It is line oriented, which means the haystacks it searches are likely to be
+small. This in turn means that the overhead of the regex engine is likely to
+matter more than in throughput oriented benchmarks.
+* On this particular haystack (the CPython source code), the number of matches
+is quite small. Therefore, it is quite beneficial here to be able to have a
+fast path to say "there is no match" without doing any extra work. While the
+number of matches here is perhaps uncharacteristically small for a Python
+project, you would generally expect _most_ lines to not have `# noqa` in them,
+and so the presumption of a fast rejection is probably a decent assumption for
+this particular regex.
+* Ruff uses capturing groups to pick out parts of the match, so when a match
+is found, the regex engine needs to report additional information beyond just
+the overall match spans. The spans of each matching capture group also need
+to be reported.
+* There are no prefix (or suffix) literals in the regex to enable any
+straight-forward prefilter optimizations.
+
+With respect to the point about no prefix or suffix literals, we also include
+a tweaked version of the regex that removes the leading `(\s*)`:
+
+```
+(?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?
+```
+
+In this case, the regex now starts with a literal, albeit one that is asked
+to match case insensitively. We can actually see pretty clearly the impact
+the tweaked version has on the speed for each regex engine. `pcre2/jit`, for
+example, improves its throughput from around 500 MB/s to 1.5 GB/s. `go/regexp`
+has an even more dramatic (relatively speaking) improvement.
+
+`rust/regex` is a little different in that it's quite fast in both cases.
+The key optimization that applies for `rust/regex` is the "reverse inner"
+optimization. Even in the original regex, `rust/regex` will pluck out the `#
+noqa` literal and search for it case insensitively. When a candidate is found,
+it then searches for `(\s*)` in reverse to find the start position, and then
+finally does a standard forward search from that point to find the reverse
+position.
+
+[ruff]: https://github.com/charliermarsh/ruff
+[noqa]: https://github.com/charliermarsh/ruff/blob/5c987874c48e6ed5d0ef7f9a09c4cb1940bd4018/crates/ruff/src/noqa.rs#L22
+'''
+
+[[bench]]
+model = 'grep-captures'
+name = 'real'
+regex = '(\s*)((?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)'
+haystack = { path = 'wild/cpython-226484e4.py' }
+count = 84
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = 'grep-captures'
+name = 'tweaked'
+regex = '(?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?'
+haystack = { path = 'wild/cpython-226484e4.py' }
+count = 44
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]

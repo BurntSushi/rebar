@@ -1,0 +1,372 @@
+# This benchmark seems to have originated from John Maddock as part of
+# measuring the performance of boost's regex engine[1]. It was then adapted[2]
+# by Zoltan Herczeg to benchmark sljit[3], the JIT backend for PCRE and PCRE2.
+# The benchmark was then further adapted by the Rust Leipzig User Group[4]. The
+# last iteration is the one we use here.
+#
+# As alluded to in the benchmark methodology, and as demonstrated in the runner
+# program[5], the benchmark is of the "find all matches" variety. That is, it
+# is not line oriented. It loads the entire haystack into memory and then finds
+# all matches.
+#
+# As appears to be a pattern in regex benchmarks, this one also does not
+# compare apples-to-apples. It goes out of its way, for example, to disable
+# Unicode mode for RE2[6], but does not do the same for the regex crate. PCRE2
+# also has Unicode mode disabled (which is the default). Anyway, we disable
+# Unicode for almost all benchmarks, since this is a predominantly ASCII. There
+# are a couple benchmarks that make use of Unicode features, and for those, we
+# enable Unicode for all regex engines.
+#
+# [1]: https://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html
+# [2]: https://zherczeg.github.io/sljit/regex_perf.html
+# [3]: https://github.com/zherczeg/sljit/
+# [4]: https://github.com/rust-leipzig/regex-performance
+# [5]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/main.c
+# [6]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/re2.cpp#L13
+# [7]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/rust/src/lib.rs#L17-L20
+
+[[bench]]
+model = "count-spans"
+name = "twain"
+regex = 'Twain'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 4055
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "twain-insensitive"
+regex = 'Twain'
+case-insensitive = true
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 4825
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "shing"
+regex = '[a-z]shing'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 9240
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "huck-saw"
+regex = 'Huck[a-zA-Z]+|Saw[a-zA-Z]+'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 1819
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "word-ending-nn"
+regex = '\b\w+nn\b'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 1105
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "certain-long-strings-ending-x"
+regex = '[a-q][^u-z]{13}x'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 61_410
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "tom-sawyer-huckle-finn"
+regex = 'Tom|Sawyer|Huckleberry|Finn'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 8878
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "tom-sawyer-huckle-fin-insensitive"
+regex = 'Tom|Sawyer|Huckleberry|Finn'
+case-insensitive = true
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 13_668
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "tom-sawyer-huckle-fin-prefix-short"
+regex = '.{0,2}(Tom|Sawyer|Huckleberry|Finn)'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 13_024
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "tom-sawyer-huckle-fin-prefix-long"
+regex = '.{2,4}(Tom|Sawyer|Huckleberry|Finn)'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 14_298
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "tom-river"
+regex = 'Tom.{10,25}river|river.{10,25}Tom'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 37
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "ing"
+regex = '[a-zA-Z]+ing'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 571_241
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "ing-whitespace"
+regex = '\s[a-zA-Z]{0,12}ing\s'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 521_534
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "awyer-inn"
+regex = '([A-Za-z]awyer|[A-Za-z]inn)\s'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 1397
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "quotes-bounded"
+regex = '''["'][^"']{0,30}[?!\.]["']'''
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 160_586
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "non-ascii-alternate"
+regex = '∞|✓'
+haystack = { path = "imported/leipzig-3200.txt" }
+unicode = true
+count = 6
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "math-symbols"
+regex = '\p{Sm}'
+haystack = { path = "imported/leipzig-3200.txt" }
+unicode = true
+count = 71
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  # 'regress', # does not support \p{Sm}
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  # 'python/re', # does not support \p{Sm}
+  'python/regex',
+]
+
+[[bench]]
+model = "count-spans"
+name = "bounded-strings-ending-z"
+regex = '(.*?,){13}z'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 0
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]

@@ -1,0 +1,44 @@
+[package]
+name = "main"
+version = "0.6.28"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+[patch.crates-io]
+aho-corasick = { path = "/home/andrew/rust/aho-corasick" }
+regex-automata = { path = "/home/andrew/rust/regex-automata" }
+regex-syntax = { path = "/home/andrew/rust/regex/regex-syntax" }
+
+[dependencies]
+anyhow = "1.0.69"
+lexopt = "0.3.0"
+# We use this just for turning ASTs and HIRs into regex matching machines in
+# order to perform the verification step after "compiling" to an AST or HIR.
+regex-automata = { version = "0.2", features = ["logging"] }
+# We use an '=' here to force a specific version. It is okay to update it,
+# but if you do, change the version of this Cargo package as well. This way,
+# the version of the runner matches the version of engine, which makes it
+# convenient to get the version number.
+#
+# Is this really the best way to do this? The main constraint here is that we
+# want "got a version number" to mean "can run the engine." So for example,
+# parsing the Cargo.lock file would be inappropriate as that doesn't mean the
+# engine is available to run. Otherwise, it would be fine to just rely on
+# 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
+regex-syntax = "=0.6.28"
+
+[dependencies.klv]
+path = "../../../shared/klv"
+[dependencies.regexredux]
+path = "../../../shared/regexredux"
+[dependencies.timer]
+path = "../../../shared/timer"
+
+[profile.release]
+debug = true
+codegen-units = 1
+lto = "thin"

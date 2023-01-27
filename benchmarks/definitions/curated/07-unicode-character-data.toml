@@ -1,0 +1,62 @@
+analysis = '''
+This regex parses data from `UnicodeData.txt`, which is part of the [Unicode
+Character Database][ucd]. This regex was [extracted from the `ucd-parse`
+crate][ucd-parse-regex], which is part of the [ucd-generate] project.
+
+This benchmark works by iterating over every line in the haystack and then
+running the regex on each line. Every line matches the regex, so regex engines
+that attempt to do some extra work to reject non-matches quickly will get
+penalized. For example, `rust/regex` looks for a semi-colon first via its
+"reverse inner" optimization, since a semi-colon is a required part of the
+regex. But this optimization is just extra work here. Indeed, disabling it will
+improve the thoughput of `rust/regex` on this benchmark.
+
+`pcre2/jit` does remarkably well here, and these types of regexes are one of
+the many things that `pcre2/jit` does quickly compared to most other regex
+engines.
+
+We also include compilation time for this regex, where PCRE2 again does quite
+well.
+
+[ucd]: https://unicode.org/ucd/
+[ucd-generate]: https://github.com/BurntSushi/ucd-generate
+[ucd-parse-regex]: https://github.com/BurntSushi/ucd-generate/blob/47ae5cbe739d46d3d2eed75e1326d9814d940c3f/ucd-parse/src/unicode_data.rs#L103-L124
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "parse-line"
+regex = { path = "wild/ucd-parse.txt" }
+haystack = { path = "wild/UnicodeData-15.0.0.txt" }
+count = 558_784
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "compile"
+name = "compile"
+regex = { path = "wild/ucd-parse.txt" }
+haystack = '249D;PARENTHESIZED LATIN SMALL LETTER B;So;0;L;<compat> 0028 0062 0029;;;;N;;;;;'
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]

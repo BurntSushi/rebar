@@ -1,0 +1,88 @@
+analysis = '''
+These benchmarks come from a [task that converts unstructured log data to
+structured JSON data][OpatrilPeter description]. It works by iterating over
+every line in the log file and parsing various parts of each line into
+different sections using capture groups. The regex matches every line, so any
+fast logic design to reject non-matches will generally penalize regex engines
+here.
+
+The original regex looks like this:
+
+```
+(?x)
+^
+(?P<timestamp>[^\ ]+\ [^\ ]+)
+
+[\ ](?P<level>[DIWEF])[1234]:[\ ]
+
+(?P<header>
+    (?:
+        (?:
+            \[ [^\]]*? \] | \( [^\)]*? \)
+        ):[\ ]
+    )*
+)
+
+(?P<body>.*?)
+
+[\ ]\{(?P<location>[^\}]*)\}
+$
+```
+
+(The actual regex is flattened since not all engines support verbose mode. We
+also remove the names from each capture group.)
+
+`pcre2/jit` does _really_ well here. I'm not personally familiar with how
+PCRE2's JIT works, but if I had to guess, I'd say there are some clever
+optimizations with respect to the `[^ ]+` (and similar) sub-expressions in this
+regex.
+
+Otherwise, the backtracking engines generally outperform the automata engines
+in this benchmark. Interestingly, all of `re2`, `go/regexp` and `rust/regex`
+principally use their own bounded backtracking algorithms. But it looks like
+"proper" backtrackers tend to be better optimized than the ones found in RE2
+and its descendants. (Bounded backtracking does have to pay for checking that
+no combination of haystack position and NFA state is visited more than once,
+but even removing that check does not bring, e.g., `rust/regex` up to speeds
+similar to other backtrackers.)
+
+[OpatrilPeter description]: https://github.com/rust-lang/regex/discussions/960#discussioncomment-5106322
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "extract"
+regex = { path = "wild/unstructured-to-json.txt" }
+haystack = { path = "wild/unstructured-to-json.log" }
+count = 600
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "compile"
+name = "compile"
+regex = { path = "wild/unstructured-to-json.txt" }
+haystack = '''2022/06/17 06:25:22 I4: [17936:140245395805952:(17998)]: (8fb074fc-c766-498b-b224-8b660126b2c0): Searching for query 'dummy query' {/src/master/mastersearchattrs.cc:MasterSearchAttributes():40}'''
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]

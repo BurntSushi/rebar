@@ -1,0 +1,84 @@
+analysis = '''
+These benchmarks demonstrate the "bounded backtracking" optimization. This
+optimization actually causes the regex crate, which is principally based
+on finite automata, to use backtracking! It turns out the backtracking can
+actually be quite fast in a lot of cases. Of course, its main problem is that
+its worst case time complexity is exponential, and it can be difficult to
+predict when exactly it will hit that worst case.
+
+The regex crate mitigates the worst case by placing a bound on how much
+backtracking can occur. Namely, it ensures that every byte in the haystack
+is visited at most once by each NFA state. It does this by keeping track of
+which combinations have been visited via a bitset. Thus, bounding backtracking
+in this way requires `O(m*n)` space, where `m ~ len(regex)` and `n ~
+len(haystack)`. Since either (or both) regex and haystack can get quite large,
+the backtracking optimization is only used when `len(regex) * len(pattern)` is
+below some heuristic limit.
+
+This limit is in part why we use the `grep-captures` model. Namely, it ensures
+the actual haystack that gets searched is quite small by capping it to the
+length of a line, while still reflecting a real world use case.
+
+We are also careful to:
+
+1. Use a somewhat small regex, especially with Unicode enabled, or else it's
+likely to go over the limits and thus disable the backtracking optimization.
+2. Ensure the regex is not one-pass, or else we'll be measuring that
+optimization instead of backtracking.
+3. Benchmark the backtracking engine directly, to ensure it can be succesfully
+used without hitting any limits. Otherwise, the meta regex engine will
+transparently use another engine (probably the PikeVM).
+4) In the Unicode Russian benchmark below, we use a Unicode-aware word boundary
+which inhibits the use of a DFA and means the backtracking optimization is even
+more critical.
+
+Overall the backtracker usually edges out the PikeVM by about 2x or so. It's
+not earth shattering, but it does help in a lot of cases.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "words-english"
+regex = '\b(?:(\w{6})|(\w{5}))\b'
+haystack = { path = "opensubtitles/en-huge.txt" }
+count = 40_536
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'python/re',
+]
+analysis = '''
+This just looks for words of length 6 or 5. Everything here is just ASCII
+aware.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "words-russian"
+regex = '\b(?:([\w&&\p{Cyrillic}]{6})|([\w&&\p{Cyrillic}]{5}))\b'
+unicode = true
+haystack = { path = "opensubtitles/ru-huge.txt" }
+count = 27_996
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'python/regex',
+]
+analysis = '''
+Like `words-english`, but makes everything Unicode aware. We also limit our
+word characters to those that are also Cyrillic given that our haystack is
+mostly written in a Cyrillic script.
+
+Sadly very few regex engines support things like `[\w&&\p{Cyrillic}]`,
+yet, that syntax is incredibly useful for situations like this. Namely,
+`[\w&&\p{Cyrillic}]` is far smaller than `\w`, by about an order of magnitude.
+And we just don't need the full `\w` here. Just the subset that is Cyrillic.
+'''

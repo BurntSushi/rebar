@@ -1,0 +1,56 @@
+analysis = '''
+These benchmarks test an optimization only present in full DFAs where some
+states get "accelerated." Namely, this happens when a state has only a few
+transitions that leave the state and where all other transitions point back to
+the same state. When this happens, fast vectorized routines like `memchr` can
+be used to look for just the outgoing transitions because otherwise the search
+will just stay in the same state.
+
+This optimization only applies when full DFAs are used because it requires
+knowing ahead of the time the full set of transitions for a state. Since things
+like the lazy DFA compute their transitions lazily, this technique can't
+(easily) be applied there. Since building full DFAs is extremely expensive, it
+is only done for very small regexes. Therefore, this optimization is somewhat
+limited in scope.
+'''
+
+[[bench]]
+model = "grep"
+name = "whole-line"
+regex = '(?m)^.*$'
+haystack = { path = "rust-src-tools-3b0d4813.txt" }
+count = 239_963
+engines = [
+  'rust/regex/meta',
+  'rust/regex/dense',
+  're2',
+  'pcre2/jit',
+]
+analysis = '''
+This just tries to match an entire line with line anchors. The DFA sees that
+`.` can't match `\n` but otherwise will match everything. So the DFA will pass
+`\n` to `memchr` to quickly find the end of the line.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "non-dna"
+regex = '>[^\n]*\n|\n'
+haystack = { path = "imported/regex-redux-100000.fasta" }
+count = 16_745
+engines = [
+  'rust/regex/meta',
+  'rust/regex/dense',
+  're2',
+  'pcre2/jit',
+]
+analysis = '''
+This regex was taken from the `regex-redux` benchmark. It is used at the
+beginning of that benchmark to remove all line terminators and lines beginning
+with `>`. The result is a flattened string of nucleotides.
+
+The DFA is able to accelerate the `[^\n]*\n` construction by feeding `\n` and
+`>` to `memchr2`. It does the same for the reverse DFA. Why `>`? Well, this is
+an unanchored regex, so if the regex stumbles on a `>`, then that could start a
+new match. So that transitions to some other state in the DFA.
+'''

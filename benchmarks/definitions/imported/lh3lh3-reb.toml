@@ -1,0 +1,90 @@
+# Source: http://lh3lh3.users.sourceforge.net/reb.shtml
+#
+# According to the brief methodology description, this is a line oriented
+# benchmark. That is, it proceeds by reading the input line-by-line and
+# printing lines that match. So it doesn't measure the time for finding all
+# matches, but rather, all matching lines. This is why we use the 'grep'
+# benchmark type here.
+#
+# Note that the haystack contains invalid UTF-8. Many regex engines can handle
+# this, but some cannot (such as 'regress').
+#
+# It's also consistent with the benchmark programs itself, e.g.,
+# https://sourceforge.net/p/klib/code/HEAD/tree/trunk/reb/re2/test.cc
+
+[[bench]]
+model = "grep"
+name = "uri"
+regex = '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?'
+haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+case-insensitive = false
+count = 17_549
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  # 'regress', # doesn't support non-UTF-8 haystacks
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "grep"
+name = "email"
+regex = '([^ @]+)@([^ @]+)'
+haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+count = 15_057
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  # 'regress', # doesn't support non-UTF-8 haystacks
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "grep"
+name = "date"
+regex = '([0-9][0-9]?)/([0-9][0-9]?)/([0-9][0-9]([0-9][0-9])?)'
+haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+count = 668
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  # 'regress', # doesn't support non-UTF-8 haystacks
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]
+
+[[bench]]
+model = "grep"
+name = "uri-or-email"
+regex = '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?|([^ @]+)@([^ @]+)'
+haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+count = 32_539
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  # 'regress', # doesn't support non-UTF-8 haystacks
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]

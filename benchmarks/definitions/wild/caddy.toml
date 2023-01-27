@@ -1,0 +1,18 @@
+[[bench]]
+model = "count-captures"
+name = "caddy"
+regex = '^([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z)\t(\w+)\t(\w+)\t([^\t]+)(?:\t(.+))?$'
+haystack = """2022-07-27T00:18:48Z\tinfo\ttls\tcleaning storage unit\t{"description": "FileStorage:/root/.local/share/caddy"}"""
+count = 6
+engines = [
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2/jit',
+  'pcre2',
+  'python/re',
+  'python/regex',
+]

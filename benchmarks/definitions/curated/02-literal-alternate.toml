@@ -1,0 +1,166 @@
+analysis = '''
+This group is like `literal`, but expands the complexity from a simple literal
+to a small alternation of simple literals, including case insensitive variants
+where applicable. Once again, we do this across three languages: English,
+Russian and Chinese. We disable Unicode mode for English but enable it for
+Russian and Chinese. Enabling Unicode here generally only means that case
+insensitivity takes Unicode case folding rules into account.
+
+This benchmark ups the ante when it comes to literal optimizations. Namely,
+for a regex engine to optimize this case, it generally needs to be capable of
+reasoning about literal optimizations that require one or more literals from
+a set to match. Many regex engines don't deal with this case well, or at all.
+For example, after a quick scan at comparing the `sherlock-en` benchmark here
+and in the previous `literal` group, one thing that should stand out is the
+proportion of regex engines that now measure throughput in MB/s instead of
+GB/s.
+
+One of the difficulties in optimizing for this case is that multiple substring
+search is difficult to do in a way that is fast. In particular, this benchmark
+carefully selected each alternation literal to start with a different character
+than the other alternation literals. This, for example, inhibits clever regex
+engines from noticing that all literals begin with the same byte (or small
+number of bytes). Consider an alternation like `foo|far|fight`. It is not hard
+to see that a regex engine _could_ just scan for the letter `f` as a prefilter
+optimization. Here, we pick our regex such that this sort of shortcut isn't
+available. For the regex engine to optimize this case, it really needs to deal
+with the problem of multiple substring search.
+
+Multiple substring search _can_ be implemented via a DFA, and perhaps in some
+cases, quite quickly via a [shift DFA]. Beyond that though, multiple substring
+search can be implemented by other various algorithms such as Aho-Corasick or
+Rabin-Karp. (The standard Aho-Corasick formulation is an NFA, but it can also
+be converted to a DFA by pre-computing all failure transitions. This winds up
+with a similar result as using Thompson's construction to produce an NFA and
+then powerset construction to get a DFA, but the Aho-Corasick construction
+algorithm is usually quite a bit faster because it doesn't need to deal with a
+full NFA.)
+
+The problem here is that DFA speeds may or may not help you. For example, in
+the case of RE2 and Rust's regex engine, it will already get DFA speeds by
+virtue of their lazy DFAs. Indeed, in this group, RE2 performs roughly the same
+across all benchmarks. So even if you, say build an Aho-Corasick DFA, it's not
+going to help much if at all. So it makes sense to avoid it.
+
+But Rust's regex crate has quite a bit higher throughputs than RE2 on most of
+the benchmarks in this group. So how is it done? Currently, this is done via
+the [Teddy] algorithm, which was ported out of [Hyperscan]. It is an algorithm
+that makes use of SIMD to accelerate searching for a somewhat small set of
+literals. Most regex engines don't have this sort of optimization, and indeed,
+it seems like Teddy is not particularly well known. Alas, regex engines that
+want to move past typical DFA speeds for multiple substring search likely need
+some kind of vectorized algorithm to do so. (Teddy is also used by Rust's
+regex crate in the previous `literal` group of benchmarks for accelerating
+case insensitive searches. Namely, it enumerates some finite set of prefixes
+like `she`, `SHE`, `ShE` and so on, and then looks for matches of those as a
+prefilter.)
+
+[shift DFA]: https://gist.github.com/pervognsen/218ea17743e1442e59bb60d29b1aa725
+[Teddy]: https://github.com/BurntSushi/aho-corasick/tree/4e7fa3b85dd3a3ce882896f1d4ee22b1f271f0b4/src/packed/teddy
+[Hyperscan]: https://github.com/intel/hyperscan
+'''
+
+[[bench]]
+model = "count"
+name = "sherlock-en"
+regex = 'Sherlock Holmes|John Watson|Irene Adler|Inspector Lestrade|Professor Moriarty'
+haystack = { path = "opensubtitles/en-sampled.txt" }
+count = 714
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-casei-en"
+regex = 'Sherlock Holmes|John Watson|Irene Adler|Inspector Lestrade|Professor Moriarty'
+case-insensitive = true
+haystack = { path = "opensubtitles/en-sampled.txt" }
+count = 725
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-ru"
+regex = 'Шерлок Холмс|Джон Уотсон|Ирен Адлер|инспектор Лестрейд|профессор Мориарти'
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt" }
+count = 899
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-casei-ru"
+regex = 'Шерлок Холмс|Джон Уотсон|Ирен Адлер|инспектор Лестрейд|профессор Мориарти'
+case-insensitive = true
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt" }
+count = 971
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count"
+name = "sherlock-zh"
+regex = '夏洛克·福尔摩斯|约翰华生|阿德勒|雷斯垂德|莫里亚蒂教授'
+unicode = true
+haystack = { path = "opensubtitles/zh-sampled.txt" }
+count = 207
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]

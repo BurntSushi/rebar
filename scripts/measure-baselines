@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# This is a kind of dumb script that records measurements for all engines
+# (or a subset of them if some are given), and records measurements for each
+# engine in their own separate file. It also creates a new directory on each
+# invocation where it writes measurements. That is, running this should never
+# be destructive and overwrite previously recorded measurements.
+#
+# The main reason to put measurements for each engine in their own file is so
+# we can record measurements for engines that don't change as often once, and
+# then record new measurements for a regex engine that's changing while still
+# comparing it against a previous baseline.
+
+verify=
+verbose=
+while true; do
+  case "$1" in
+    --verify)
+      verify=--verify
+      shift
+      ;;
+    --verbose)
+      verbose=--verbose
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $(basename "$0") [--verify] [<engine> ...]"
+      exit 0
+      ;;
+    -*)
+      echo "Usage: $(basename "$0") [--verify] [<engine> ...]"
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+if [ $# = 0 ]; then
+  engines="$(rg 'name = "([^"]+)"' -or'$1' benchmarks/engines.toml | LC_ALL=C sort)"
+else
+  engines="$*"
+fi
+
+stamp="$(date +'%Y-%m-%d')"
+dirpre="tmp/base/$stamp"
+for ((i=1; i<1000; i++)); do
+  dir="$dirpre.$i"
+  if ! [ -d "$dir" ]; then
+    break
+  fi
+done
+if [ -d "$dir" ]; then
+  echo "could not find an available directory" >&2
+  exit 1
+fi
+mkdir -p "$dir"
+for name_with_slashes in $engines; do
+  name="$(echo $name_with_slashes | rg --passthru '/' -r'-')"
+  pat="^(?:$name_with_slashes)$"
+  path="$dir/$name.csv"
+  echo "=== $path ==="
+  if [ -n "$verify" ]; then
+    rebar measure -e "$pat" "$verify" "$verbose"
+  else
+    rebar measure -e "$pat" | tee "$path"
+  fi
+done

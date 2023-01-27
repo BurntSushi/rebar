@@ -1,0 +1,57 @@
+# These benchmarks test the Aho-Corasick algorithm (both an NFA and a DFA) on
+# very large dictionaries.
+
+[[bench]]
+model = "count"
+name = "english"
+regex = { path = "dictionary/english/sorted-by-length.txt", per-line = "pattern" }
+haystack = { path = "opensubtitles/en-medium.txt" }
+count = 15_032
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]
+
+[[bench]]
+model = "count"
+name = "english-tiny"
+regex = { path = "dictionary/english/sorted-by-length.txt", per-line = "pattern" }
+haystack = { path = "opensubtitles/en-tiny.txt" }
+count = 22
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]
+
+[[bench]]
+model = "count"
+name = "english-10"
+regex = { path = "dictionary/english/length-10.txt", per-line = "pattern" }
+haystack = { path = "opensubtitles/en-medium.txt" }
+count = 66
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]
+
+[[bench]]
+model = "count"
+name = "english-15"
+regex = { path = "dictionary/english/length-15.txt", per-line = "pattern" }
+haystack = { path = "opensubtitles/en-medium.txt" }
+count = 1
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]
+
+[[bench]]
+model = "count"
+name = "i787-noword"
+regex = { path = "dictionary/i787.txt", per-line = "pattern" }
+haystack = { path = "github-rustlang-regex-i787.txt" }
+count = 4_861
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]

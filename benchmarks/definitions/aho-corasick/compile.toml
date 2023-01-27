@@ -1,0 +1,36 @@
+# These benchmarks test the compilation time of aho-corasick. They in
+# particular show the start contrast between building an NFA versus a DFA. A
+# DFA tends to take an order of magnitude more time.
+
+[[bench]]
+model = "compile"
+name = "dictionary-english"
+regex = { path = "dictionary/english/sorted-by-length.txt", per-line = "pattern" }
+haystack = "zygotes"
+count = 1
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]
+
+[[bench]]
+model = "compile"
+name = "dictionary-english-10"
+regex = { path = "dictionary/english/length-10.txt", per-line = "pattern" }
+haystack = "Zubeneschamali's"
+count = 1
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]
+
+[[bench]]
+model = "compile"
+name = "dictionary-english-15"
+regex = { path = "dictionary/english/length-15.txt", per-line = "pattern" }
+haystack = "Zubeneschamali's"
+count = 1
+engines = [
+  'rust/aho-corasick/dfa',
+  'rust/aho-corasick/nfa',
+]

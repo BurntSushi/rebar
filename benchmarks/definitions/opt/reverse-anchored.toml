@@ -1,0 +1,26 @@
+analysis = '''
+This benchmark demonstrates that if a regex is anchored at the end, then
+regex-automata's meta engine will do a reverse search starting at the end to
+look for a match. In contrast, lower level regex engines don't know about this
+optimization and just naively scan starting at the beginning.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "word-end"
+regex = '\w$'
+haystack = { contents = "*", repeat = 1_000_000, append = "X" }
+count = 1
+engines = [
+  # Does a reverse anchored search.
+  'rust/regex/meta',
+  # Does not.
+  'rust/regex/hybrid',
+  # Does not.
+  'pcre2/jit',
+  # Does it!
+  're2',
+  # Does not.
+  # See: https://github.com/golang/go/issues/21743
+  'go/regexp',
+]

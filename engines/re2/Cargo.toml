@@ -1,0 +1,29 @@
+[package]
+name = "main"
+version = "0.0.0"
+edition = "2021"
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+[dependencies]
+anyhow = "1.0.69"
+bstr = { version = "1.2.0", default-features = false, features = ["std"] }
+lexopt = "0.3.0"
+libc = "0.2.139"
+
+[dependencies.klv]
+path = "../../shared/klv"
+[dependencies.regexredux]
+path = "../../shared/regexredux"
+[dependencies.timer]
+path = "../../shared/timer"
+
+[build-dependencies]
+cc = { version = "1.0.73", features = ["parallel"] }
+
+[profile.release]
+debug = true
+codegen-units = 1
+lto = "thin"

@@ -1,0 +1,103 @@
+analysis = '''
+This benchmark measures how long it takes for a regex engine to find words in
+a haystack. We compare one regex that finds all words, `\b\w+\b` and another
+regex that only looks for longer words, `\b\w{12,}\b`. We also compare ASCII
+regexes on English text with Unicode regexes on Russian text.
+
+The split between finding all words and finding only long words tends to
+highlight the overhead of matching in each regex engine. Regex engines that are
+quicker to get in and out of its match routine do better at finding all words
+than regex engines that have higher overhead. For example, `regress` is faster
+than `rust/regex` on `all-english`, but substantially slower than `rust/regex`
+on `long-english`. This is likely because `rust/regex` is doing more work per
+search call than `regress`, which is in part rooted in the optimizations it
+performs to gain higher throughput.
+
+Otherwise, `pcre2/jit` does quite well here across the board, but especially on
+the Unicode variants. When comparing it against `rust/regex` for example, it
+is substantially faster. In the case of `rust/regex`, its faster DFA oriented
+engines cannot handle the Unicode aware `\b` on non-ASCII haystacks, and this
+causes `rust/regex` to use a slower internal engine. It's so slow in fact
+that `python/re` and `python/regex` are both faster than `rust/regex` for the
+Unicode benchmarks. For the ASCII `long-english` benchmark, `rust/regex` and
+`re2` both do well because most of the time is spent in its lazy DFA, which has
+pretty good throughput performance when compared to a pure backtracker.
+
+Note that several regex engines can't be used in the Unicode variants because
+either they don't support a Unicode aware `\w` or because they don't support a
+Unicode aware `\b` (or both).
+'''
+
+[[bench]]
+model = "count-spans"
+name = "all-english"
+regex = '\b\w+\b'
+haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
+count = 56_691
+engines = [
+  'rust/regex/meta',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "all-russian"
+regex = '\b\w+\b'
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
+count = 107_391
+engines = [
+  'rust/regex/meta',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+analysis = '''
+`regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
+aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "long-english"
+regex = '\b\w{12,}\b'
+haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
+count = 839
+engines = [
+  'rust/regex/meta',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+
+[[bench]]
+model = "count-spans"
+name = "long-russian"
+regex = '\b\w{12,}\b'
+unicode = true
+haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
+count = 5481
+engines = [
+  'rust/regex/meta',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+analysis = '''
+`regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
+aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
+'''

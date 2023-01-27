@@ -1,0 +1,154 @@
+analysis = '''
+This is a monster regex for extracting dates from unstructured text from
+the [datefinder] project written in Python. The regex itself was taken from
+[printing the `DATES_PATTERN`][datefinder-regex] variable in the `datefinder`
+project. I then removed all names from the capture groups, unnecessary escapes
+and collapsed it to a single line (because not all regex engines support
+verbose mode).
+
+The regex is more akin to a tokenizer, and the `datefinder` library attempts to
+combine these tokens into timestamps.
+
+We measure an ASCII only version of it and a Unicode-aware version of it.
+Unicode is relevant here because of case insensitivity, and because the regex
+makes use of the character classes `\s` and `\d`, which are bigger when they're
+Unicode aware. We also measure the compilation time of each.
+
+The results here can be a little tricky to interpret. Namely, it looks like
+backtrackers tend to do worse than automata oriented regex engines, but
+`go/regexp` uses automata and is itself quite slow here. Notice, though, that
+`hyperscan`, `re2` and `rust/regex` do well here. While I'm less familiar with
+`hyperscan`, the explanation for `re2` and `rust/regex` is obvious once you
+look at a profile: it's the lazy DFA. Both have implementations of a regex
+engine that build a DFA during search time, with at most one new transition
+(and one new state) being create per byte of haystack. In practice, most
+transitions get reused, which means that it tends to act like a real DFA most
+of the time for most regexes on most haystacks.
+
+Compilation time of this monster regex is also all over the place. PCRE2 does
+the best, and Hyperscan winds up being quite slow. Once you enable Unicode
+mode, compilation time generally gets worse, and especially so for `re2` and
+`rust/regex`. In particular, both compile _byte oriented_ automata, which means
+the transitions are defined over bytes and not codepoints. That means large
+Unicode classes like `\d` tend to balloon in size, because they get converted
+into UTF-8 automata.
+
+[datefinder]: https://github.com/akoumjian/datefinder/tree/master
+[datefinder-regex]: https://github.com/akoumjian/datefinder/blob/5376ece0a522c44762b1ab656fc80737b427ed16/datefinder/constants.py#L112-L124
+'''
+
+
+[[bench]]
+model = "count-spans"
+name = "ascii"
+regex = { path = "wild/date.txt" }
+case-insensitive = true
+haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
+count = [
+  { engine = '*', count = 111_817 },
+  { engine = 'hyperscan', count = 547_662 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+analysis = '''
+As with many other benchmarks, Hyperscan reports all matches, even ones that
+are overlapping. This particular regex is too big to analyze closely, but it
+seems plausible one could still use it (possibly with a slightly tweaked regex)
+for this task.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "unicode"
+regex = { path = "wild/date.txt" }
+case-insensitive = true
+unicode = true
+haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
+count = 111_841
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+analysis = '''
+`regress` is included here despite its `\d` and `\s` not being Unicode-aware
+since it seems like Unicode-aware case insensitivity is what matters for this
+particular regex and haystack.
+
+However, neither `re2` nor `go/regexp` are included here despite supposedly
+having the same semantics as `regress`. That is, `\d` and `\s` are not Unicode
+aware, but its case insensitive matching is.
+
+Finally, `hyperscan` is excluded here because the pattern results in a "too
+large" compilation error. As far as I know, Hyperscan doesn't expose any knobs
+for increasing this limit.
+'''
+
+[[bench]]
+model = "compile"
+name = "compile-ascii"
+regex = { path = "wild/date.txt" }
+case-insensitive = true
+haystack = "2010-03-14"
+count = [
+  { engine = '*', count = 5 },
+  { engine = 'hyperscan', count = 10 },
+]
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+]
+analysis = '''
+Notice that `regress` is now include in the ASCII benchmark, because in
+`compile-unicode` we specifically test that the `\d` used in this regex is
+Unicode-aware. `regress` does not make `\d` Unicode-aware, so it gets thrown
+into the ASCII group. But do note that it does appear to have some Unicode
+awareness.
+'''
+
+[[bench]]
+model = "compile"
+name = "compile-unicode"
+regex = { path = "wild/date.txt" }
+case-insensitive = true
+unicode = true
+haystack = "۲۰۱۰-۰۳-۱۴"
+count = 5
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+]
+analysis = '''
+We use "extended arabic-indic digits" to represent the same date, `2010-03-14`,
+that we use for verification in `compile-ascii`. These digits are part of `\d`
+when it is Unicode aware.
+'''
