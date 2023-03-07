@@ -334,6 +334,9 @@ then `contents` must not be. When read from a file, the haystack corresponds
 precisely to the contents of the file, including any leading or trailing
 whitespace. Using `path` is the only way to define a benchmark that contains
 invalid UTF-8 since TOML strings must be valid UTF-8.
+* `utf8-lossy` - When enabled, the haystack is lossily converted to UTF-8.
+Any invalid UTF-8 sequences are replaced with `U+FFFD`, the Unicode replacement
+codepoint, by the substitution of maximal subparts strategy.
 * `trim` - Leading and trailing whitespace is trimmed from the haystack when
 enabled.
 * `line-start` - Ignore all lines before `line-start`, where the first line
