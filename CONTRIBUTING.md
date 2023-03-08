@@ -32,8 +32,9 @@ All benchmarks are defined in TOML files in the
 [`benchmarks/definitions`](./benchmarks/definitions) directory. In
 cases where the regex is too big to fit in a TOML file, they are in the
 [`benchmarks/regexes`](./benchmarks/regexes) directory. Similarly, in cases
-where the haystack is too big to fit in a TOML (which is most of the time),
-they are in the [`benchmarks/haystacks`](./benchmarks/haystacks) directory.
+where the haystack is too big to fit in a TOML file (which is most of the
+time), they are in the [`benchmarks/haystacks`](./benchmarks/haystacks)
+directory.
 
 For more information about how the `benchmarks` directory is structured,
 including a complete description of the supported TOML format, please see
@@ -55,15 +56,15 @@ it wouldn't be duplicative of another benchmark, but in practice there are so
 many benchmarks and determining whether any two actually overlap is actually
 quite difficult.
 
-Either way, the process for submitting a new benchmark should be to first open
-a PR. The PR should include the full benchmark definition so that others can
-checkout your branch and run the benchmark. Ideally, a benchmark will reuse
-an existing haystack, but new ones can be added. We just need to be careful
-not to add too many, as haystacks tend to be large and we don't want to bloat
-the repository.
+Either way, the process for submitting a new benchmark should be to open a PR
+once you've defined your benchmark and successfully collected measurements. The
+PR should include the full benchmark definition so that others can checkout
+your branch and run the benchmark. Ideally, a benchmark will reuse an existing
+haystack, but new ones can be added. We just need to be careful not to add too
+many, as haystacks tend to be large and we don't want to bloat the repository.
 
-The next step is to run your new benchmark and present the results in the PR
-for discussion. We use rebar for both. Let's say you added a new TOML file at
+The run your new benchmark and present the results in the PR,
+you can use rebar. Let's say you added a new TOML file at
 `benchmarks/definitions/wild/my-use-case.toml`. And in it, you defined this
 benchmark:
 
