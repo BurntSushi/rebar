@@ -67,7 +67,7 @@ fn pikevm(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
         input.set_start(0);
         let mut count = 0;
         while let Some(m) = {
-            re.try_search(&mut cache, &input, &mut caps)?;
+            re.search(&mut cache, &input, &mut caps);
             caps.get_match()
         } {
             for i in 0..caps.group_len() {

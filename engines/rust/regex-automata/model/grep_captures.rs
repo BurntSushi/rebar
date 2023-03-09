@@ -75,7 +75,7 @@ fn pikevm(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
         for line in haystack.lines() {
             let mut input = Input::new(line);
             while let Some(m) = {
-                re.try_search(&mut cache, &input, &mut caps)?;
+                re.search(&mut cache, &input, &mut caps);
                 caps.get_match()
             } {
                 for i in 0..caps.group_len() {
