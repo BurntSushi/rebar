@@ -15,8 +15,7 @@ pub(crate) fn run(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
 fn meta(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
     let haystack = &*c.b.haystack;
     let re = new::meta(c)?;
-    let mut cache = re.create_cache();
-    timer::run(&c.b, || Ok(re.find_iter(&mut cache, haystack).count()))
+    timer::run(&c.b, || Ok(re.find_iter(haystack).count()))
 }
 
 fn dense(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {

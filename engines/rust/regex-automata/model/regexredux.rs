@@ -19,10 +19,7 @@ fn meta(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
             .syntax(new::syntax_config(c))
             .configure(Regex::config().utf8(false))
             .build(pattern)?;
-        let mut cache = re.create_cache();
-        let find = move |h: &str| {
-            Ok(re.find(&mut cache, h).map(|m| (m.start(), m.end())))
-        };
+        let find = move |h: &str| Ok(re.find(h).map(|m| (m.start(), m.end())));
         Ok(Box::new(find))
     };
     timer::run(&c.b, || regexredux::generic(haystack, compile))

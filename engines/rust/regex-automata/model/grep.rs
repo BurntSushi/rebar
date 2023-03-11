@@ -18,11 +18,10 @@ pub(crate) fn run(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
 fn meta(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
     let haystack = &*c.b.haystack;
     let re = new::meta(c)?;
-    let mut cache = re.create_cache();
     timer::run(&c.b, || {
         let mut count = 0;
         for line in haystack.lines() {
-            if re.is_match(&mut cache, line) {
+            if re.is_match(line) {
                 count += 1;
             }
         }

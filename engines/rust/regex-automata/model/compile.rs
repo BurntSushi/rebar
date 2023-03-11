@@ -39,8 +39,7 @@ fn meta(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
     timer::run_and_count(
         &c.b,
         |re: regex_automata::meta::Regex| {
-            let mut cache = re.create_cache();
-            Ok(re.find_iter(&mut cache, &c.b.haystack).count())
+            Ok(re.find_iter(&c.b.haystack).count())
         },
         || new::meta(c),
     )

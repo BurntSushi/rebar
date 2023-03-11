@@ -17,13 +17,13 @@ pub(crate) fn run(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
 fn meta(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
     let haystack = &*c.b.haystack;
     let re = new::meta(c)?;
-    let (mut cache, mut caps) = (re.create_cache(), re.create_captures());
+    let mut caps = re.create_captures();
     timer::run(&c.b, || {
         let mut count = 0;
         for line in haystack.lines() {
             let mut input = Input::new(line);
             while let Some(m) = {
-                re.search_captures(&mut cache, &input, &mut caps);
+                re.search_captures(&input, &mut caps);
                 caps.get_match()
             } {
                 for i in 0..caps.group_len() {
