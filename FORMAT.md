@@ -86,13 +86,12 @@ The command table has the following keys:
 * `cwd` - Sets the working directory in which this command is run. If it's
 absent, then the `cwd` set on the engine is used. If that's absent, then the
 working directory of `rebar` is used.
-* `bin` - A string corresponding to the binary name of the program. When absent
-or empty, this defaults to the currently running executable (i.e., `rebar`).
-Note that because of platform idiosyncracies, when `cwd` is set (either here
-or on the engine) and `bin` contains a `/`, then it is assumed to be relative
-path. The final bin used is then `cwd(rebar)/cwd(engine or command)/bin`. If
-the binary name contains no slashes, then it is used as-is and likely relies on
-the value of your environment's `PATH` to be resolved.
+* `bin` - A string corresponding to the binary name of the program. Note that
+because of platform idiosyncracies, when `cwd` is set (either here or on the
+engine) and `bin` contains a `/`, then it is assumed to be relative path. The
+final bin used is then `cwd(rebar)/cwd(engine or command)/bin`. If the binary
+name contains no slashes, then it is used as-is and likely relies on the value
+of your environment's `PATH` to be resolved.
 * `args` - An optional array of arguments to call `bin` with.
 * `envs` - An optional array of environment variables. Each environment
 variable is itself a table, with string keys `name` and `value`.

@@ -326,7 +326,6 @@ impl VersionConfig {
 #[derive(Clone, Debug, Eq, PartialEq, serde::Deserialize)]
 pub struct Command {
     pub cwd: Option<String>,
-    #[serde(default)]
     pub bin: String,
     #[serde(default)]
     pub args: Vec<String>,
@@ -410,9 +409,6 @@ impl Command {
     fn validate(&mut self, cwd: Option<&str>) -> anyhow::Result<()> {
         if self.cwd.is_none() {
             self.cwd = cwd.map(|s| s.to_string());
-        }
-        if self.bin.is_empty() {
-            self.bin = util::current_exe()?;
         }
         Ok(())
     }
