@@ -1,6 +1,6 @@
 [package]
 name = "main"
-version = "0.4.1"
+version = "0.5.0"
 edition = "2021"
 
 [[bin]]
@@ -20,7 +20,7 @@ lexopt = "0.3.0"
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-regress = "=0.4.1"
+regress = "=0.5.0"
 
 [dependencies.klv]
 path = "../../shared/klv"

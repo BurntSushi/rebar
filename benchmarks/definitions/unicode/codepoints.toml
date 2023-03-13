@@ -73,6 +73,11 @@ engines = [
   'pcre2/jit',
   'python/regex',
 ]
+analysis = '''
+The `regress` engine is excluded because it doesn't support `\pL` syntax. It
+*does* support `\p{Letter}`, but none of `re2`, `go/regexp` or `pcre2/jit`
+support `\p{Letter}`.
+'''
 
 # This benchmark looks for exactly the same thing as 'letters-one', except it
 # uses the constituent Unicode properties that make up '\p{Letter}'.
@@ -127,6 +132,28 @@ engines = [
   'rust/regex/meta',
   # 're2', # appears to crap out and reports 0 matches
   # 'go/regexp', # insufficient Unicode property support
+  'pcre2/jit',
+  'python/regex',
+]
+
+[[bench]]
+model = "count"
+name = "contiguous-greek"
+regex = '\p{Greek}+'
+haystack = { path = "unicode/allcodepoints.txt" }
+unicode = true
+count = [
+  { engine = '*', count = 36 },
+  # Perhaps a different version of Unicode?
+  { engine = 'pcre2', count = 38 },
+  { engine = 'pcre2/jit', count = 38 },
+]
+engines = [
+  'rust/regex/meta',
+  'regress',
+  're2',
+  'go/regexp',
+  'pcre2',
   'pcre2/jit',
   'python/regex',
 ]

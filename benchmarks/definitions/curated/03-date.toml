@@ -84,11 +84,13 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'go/regexp',
 ]
 analysis = '''
 `regress` is included here despite its `\d` and `\s` not being Unicode-aware
 since it seems like Unicode-aware case insensitivity is what matters for this
-particular regex and haystack.
+particular regex and haystack. (Which `regress` supports.)
 
 However, neither `re2` nor `go/regexp` are included here despite supposedly
 having the same semantics as `regress`. That is, `\d` and `\s` are not Unicode

@@ -7,9 +7,8 @@ The following decisions are made by this runner program:
 * The `regress` regex API doesn't permit searching anything other than a Rust
 `&str`, which implies the API only supports searching valid UTF-8. Therefore,
 this runner program always returns an error when the haystack is invalid UTF-8.
-* The `regress` API doesn't (at time of writing) have a Unicode mode that can
-be toggled on or off. Instead, the crate implements Unicode features by
-default. (See below for more details.)
+* The `regress` API does have a Unicode mode that can be toggled on or off, but
+it looks like it only currently impacts surface level syntax support.
 
 ## No support for inline flags
 
@@ -34,13 +33,17 @@ Similar to Go's regexp engine, `regress` has support for Unicode mode in some
 aspects but not in others. For example, `.` and `[^a]` match entire codepoints
 instead of individual bytes and case insensitivity is implemented by taking
 Unicode case folding rules into account. Also like Go, though, the classes
-`\w`, `\d` and `\s` are always limited to their ASCII definitions. And also
-like Go, regress has no way of disabling Unicode mode.
+`\w`, `\d` and `\s` are always limited to their ASCII definitions. Unlike
+Go, as of `regress 0.5.0`, there is now a way of disabling Unicode mode. But
+that Unicode mode seems to only impact surface level syntax, for example, by
+rejecting invalid bounded repetition syntax.
 
-One other thing worth mentioning is that even "simple" Unicode character
-classes like `\pL` and `\p{Greek}` are not supported.
+One other thing worth mentioning is that `regress` has some support for Unicode
+character class syntax, but tends to diverge from other regex engines in this
+barometer. For example, `regress` supports `\p{Letter}` but not `\pL`, while
+PCRE2, RE2 and Go's `regexp` package all support `\pL` but not `\p{Letter}`.
 
-(It's likely that some or all of this support is dictated by EcmaScript, but
+(It's likely that some or all of this support is dictated by ECMAScript, but
 I didn't spend the time to dig into that.)
 
 [regress]: https://github.com/ridiculousfish/regress

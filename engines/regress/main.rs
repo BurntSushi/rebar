@@ -155,5 +155,6 @@ fn flags(b: &klv::Benchmark) -> Flags {
         multiline: false,
         dot_all: false,
         no_opt: false,
+        unicode: b.regex.unicode,
     }
 }
