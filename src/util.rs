@@ -309,14 +309,14 @@ pub fn output(cmd: &mut std::process::Command) -> anyhow::Result<BString> {
     if out.status.success() {
         if !out.stderr.is_empty() {
             log::debug!(
-                "success, but stderr is not empty: {:?}",
+                "success, but stderr is not empty: {}",
                 out.stderr.as_bstr()
             );
         }
         return Ok(BString::from(out.stdout));
     }
     log::debug!("command failed, exit status: {:?}", out.status);
-    log::debug!("stderr: {:?}", out.stderr.as_bstr());
+    log::debug!("stderr: {}", out.stderr.as_bstr());
     anyhow::ensure!(
         !out.stderr.is_empty(),
         "command failed with {:?} but stderr is empty",

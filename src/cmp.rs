@@ -175,7 +175,7 @@ impl Config {
                 Arg::Value(v) => c.csv_paths.push(PathBuf::from(v)),
                 Arg::Short('h') => anyhow::bail!("{}", usage_short()),
                 Arg::Long("help") => anyhow::bail!("{}", usage_long()),
-                Arg::Short('c') | Arg::Long("color") => {
+                Arg::Long("color") => {
                     c.color = args::parse(p, "-c/--color")?;
                 }
                 Arg::Short('e') | Arg::Long("engine") => {

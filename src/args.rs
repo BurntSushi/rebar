@@ -55,7 +55,7 @@ where
 }
 
 /// This defines a flag for controlling the use of color in the output.
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Color {
     /// Color is only enabled when the output is a tty.
     Auto,
@@ -67,7 +67,7 @@ pub enum Color {
 
 impl Color {
     pub const USAGE: Usage = Usage::new(
-        "-c, --color <mode>",
+        "--color <mode>",
         "One of: auto, always, never.",
         r#"
 Whether to use color (default: auto).
@@ -88,6 +88,17 @@ colorized. The choices are: auto, always, never.
             Box::new(Ansi::new(std::io::stdout()))
         } else {
             Box::new(NoColor::new(std::io::stdout()))
+        }
+    }
+
+    /// Return a possibly colorized stderr.
+    pub fn stderr(&self) -> Box<dyn termcolor::WriteColor> {
+        use termcolor::{Ansi, NoColor};
+
+        if self.should_color() {
+            Box::new(Ansi::new(std::io::stderr()))
+        } else {
+            Box::new(NoColor::new(std::io::stderr()))
         }
     }
 
