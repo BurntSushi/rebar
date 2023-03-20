@@ -153,3 +153,106 @@ comment. That should make the benchmark and its results easier to review.
 ## Adding a new regex engine
 
 TODO. See the [`engines`](./engines/) directory for existing examples.
+
+Adding a new regex engine to this barometer generally requires doing the
+following things:
+
+1. Making a case for why the regex engine should be included.
+2. Writing a program that accepts benchmark executions in the [KLV](KLV.md)
+format on stdin, executes the indicated benchmark model repeatedly, and prints
+timings and verification details for each execution.
+3. Add the regex engine to existing benchmark definitions, and consider
+whether new benchmarks should be added to account for the new regex engine.
+
+The criteria for (1) are currently not so clear at the moment. On the one hand,
+we shouldn't accept literally every regex engine. On the other hand, as long
+as the maintenance burden for the engine is low and it has a sensible build
+process, there shouldn't be much harm. For now, if the regex engine is actually
+used by people in production _or_ has some particularly interesting property,
+then I think it's probably fair game to include it. With that said, it does
+need to have a sensible build process. I reserve the right to remove it in the
+future if its build process causes too much pain.
+
+### Build dependencies
+
+In general, it is okay for a regex engine to fail to build. Some regex engines,
+like `python/re` for example, won't build if `python` isn't available. This
+means `python` is a build (and runtime in this case) dependency of this
+barometer. But the barometer can function just fine when some of its regex
+engines can't be built.
+
+The dependencies for a regex engine _must_ be reasonable. The dependencies
+should generally be installable via standard package managers. An example of
+an unreasonable dependency would be a specific revision of llvm coupled with
+patches that are included in this repository as part of the build process.
+
+### Concrete steps for adding a new regex engine
+
+The concrete steps to add a new regex engine are split into a few pieces,
+because the steps vary somewhat depending on what you're doing.
+
+#### Initial steps
+
+1. Read through the [engines README](./engines/README.md) to get a high level
+idea of how they work.
+2. Choose whether the runner program will be written in Rust or not. Generally
+speaking, if the regex engine is written in C, C++, Rust or some other language
+that is easy to use from Rust via a C FFI at zero cost, then Rust should be
+used as it eases the maintenance burden of the overall barometer. Otherwise,
+a different language can be used. If you choose Rust, skip next section.
+Otherwise, mush on.
+
+#### For non-Rust runner programs
+
+1. Create a new directory `engines/{regex-engine-name}`. If the regex engine
+has its own unique name (e.g., "RE2" or "PCRE2" or "Hyperscan"), then use that.
+Otherwise, if the regex engine is part of a language's standard library, then
+use the language name. (If the _implementation_ of the language is relevant,
+then the name should include some other disambiguating term.)
+2. There is no mandated structure for what goes in this directory. It just
+needs to be a buildable program, and that program needs to accept [KLV](KLV.md)
+on stdin. It should then collect samples by executing the benchmark repeatedly,
+up to a certain time limit or a number of iterations (which ever is reached
+first). Each sample is just the duration in the number of nanoseconds and a
+single integer "count" corresponding to the output of the benchmark (which
+varies based on the [model](MODELS.md) used). The output format is just
+printing each sample on its own line, with the duration followed by the count,
+separated by a comma. If you need help, consult another non-Rust runner
+program. (I say non-Rust because the non-Rust programs tend to be well isolated
+self-contained programs, where as the Rust programs---because there are many of
+them---tend to have reusable components.)
+3. Skip the next section about Rust runner programs and move on to the section
+about testing and finishing your runner program.
+
+#### For Rust runner programs
+
+If you're adding a new regex engine that is managed through a Rust runner
+program, then some of the bits and bobs you need (such as parsing the KLV
+format and collecting measurements) are already written for you.
+
+#### Testing and finishing your runner program
+
+At this point, you should be able to build your runner program and you feel
+ready to test it.
+
+1. You can test your runner program directly by using `rebar` to produce KLV
+data from any benchmark. For example, `rebar klv curated/08-words/all-english
+--max-time 3s --max-iters 10 | ./engines/go/main` will run the
+`curated/08-words/all-english` benchmark at most 10 times (and up to 3 seconds)
+using the `go` regex engine. Just swap out `./engines/go/main` with the
+executable to your program to test it.
+2. Add a new regex engine entry to
+[`benchmarks/engines.toml`](benchmarks/engines.toml). This makes it available
+as an engine that one can use inside benchmark definitions.
+3. Check that `rebar build <regex-engine-name>` works for your regex engine.
+3. Add your regex engine to the basic benchmark definition `all` in
+[`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml).
+4. Test that everything works by running `rebar measure -f '^test/all$' -e
+go/regexp --verify --verbose`, but with `go/regexp` replaced with the name
+of the regex engine you added to `engines.toml`. You should see output like
+`test/all,go/regexp,count,1.20.1,OK`.
+5. Add the engine to benchmark definitions as appropriate.
+6. Submit a pull request. Ensure that others are able to checkout your PR,
+run `rebar build <name>` and are able to test it by running `rebar measure -e
+<name> --verify --verbose`. **CI must be able to run `rebar build` in its
+entirety successfully.**
