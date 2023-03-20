@@ -84,17 +84,16 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
-  're2',
-  'go/regexp',
 ]
 analysis = '''
-`regress` is included here despite its `\d` and `\s` not being Unicode-aware
-since it seems like Unicode-aware case insensitivity is what matters for this
-particular regex and haystack. (Which `regress` supports.)
+`regress` is included here despite its `\d` not being Unicode-aware (as
+required by ECMAScript). Notably, its `\s` _is_ Unicode aware. (`\w` is too,
+but it's not used in this regex.) In this particular haystack, `\d` being
+ASCII-only doesn't impact the match count.
 
-However, neither `re2` nor `go/regexp` are included here despite supposedly
-having the same semantics as `regress`. That is, `\d` and `\s` are not Unicode
-aware, but its case insensitive matching is.
+However, neither `re2` nor `go/regexp` are included here because neither `\d`
+nor `\s` are Unicode-aware, and the `\s` being ASCII-only does impact the match
+count.
 
 Finally, `hyperscan` is excluded here because the pattern results in a "too
 large" compilation error. As far as I know, Hyperscan doesn't expose any knobs
