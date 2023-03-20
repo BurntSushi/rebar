@@ -13,7 +13,7 @@ Discussion.
 ## Adding a new benchmark
 
 **Summary:** Open a pull request with your new benchmark. If you're adding a
-new curated benchmark that will appear in the README, be prepared to defend
+new _curated_ benchmark that will appear in the README, be prepared to defend
 your submission as it needs to clear a high bar. Your PR comment should include
 the results of running your benchmark, probably by showing the output of a
 `rebar cmp` command.
@@ -63,7 +63,7 @@ your branch and run the benchmark. Ideally, a benchmark will reuse an existing
 haystack, but new ones can be added. We just need to be careful not to add too
 many, as haystacks tend to be large and we don't want to bloat the repository.
 
-The run your new benchmark and present the results in the PR,
+To run your new benchmark and present the results in the PR,
 you can use rebar. Let's say you added a new TOML file at
 `benchmarks/definitions/wild/my-use-case.toml`. And in it, you defined this
 benchmark:
@@ -79,7 +79,6 @@ count = 282
 engines = [
   'rust/regex',
   're2',
-  'go/regexp',
   'pcre2',
   'python/re',
 ]
@@ -111,7 +110,7 @@ true`, or force the haystack to be converted to UTF-8 lossily before taking
 measurements:
 
 ```toml
-haystack = { path = 'wild/cpython-226484e4.py' }
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 ```
 
 Now verification should succeed:
@@ -152,7 +151,15 @@ comment. That should make the benchmark and its results easier to review.
 
 ## Adding a new regex engine
 
-TODO. See the [`engines`](./engines/) directory for existing examples.
+**Summary:** Write a program that accepts the [KLV](KLV.md) format
+on stdin, and prints a CSV of duration and count samples on stdout.
+Put the program in a new directory `engines/<name>`, add an entry for
+it to [`benchmarks/engines.toml`](benchmarks/engines.toml), build
+it with `rebar build <name>` and add it to the `all` definition in
+[`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml). Add it
+to other relevant definitions. Test it with `rebar measure -e <name> --verify
+--verbose`. Finally, submit a PR with rationale for why the regex engine should
+be included.
 
 Adding a new regex engine to this barometer generally requires doing the
 following things:
@@ -221,14 +228,54 @@ separated by a comma. If you need help, consult another non-Rust runner
 program. (I say non-Rust because the non-Rust programs tend to be well isolated
 self-contained programs, where as the Rust programs---because there are many of
 them---tend to have reusable components.)
-3. Skip the next section about Rust runner programs and move on to the section
+3. Your program should be as self-contained as possible and use as little
+(ideally none) dependencies as possible, other than the environment's standard
+library. The runner program requirements are specifically simplistic to
+support this. The only thing that's required is standard I/O, some light string
+parsing and the ability to measure durations to nanosecond precision.
+4. Skip the next section about Rust runner programs and move on to the section
 about testing and finishing your runner program.
 
 #### For Rust runner programs
 
 If you're adding a new regex engine that is managed through a Rust runner
-program, then some of the bits and bobs you need (such as parsing the KLV
-format and collecting measurements) are already written for you.
+program, then some of the bits and bobs you need (such as parsing the
+KLV format and collecting measurements) are already written for you.
+With that said, this means there is a little more setup. When in doubt,
+you can always reference one of the several other Rust runner programs.
+[`engines/re2`](engines/re2) is a good one that shows FFI to a C++
+library, where as [`engines/regress`](engines/regress) shows how to call a
+written-in-Rust regex engine.
+
+1. Create a new directory `engines/{name}`. If the regex engine has its own
+unique name (e.g., "RE2" or "PCRE2" or "Hyperscan"), then use that. Otherwise,
+if the regex engine is part of a language's standard library, then use the
+language name. (If the _implementation_ of the language is relevant, then the
+name should include some other disambiguating term.) Note that you should
+probably not use the `engines/rust` directory. That directory is reserved for
+"Rust's regex crate."
+2. In the directory, run `echo 'fn main() {}' > main.rs` and `cargo init --bin`.
+3. Add `engines/{name}` to the `exclude` array in [`Cargo.toml`](Cargo.toml).
+4. Add `engines/{name}/Cargo.toml` to the array in
+[`.vim/coc-settings.json`](.vim/coc-settings.json).
+5. Edit your `engines/{name}/Cargo.toml` file to look roughly similar to
+[`engines/regress/Cargo.toml`](engines/regress/Cargo.toml). In particular,
+the name of the program, the `[[bin]]` section, and the `dependencies.klv`,
+`dependencies.regexredux` and `dependencies.timer` sections.
+6. You should be able to run `cargo build` in `engines/{name}` and get a
+working program at `target/debug/main`.
+7. Consult the [`engines/regress/main.rs`](engines/regress/main.rs) program
+for how to use the `lexopt`, `anyhow`, `klv`, `regexredux` and `timer`
+dependencies to compose a runner program.
+
+In the likely event that you're trying to add a regex engine that
+_isn't_ written in Rust, you'll need to create an FFI shim. This
+guide won't cover how to do that in detail, but you should be able
+to follow along with the [`engines/pcre2`](engines/pcre2) and
+[`engines/re2`](engines/re2) examples. You'll also want to add a script like
+[`scripts/update-re2`](scripts/update-re2) if it makes sense to vendor the
+regex engine source itself. (If the regex engine is a standalone library with a
+reasonable build process, then it probably does.)
 
 #### Testing and finishing your runner program
 
@@ -243,16 +290,20 @@ using the `go` regex engine. Just swap out `./engines/go/main` with the
 executable to your program to test it.
 2. Add a new regex engine entry to
 [`benchmarks/engines.toml`](benchmarks/engines.toml). This makes it available
-as an engine that one can use inside benchmark definitions.
+as an engine that one can use inside benchmark definitions. See the
+[FORMAT.md](FORMAT.md) document for what kind of things are supported. One
+important bit here is that getting the version number *must* act as a receipt
+that the regex engine has been built and can be run successfully in the current
+environment.
 3. Check that `rebar build <regex-engine-name>` works for your regex engine.
-3. Add your regex engine to the basic benchmark definition `all` in
+4. Add your regex engine to the basic benchmark definition `all` in
 [`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml).
-4. Test that everything works by running `rebar measure -f '^test/all$' -e
+5. Test that everything works by running `rebar measure -f '^test/all$' -e
 go/regexp --verify --verbose`, but with `go/regexp` replaced with the name
 of the regex engine you added to `engines.toml`. You should see output like
 `test/all,go/regexp,count,1.20.1,OK`.
-5. Add the engine to benchmark definitions as appropriate.
-6. Submit a pull request. Ensure that others are able to checkout your PR,
+6. Add the engine to benchmark definitions as appropriate.
+7. Submit a pull request. Ensure that others are able to checkout your PR,
 run `rebar build <name>` and are able to test it by running `rebar measure -e
 <name> --verify --verbose`. **CI must be able to run `rebar build` in its
 entirety successfully.**
