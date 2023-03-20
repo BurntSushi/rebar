@@ -151,11 +151,11 @@ comment. That should make the benchmark and its results easier to review.
 
 ## Adding a new regex engine
 
-**Summary:** Write a program that accepts the [KLV](KLV.md) format
-on stdin, and prints a CSV of duration and count samples on stdout.
-Put the program in a new directory `engines/<name>`, add an entry for
-it to [`benchmarks/engines.toml`](benchmarks/engines.toml), build
-it with `rebar build <name>` and add it to the `all` definition in
+**Summary:** Write a program that accepts the [KLV](KLV.md) format on
+stdin, and prints CSV data consisting of of duration and count samples
+on stdout. Put the program in a new directory `engines/<name>`, add an
+entry for it to [`benchmarks/engines.toml`](benchmarks/engines.toml),
+build it with `rebar build <name>` and add it to the `all` definition in
 [`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml). Add it
 to other relevant definitions. Test it with `rebar measure -e <name> --verify
 --verbose`. Finally, submit a PR with rationale for why the regex engine should
@@ -202,21 +202,21 @@ because the steps vary somewhat depending on what you're doing.
 
 1. Read through the [engines README](./engines/README.md) to get a high level
 idea of how they work.
-2. Choose whether the runner program will be written in Rust or not. Generally
-speaking, if the regex engine is written in C, C++, Rust or some other language
-that is easy to use from Rust via a C FFI at zero cost, then Rust should be
-used as it eases the maintenance burden of the overall barometer. Otherwise,
-a different language can be used. If you choose Rust, skip next section.
-Otherwise, mush on.
-
-#### For non-Rust runner programs
-
-1. Create a new directory `engines/{regex-engine-name}`. If the regex engine
+2. Create a new directory `engines/{regex-engine-name}`. If the regex engine
 has its own unique name (e.g., "RE2" or "PCRE2" or "Hyperscan"), then use that.
 Otherwise, if the regex engine is part of a language's standard library, then
 use the language name. (If the _implementation_ of the language is relevant,
 then the name should include some other disambiguating term.)
-2. There is no mandated structure for what goes in this directory. It just
+3. Choose whether the runner program will be written in Rust or not. Generally
+speaking, if the regex engine is written in C, C++, Rust or some other language
+that is easy to use from Rust via a C FFI at zero cost, then Rust should be
+used as it eases the maintenance burden of the overall barometer. Otherwise,
+a different language can be used. If you choose Rust, skip the next section.
+Otherwise, mush on.
+
+#### For non-Rust runner programs
+
+1. There is no mandated structure for what goes in this directory. It just
 needs to be a buildable program, and that program needs to accept [KLV](KLV.md)
 on stdin. It should then collect samples by executing the benchmark repeatedly,
 up to a certain time limit or a number of iterations (which ever is reached
@@ -228,12 +228,12 @@ separated by a comma. If you need help, consult another non-Rust runner
 program. (I say non-Rust because the non-Rust programs tend to be well isolated
 self-contained programs, where as the Rust programs---because there are many of
 them---tend to have reusable components.)
-3. Your program should be as self-contained as possible and use as little
+2. Your program should be as self-contained as possible and use as little
 (ideally none) dependencies as possible, other than the environment's standard
 library. The runner program requirements are specifically simplistic to
 support this. The only thing that's required is standard I/O, some light string
 parsing and the ability to measure durations to nanosecond precision.
-4. Skip the next section about Rust runner programs and move on to the section
+3. Skip the next section about Rust runner programs and move on to the section
 about testing and finishing your runner program.
 
 #### For Rust runner programs
@@ -247,24 +247,18 @@ you can always reference one of the several other Rust runner programs.
 library, where as [`engines/regress`](engines/regress) shows how to call a
 written-in-Rust regex engine.
 
-1. Create a new directory `engines/{name}`. If the regex engine has its own
-unique name (e.g., "RE2" or "PCRE2" or "Hyperscan"), then use that. Otherwise,
-if the regex engine is part of a language's standard library, then use the
-language name. (If the _implementation_ of the language is relevant, then the
-name should include some other disambiguating term.) Note that you should
-probably not use the `engines/rust` directory. That directory is reserved for
-"Rust's regex crate."
-2. In the directory, run `echo 'fn main() {}' > main.rs` and `cargo init --bin`.
-3. Add `engines/{name}` to the `exclude` array in [`Cargo.toml`](Cargo.toml).
-4. Add `engines/{name}/Cargo.toml` to the array in
+1. In the `engines/{name}` directory you just created, run
+`echo 'fn main() {}' > main.rs` and `cargo init --bin`.
+2. Add `engines/{name}` to the `exclude` array in [`Cargo.toml`](Cargo.toml).
+3. Add `engines/{name}/Cargo.toml` to the array in
 [`.vim/coc-settings.json`](.vim/coc-settings.json).
-5. Edit your `engines/{name}/Cargo.toml` file to look roughly similar to
+4. Edit your `engines/{name}/Cargo.toml` file to look roughly similar to
 [`engines/regress/Cargo.toml`](engines/regress/Cargo.toml). In particular,
 the name of the program, the `[[bin]]` section, and the `dependencies.klv`,
 `dependencies.regexredux` and `dependencies.timer` sections.
-6. You should be able to run `cargo build` in `engines/{name}` and get a
+5. You should be able to run `cargo build` in `engines/{name}` and get a
 working program at `target/debug/main`.
-7. Consult the [`engines/regress/main.rs`](engines/regress/main.rs) program
+6. Consult the [`engines/regress/main.rs`](engines/regress/main.rs) program
 for how to use the `lexopt`, `anyhow`, `klv`, `regexredux` and `timer`
 dependencies to compose a runner program.
 
