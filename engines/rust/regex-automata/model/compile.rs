@@ -7,6 +7,7 @@ pub(crate) fn run(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
         "dense" => dense(c),
         "sparse" => sparse(c),
         "hybrid" => hybrid(c),
+        "backtrack" => backtrack(c),
         "pikevm" => pikevm(c),
         "onepass" => onepass(c),
         _ => unreachable!(),
@@ -72,6 +73,17 @@ fn hybrid(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
             Ok(re.find_iter(&mut cache, &c.b.haystack).count())
         },
         || new::hybrid(c),
+    )
+}
+
+fn backtrack(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
+    timer::run_and_count(
+        &c.b,
+        |re: regex_automata::nfa::thompson::backtrack::BoundedBacktracker| {
+            let mut cache = re.create_cache();
+            Ok(re.try_find_iter(&mut cache, &c.b.haystack).count())
+        },
+        || new::backtrack(c),
     )
 }
 

@@ -29,4 +29,7 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]

@@ -31,9 +31,13 @@ Unicode aware `\b` (or both).
 [[bench]]
 model = "count-spans"
 name = "all-english"
-regex = '\b\w+\b'
+regex = '\b[0-9A-Za-z_]+\b'
 haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
-count = 56_691
+count = [
+  { engine = '*', count = 56_691 },
+  { engine = 'dotnet/compiled', count = 56_601 },
+  { engine = 'dotnet/nobacktrack', count = 56_601 },
+]
 engines = [
   'rust/regex/meta',
   'regress',
@@ -44,7 +48,17 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
+analysis = '''
+We specifically write out `[0-9A-Za-z_]` instead of using `\w` because some
+regex engines, such as the one found in .NET, make `\w` Unicode aware and there
+doesn't appear to be any easy way of disabling it.
+
+Also, the .NET engine makes `\b` Unicode-aware, which also appears impossible
+to disable. To account for that, we permit a different count.
+'''
 
 [[bench]]
 model = "count-spans"
@@ -52,23 +66,32 @@ name = "all-russian"
 regex = '\b\w+\b'
 unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
-count = 107_391
+count = [
+  { engine = '*', count = 107_391 },
+  { engine = 'dotnet/compiled', count = 53_960 },
+  { engine = 'dotnet/nobacktrack', count = 53_960 },
+]
 engines = [
   'rust/regex/meta',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 analysis = '''
 `regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
 aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
+
+For `dotnet/compiled`, since the length of matching spans is in the number of
+UTF-16 code units, its expected count is smaller.
 '''
 
 [[bench]]
 model = "count-spans"
 name = "long-english"
-regex = '\b\w{12,}\b'
+regex = '\b[0-9A-Za-z_]{12,}\b'
 haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
 count = 839
 engines = [
@@ -81,7 +104,17 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
+analysis = '''
+We specifically write out `[0-9A-Za-z_]` instead of using `\w` because some
+regex engines, such as the one found in .NET, make `\w` Unicode aware and there
+doesn't appear to be any easy way of disabling it.
+
+Also, the fact that `\b` is Unicode-aware in .NET does not seem to impact the
+match counts in this benchmark.
+'''
 
 [[bench]]
 model = "count-spans"
@@ -89,15 +122,24 @@ name = "long-russian"
 regex = '\b\w{12,}\b'
 unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
-count = 5481
+count = [
+  { engine = '*', count = 5481 },
+  { engine = 'dotnet/compiled', count = 2747 },
+  { engine = 'dotnet/nobacktrack', count = 2747 },
+]
 engines = [
   'rust/regex/meta',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 analysis = '''
 `regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
 aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
+
+For `dotnet/compiled`, since the length of matching spans is in the number of
+UTF-16 code units, its expected count is smaller.
 '''

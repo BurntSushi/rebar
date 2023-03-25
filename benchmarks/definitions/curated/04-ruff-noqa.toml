@@ -61,7 +61,7 @@ position.
 model = 'grep-captures'
 name = 'real'
 regex = '(\s*)((?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)'
-haystack = { path = 'wild/cpython-226484e4.py' }
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = 84
 engines = [
   'rust/regex/meta',
@@ -73,13 +73,15 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
 model = 'grep-captures'
 name = 'tweaked'
 regex = '(?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?'
-haystack = { path = 'wild/cpython-226484e4.py' }
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = 44
 engines = [
   'rust/regex/meta',
@@ -91,4 +93,6 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]

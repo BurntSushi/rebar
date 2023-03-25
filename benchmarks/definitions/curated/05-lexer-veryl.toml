@@ -84,11 +84,37 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
 ]
 analysis = '''
 Note that we don't include Hyperscan here because it doesn't support the
 `count-captures` benchmark model. It is included in the `multiple` benchmark
 below, which doesn't require capture groups.
+
+Also, I tried to use `dotnet/nobacktrack` here, but it failed because it was
+too big and it wasn't obvious to me how to raise the limit.
+'''
+
+[[bench]]
+model = "compile"
+name = "compile-single"
+regex = { path = "wild/parol-veryl.txt", per-line = "alternate" }
+haystack = 'abcdefg_foobar'
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'dotnet/compiled',
+]
+analysis = '''
+This measures how long it takes to a compile a moderately large lexer.
 '''
 
 [[bench]]

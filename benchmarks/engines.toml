@@ -216,6 +216,69 @@ args = ["build", "--release"]
 bin = "cargo"
 args = ["clean"]
 
+# .NET's default or interpreter regex engine.
+#
+# URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
+[[engine]]
+name = "dotnet"
+cwd = "engines/dotnet"
+[engine.version]
+bin = "bin/Release/net7.0/main"
+args = ["version"]
+[engine.run]
+bin = "bin/Release/net7.0/main"
+args = ["interp"]
+[[engine.build]]
+bin = "dotnet"
+args = ["build", "-c", "Release"]
+[[engine.clean]]
+bin = "dotnet"
+args = ["clean", "-c", "Release"]
+
+# .NET's "compiled" regex engine.
+#
+# This is like the interpreter engine, but sets RegexOptions.Compiled.
+#
+# URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
+[[engine]]
+name = "dotnet/compiled"
+cwd = "engines/dotnet"
+[engine.version]
+bin = "bin/Release/net7.0/main"
+args = ["version"]
+[engine.run]
+bin = "bin/Release/net7.0/main"
+args = ["compiled"]
+[[engine.build]]
+bin = "dotnet"
+args = ["build", "-c", "Release"]
+[[engine.clean]]
+bin = "dotnet"
+args = ["clean", "-c", "Release"]
+
+# .NET's "non-backtracking" regex engine.
+#
+# This is like the interpreter engine, but sets RegexOptions.NonBacktracking.
+#
+# Note that this was introduced in .NET 7.
+#
+# URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
+[[engine]]
+name = "dotnet/nobacktrack"
+cwd = "engines/dotnet"
+[engine.version]
+bin = "bin/Release/net7.0/main"
+args = ["version"]
+[engine.run]
+bin = "bin/Release/net7.0/main"
+args = ["nobacktrack"]
+[[engine.build]]
+bin = "dotnet"
+args = ["build", "-c", "Release"]
+[[engine.clean]]
+bin = "dotnet"
+args = ["clean", "-c", "Release"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and

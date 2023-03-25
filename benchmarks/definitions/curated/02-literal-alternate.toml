@@ -78,6 +78,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -99,6 +101,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -120,6 +124,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -142,6 +148,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -163,4 +171,6 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]

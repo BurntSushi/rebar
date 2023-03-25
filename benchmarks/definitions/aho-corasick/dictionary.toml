@@ -48,7 +48,7 @@ engines = [
 [[bench]]
 model = "count"
 name = "i787-noword"
-regex = { path = "dictionary/i787.txt", per-line = "pattern" }
+regex = { path = "reported/i787-keywords.txt", per-line = "pattern" }
 haystack = { path = "github-rustlang-regex-i787.txt" }
 count = 4_861
 engines = [

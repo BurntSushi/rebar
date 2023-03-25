@@ -13,7 +13,7 @@ dependencies = [
 [[package]]
 name = "aho-corasick"
 version = "0.7.20"
-source = "git+https://github.com/BurntSushi/aho-corasick#e74ed25054d65aae4bd6d648e163c5635e0ce6ab"
+source = "git+https://github.com/BurntSushi/aho-corasick#c88cf359f9c853986d7c182b013f5c6d81af10c3"
 dependencies = [
  "memchr",
 ]
@@ -131,7 +131,7 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "regex"
-version = "1.7.1"
+version = "1.7.2"
 dependencies = [
  "aho-corasick 0.7.20 (git+https://github.com/BurntSushi/aho-corasick)",
  "memchr",
@@ -150,7 +150,7 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.6.28"
+version = "0.6.29"
 
 [[package]]
 name = "regexredux"

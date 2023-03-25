@@ -56,6 +56,7 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
 ]
 
 [[bench]]
@@ -76,6 +77,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -95,6 +98,7 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
 ]
 
 [[bench]]
@@ -115,4 +119,6 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]

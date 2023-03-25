@@ -56,12 +56,14 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
 model = "count"
 name = "letters-ru"
-regex = '\pL{8,13}'
+regex = '\p{L}{8,13}'
 unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 5_000 }
 count = [
@@ -78,6 +80,8 @@ engines = [
   'pcre2/jit',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -100,6 +104,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -122,6 +128,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -141,6 +149,8 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -163,4 +173,6 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]

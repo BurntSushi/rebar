@@ -17,7 +17,7 @@ fn meta(c: &Config) -> anyhow::Result<Vec<timer::Sample>> {
     let compile = |pattern: &str| -> anyhow::Result<regexredux::RegexFn> {
         let re = Regex::builder()
             .syntax(new::syntax_config(c))
-            .configure(Regex::config().utf8(false))
+            .configure(Regex::config().utf8_empty(false))
             .build(pattern)?;
         let find = move |h: &str| Ok(re.find(h).map(|m| (m.start(), m.end())));
         Ok(Box::new(find))

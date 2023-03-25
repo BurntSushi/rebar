@@ -5,7 +5,6 @@ version = 3
 [[package]]
 name = "aho-corasick"
 version = "0.7.20"
-source = "git+https://github.com/BurntSushi/aho-corasick#e74ed25054d65aae4bd6d648e163c5635e0ce6ab"
 dependencies = [
  "memchr",
 ]
@@ -62,6 +61,8 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 [[package]]
 name = "regex"
 version = "1.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48aaa5748ba571fb95cd2c85c09f629215d3a6ece942baa100950af03a34f733"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -70,7 +71,7 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.6.28"
+version = "0.6.29"
 
 [[package]]
 name = "regexredux"
@@ -94,5 +95,5 @@ dependencies = [
 ]
 
 [[patch.unused]]
-name = "aho-corasick"
-version = "0.7.20"
+name = "regex"
+version = "1.7.2"

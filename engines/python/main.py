@@ -248,6 +248,8 @@ def model_grep_captures(c):
         if len(lines) > 0 and len(lines[len(lines)-1]) == 0:
             lines = lines[:len(lines)-1]
         for line in lines:
+            if line.endswith(c.maybe_bytes('\r')):
+                line = line[0:len(line)-1]
             for m in r.finditer(line):
                 # Add 1 to account for implicit capture group.
                 count += 1 + sum(1 for g in m.groups() if g is not None)

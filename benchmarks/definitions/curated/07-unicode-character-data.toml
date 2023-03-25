@@ -40,6 +40,8 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 
 [[bench]]
@@ -59,4 +61,6 @@ engines = [
   'pcre2/jit',
   'python/re',
   'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]

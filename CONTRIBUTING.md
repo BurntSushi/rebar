@@ -290,14 +290,19 @@ important bit here is that getting the version number *must* act as a receipt
 that the regex engine has been built and can be run successfully in the current
 environment.
 3. Check that `rebar build <regex-engine-name>` works for your regex engine.
-4. Add your regex engine to the basic benchmark definition `all` in
-[`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml).
-5. Test that everything works by running `rebar measure -f '^test/all$' -e
+4. Add your regex engine to as many of the benchmark definitions in
+[`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml) as
+possible. If none are appropriate, then please open an issue discussing the
+regex engine and why it should be added.
+5. Test that everything works by running `rebar measure -f '^test/' -e
 go/regexp --verify --verbose`, but with `go/regexp` replaced with the name
 of the regex engine you added to `engines.toml`. You should see output like
-`test/all,go/regexp,count,1.20.1,OK`.
+`test/count,go/regexp,count,1.20.1,OK`.
 6. Add the engine to benchmark definitions as appropriate.
-7. Submit a pull request. Ensure that others are able to checkout your PR,
+7. Add a `engines/{name}/README.md` file explaining some of the choices made
+in your runner program, and include a link to the regex engine. See the README
+files for other engines for examples.
+8. Submit a pull request. Ensure that others are able to checkout your PR,
 run `rebar build <name>` and are able to test it by running `rebar measure -e
 <name> --verify --verbose`. **CI must be able to run `rebar build` in its
 entirety successfully.**

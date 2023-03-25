@@ -1,11 +1,12 @@
 analysis = '''
 This is a collection of benchmarks that are generally meant to test aspects of
-functionality of regex engines, and less to measure how fast they are.
+functionality of regex engines and benchmark model support, and less to measure
+how fast they are.
 '''
 
 [[bench]]
 model = "count"
-name = "all"
+name = "count"
 regex = '[a-z][a-z][a-z][a-z][a-z]'
 haystack = { contents = "then as it was, then again it will be" }
 count = 1
@@ -26,9 +27,168 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
 ]
 analysis = '''
 This benchmark is a way to test the most basic capabilities of probably almost
-any regex engine worth benchmarking. It doesn't even use a bounded repetition
-operator. Just a simple manual repetition with exactly one possible match.
+any regex engine worth benchmarking, and does so via the `count` model. It
+doesn't even use a bounded repetition operator. Just a simple manual repetition
+with exactly one possible match.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "count-spans"
+regex = '[a-z][a-z][a-z][a-z][a-z]'
+haystack = { contents = "then as it was, then again it will be" }
+count = 5
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/meta',
+  'rust/regex/dense',
+  'rust/regex/sparse',
+  'rust/regex/hybrid',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  'pcre2',
+  'pcre2/jit',
+  're2',
+  'go/regexp',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+]
+analysis = '''
+This is like `count`, but uses the `count-spans` model to ensure the count is
+correct.
+'''
+
+[[bench]]
+model = "count-captures"
+name = "count-captures"
+regex = '([a-z][a-z][a-z])([a-z][a-z])([a-z])?'
+haystack = { contents = "then as it was, then again it will be" }
+count = 3
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/meta',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  'pcre2',
+  'pcre2/jit',
+  're2',
+  'go/regexp',
+  'python/re',
+  'python/regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+]
+analysis = '''
+This is like `count`, but uses the `count-captures` model to ensure the runner
+program implements capture groups correctly.
+'''
+
+[[bench]]
+model = "grep"
+name = "grep"
+regex = '[a-z][a-z][a-z]'
+haystack = { contents = "foo foo\nZ\nfoo" }
+count = 2
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/meta',
+  'rust/regex/dense',
+  'rust/regex/sparse',
+  'rust/regex/hybrid',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  'pcre2',
+  'pcre2/jit',
+  're2',
+  'go/regexp',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+]
+analysis = '''
+This is like `count`, but uses the `grep` model to ensure the runner program
+implements line oriented searching correctly. In particular, that the total
+number of matching lines is counted and not the total number of matches.
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "grep-captures"
+regex = '([a-z][a-z])([a-z])([\r\n])?'
+haystack = { contents = "foo foo\r\nZ\r\nfoo\r\nfoo" }
+count = 12
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/meta',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  'pcre2',
+  'pcre2/jit',
+  're2',
+  'go/regexp',
+  'python/re',
+  'python/regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+]
+analysis = '''
+This is like `count`, but uses the `grep-captures` model to ensure the runner
+program implements capture group search in a line oriented way. In particular,
+that all matching capture groups are counted and that each search should behave
+as if the line terminator is not included.
+'''
+
+[[bench]]
+model = "compile"
+name = "compile"
+regex = '[a-z][a-z][a-z][a-z][a-z]'
+haystack = { contents = "then as it was, then again it will be" }
+count = 1
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/meta',
+  'rust/regex/dense',
+  'rust/regex/sparse',
+  'rust/regex/hybrid',
+  'rust/regex/backtrack',
+  'rust/regex/pikevm',
+  'regress',
+  'pcre2',
+  'pcre2/jit',
+  're2',
+  'go/regexp',
+  'python/re',
+  'python/regex',
+  'hyperscan',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+]
+analysis = '''
+This is like `count`, but uses the `compile` model to ensure the count is
+correct.
 '''

@@ -7,7 +7,7 @@ pub(crate) fn meta(c: &Config) -> anyhow::Result<regex_automata::meta::Regex> {
     let config = Regex::config()
         // Disabling UTF-8 here just means that zero-width matches that split
         // a codepoint are allowed.
-        .utf8(false)
+        .utf8_empty(false)
         .nfa_size_limit(Some((1 << 20) * 100));
     let re = Regex::builder()
         .syntax(syntax_config(c))
