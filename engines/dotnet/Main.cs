@@ -388,9 +388,6 @@ agggtaa[cgt]|[acg]ttaccct 43
                 result.AppendLine($"{clen}");
                 result.AppendLine($"{seq.Length}");
                 if (result.ToString() != expected) {
-                    Console.WriteLine(result.ToString());
-                    Console.WriteLine("===========");
-                    Console.WriteLine(expected);
                     throw new Exception("result did not match expected");
                 }
                 return seq.Length;
