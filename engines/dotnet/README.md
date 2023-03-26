@@ -3,13 +3,13 @@ expressions][dotnet-regex].
 
 .NET's regex engine is principally backtracking based, with an option for JIT
 compilation. As of .NET 7, there is also an option to use a non-backtracking
-engine. In total, this results in three total regex engines that this runner
-program can execute: `dotnet`, `dotnet/compiled` and `dotnet/nobacktrack`. In
-general, we only measure the latter two, since it's expected that if one cares
-about performance, then they'll avoid using the pure interpreter based regex
-engine. (.NET also provides generated regexes. In theory, we could measure
-those too, but it would require writing a program to build .NET programs, which
-is perhaps more trouble than it's worth.)
+engine. In total, this results in three regex engines that this runner program
+can execute: `dotnet`, `dotnet/compiled` and `dotnet/nobacktrack`. In general,
+we only measure the latter two, since it's expected that if one cares about
+performance, then they'll avoid using the pure interpreter based regex engine.
+(.NET also provides regexes that compile to C# source code. In theory, we
+could measure those too, but it would require writing a program to build .NET
+programs, which is perhaps more trouble than it's worth.)
 
 This program otherwise makes the following choices:
 

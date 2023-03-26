@@ -108,9 +108,17 @@ start of a match in automata oriented engines.
 
 ## `count-spans`
 
-This model is like `count`, except it returns a sum of the lengths (in bytes)
-of all matches found in a single haystack. The verification step simply
-confirms that the sum matches what is expected.
+This model is like `count`, except it returns a sum of the lengths of all
+matches found in a single haystack. The verification step simply confirms that
+the sum matches what is expected.
+
+The length of a match should ideally be in terms of the number of bytes, but
+it is also permissible to count the number of code units. For example, .NET's
+regex engine can only run on sequences of UTF-16 code units, so using a length
+derived from anything other than UTF-16 code units implies an overhead cost
+that would otherwise be artificial to this benchmark. Benchmark definitions
+will need to account for this by specifying different counts expected for regex
+engines that count something other than individual bytes.
 
 For example, given the regex `[0-9]{2}|[a-z]` and the haystack `12a!!34`, the
 total sum reported should be `len(12) + len(a) + len(34) = 5`.
