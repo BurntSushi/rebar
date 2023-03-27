@@ -787,6 +787,9 @@ performance profile of any specific regex engine or workload.
                 continue;
             }
         }
+        if emeasured.count_search == 0 {
+            continue;
+        }
         write!(wtr, "| ")?;
         // We want to link to the directory containing the runner program
         // for each engine, but this relies on 'cwd' being set in the engine
@@ -822,6 +825,9 @@ performance profile of any specific regex engine or workload.
             if re.is_match(&emeasured.name) {
                 continue;
             }
+        }
+        if emeasured.count_compile == 0 {
+            continue;
         }
         write!(wtr, "| ")?;
         // We want to link to the directory containing the runner program
