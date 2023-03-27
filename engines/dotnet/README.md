@@ -39,4 +39,9 @@ ASCII search and not a full Unicode search.
 In some cases though, we just have to "live" with the fact that certain things
 are Unicode-aware. For example, `\b` in .NET's regex is always Unicode aware.
 
+## Warning
+
+This is the first real .NET program I've ever written. It is probably not
+idiomatic. I'm open to PRs making it more idiomatic or other improvements.
+
 [dotnet-regex]: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
