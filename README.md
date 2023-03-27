@@ -129,7 +129,6 @@ performance profile of any specific regex engine or workload.
 | Engine | Version | Geometric mean of speed ratios | Benchmark count |
 | ------ | ------- | ------------------------------ | --------------- |
 | [pcre2](engines/pcre2) | 10.42 2022-12-11 | 1.00 | 9 |
-| [perl](engines/perl) | 5.36.0 | 1.00 | 0 |
 | [regress](engines/regress) | 0.5.0 | 3.37 | 5 |
 | [pcre2/jit](engines/pcre2) | 10.42 2022-12-11 | 4.68 | 9 |
 | [re2](engines/re2) | 2023-03-01 | 9.51 | 8 |
@@ -225,7 +224,7 @@ or another.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count | 513 |
+| count(`.*`) | 513 |
 
 
 **sherlock-casei-en**
@@ -238,7 +237,7 @@ or another.
 | case-insensitive | `true` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count | 522 |
+| count(`.*`) | 522 |
 
 
 **sherlock-ru**
@@ -251,7 +250,7 @@ or another.
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count | 724 |
+| count(`.*`) | 724 |
 
 
 **sherlock-casei-ru**
@@ -264,7 +263,7 @@ or another.
 | case-insensitive | `true` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count | 746 |
+| count(`.*`) | 746 |
 
 
 **sherlock-zh**
@@ -277,7 +276,7 @@ or another.
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/zh-sampled.txt`](benchmarks/haystacks/opensubtitles/zh-sampled.txt) |
-| count | 30 |
+| count(`.*`) | 30 |
 
 
 </details>
@@ -374,7 +373,7 @@ prefilter.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count | 714 |
+| count(`.*`) | 714 |
 
 
 **sherlock-casei-en**
@@ -387,7 +386,7 @@ prefilter.)
 | case-insensitive | `true` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count | 725 |
+| count(`.*`) | 725 |
 
 
 **sherlock-ru**
@@ -400,7 +399,7 @@ prefilter.)
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count | 899 |
+| count(`.*`) | 899 |
 
 
 **sherlock-casei-ru**
@@ -413,7 +412,7 @@ prefilter.)
 | case-insensitive | `true` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count | 971 |
+| count(`.*`) | 971 |
 
 
 **sherlock-zh**
@@ -426,7 +425,7 @@ prefilter.)
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/zh-sampled.txt`](benchmarks/haystacks/opensubtitles/zh-sampled.txt) |
-| count | 207 |
+| count(`.*`) | 207 |
 
 
 </details>
@@ -499,8 +498,8 @@ into UTF-8 automata.
 | case-insensitive | `true` |
 | unicode | `false` |
 | haystack-path | [`rust-src-tools-3b0d4813.txt`](benchmarks/haystacks/rust-src-tools-3b0d4813.txt) |
-| count(\*) | 111817 |
-| count(hyperscan) | 547662 |
+| count(`hyperscan`) | 547662 |
+| count(`.*`) | 111817 |
 
 As with many other benchmarks, Hyperscan reports all matches, even ones that
 are overlapping. This particular regex is too big to analyze closely, but it
@@ -517,8 +516,8 @@ for this task.
 | case-insensitive | `true` |
 | unicode | `true` |
 | haystack-path | [`rust-src-tools-3b0d4813.txt`](benchmarks/haystacks/rust-src-tools-3b0d4813.txt) |
-| count(\*) | 111841 |
-| count(dotnet/compiled) | 111825 |
+| count(`dotnet/compiled`) | 111825 |
+| count(`.*`) | 111841 |
 
 `regress` is included here despite its `\d` not being Unicode-aware (as
 required by ECMAScript). Notably, its `\s` _is_ Unicode aware. (`\w` is too,
@@ -547,8 +546,8 @@ increasing this limit.
 | case-insensitive | `true` |
 | unicode | `false` |
 | haystack | `2010-03-14` |
-| count(\*) | 5 |
-| count(hyperscan) | 10 |
+| count(`hyperscan`) | 10 |
+| count(`.*`) | 5 |
 
 Notice that `regress` is now include in the ASCII benchmark, because in
 `compile-unicode` we specifically test that the `\d` used in this regex is
@@ -566,7 +565,7 @@ awareness.
 | case-insensitive | `true` |
 | unicode | `true` |
 | haystack | `۲۰۱۰-۰۳-۱۴` |
-| count | 5 |
+| count(`.*`) | 5 |
 
 We use "extended arabic-indic digits" to represent the same date, `2010-03-14`,
 that we use for verification in `compile-ascii`. These digits are part of `\d`
@@ -661,7 +660,7 @@ position.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/cpython-226484e4.py`](benchmarks/haystacks/wild/cpython-226484e4.py) |
-| count | 84 |
+| count(`.*`) | 84 |
 
 
 **tweaked**
@@ -674,7 +673,7 @@ position.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/cpython-226484e4.py`](benchmarks/haystacks/wild/cpython-226484e4.py) |
-| count | 44 |
+| count(`.*`) | 44 |
 
 
 </details>
@@ -777,7 +776,7 @@ requires them to use slower engines for resolving capturing groups.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/parol-veryl.vl`](benchmarks/haystacks/wild/parol-veryl.vl) |
-| count | 124800 |
+| count(`.*`) | 124800 |
 
 Note that we don't include Hyperscan here because it doesn't support the
 `count-captures` benchmark model. It is included in the `multiple` benchmark
@@ -796,7 +795,7 @@ too big and it wasn't obvious to me how to raise the limit.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `abcdefg_foobar` |
-| count | 1 |
+| count(`.*`) | 1 |
 
 This measures how long it takes to a compile a moderately large lexer.
 
@@ -810,8 +809,8 @@ This measures how long it takes to a compile a moderately large lexer.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/parol-veryl.vl`](benchmarks/haystacks/wild/parol-veryl.vl) |
-| count(\*) | 150600 |
-| count(hyperscan) | 669500 |
+| count(`hyperscan`) | 669500 |
+| count(`.*`) | 150600 |
 
 Hyperscan reports everything that matches, including overlapping matches,
 and that's why its count is higher. It is likely still serviceable for
@@ -917,8 +916,8 @@ will actually run `memchr` on `\n` and skip right to the end of the haystack.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `math x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [.. snip ..]` |
-| count(\*) | 107 |
-| count(hyperscan) | 5757 |
+| count(`hyperscan`) | 5757 |
+| count(`.*`) | 107 |
 
 
 **simplified-short**
@@ -931,8 +930,8 @@ will actually run `memchr` on `\n` and skip right to the end of the haystack.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [.. snip ..]` |
-| count(\*) | 102 |
-| count(hyperscan) | 5252 |
+| count(`hyperscan`) | 5252 |
+| count(`.*`) | 102 |
 
 
 **simplified-long**
@@ -945,8 +944,8 @@ will actually run `memchr` on `\n` and skip right to the end of the haystack.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`cloud-flare-redos.txt`](benchmarks/haystacks/cloud-flare-redos.txt) |
-| count(\*) | 10000 |
-| count(hyperscan) | 50004999 |
+| count(`hyperscan`) | 50004999 |
+| count(`.*`) | 10000 |
 
 
 </details>
@@ -1005,7 +1004,7 @@ well.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/UnicodeData-15.0.0.txt`](benchmarks/haystacks/wild/UnicodeData-15.0.0.txt) |
-| count | 558784 |
+| count(`.*`) | 558784 |
 
 
 **compile**
@@ -1018,7 +1017,7 @@ well.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `249D;PARENTHESIZED LATIN SMALL LETTER B;So;0;L;<compat> 0028 [.. snip ..]` |
-| count | 1 |
+| count(`.*`) | 1 |
 
 
 </details>
@@ -1081,9 +1080,9 @@ Unicode aware `\b` (or both).
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count(\*) | 56691 |
-| count(dotnet/compiled) | 56601 |
-| count(dotnet/nobacktrack) | 56601 |
+| count(`dotnet/compiled`) | 56601 |
+| count(`dotnet/nobacktrack`) | 56601 |
+| count(`.*`) | 56691 |
 
 We specifically write out `[0-9A-Za-z_]` instead of using `\w` because some
 regex engines, such as the one found in .NET, make `\w` Unicode aware and there
@@ -1102,10 +1101,10 @@ to disable. To account for that, we permit a different count.
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count(\*) | 107391 |
-| count(dotnet/compiled) | 53960 |
-| count(dotnet/nobacktrack) | 53960 |
-| count(perl) | 53960 |
+| count(`dotnet/compiled`) | 53960 |
+| count(`dotnet/nobacktrack`) | 53960 |
+| count(`perl`) | 53960 |
+| count(`.*`) | 107391 |
 
 `regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
 aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
@@ -1129,7 +1128,7 @@ codepoints.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count | 839 |
+| count(`.*`) | 839 |
 
 We specifically write out `[0-9A-Za-z_]` instead of using `\w` because some
 regex engines, such as the one found in .NET, make `\w` Unicode aware and there
@@ -1148,10 +1147,10 @@ match counts in this benchmark.
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count(\*) | 5481 |
-| count(dotnet/compiled) | 2747 |
-| count(dotnet/nobacktrack) | 2747 |
-| count(perl) | 2747 |
+| count(`dotnet/compiled`) | 2747 |
+| count(`dotnet/nobacktrack`) | 2747 |
+| count(`perl`) | 2747 |
+| count(`.*`) | 5481 |
 
 `regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
 aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
@@ -1238,7 +1237,7 @@ CPython source code contains a very small amount of invalid UTF-8.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/cpython-226484e4.py`](benchmarks/haystacks/wild/cpython-226484e4.py) |
-| count | 0 |
+| count(`.*`) | 0 |
 
 
 **quick**
@@ -1251,7 +1250,7 @@ CPython source code contains a very small amount of invalid UTF-8.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/cpython-226484e4.py`](benchmarks/haystacks/wild/cpython-226484e4.py) |
-| count | 0 |
+| count(`.*`) | 0 |
 
 
 **compile-full**
@@ -1264,7 +1263,7 @@ CPython source code contains a very small amount of invalid UTF-8.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `"AIDAABCDEFGHIJKLMNOP""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa [.. snip ..]` |
-| count | 1 |
+| count(`.*`) | 1 |
 
 
 **compile-quick**
@@ -1277,7 +1276,7 @@ CPython source code contains a very small amount of invalid UTF-8.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `AIDAABCDEFGHIJKLMNOP` |
-| count | 1 |
+| count(`.*`) | 1 |
 
 
 </details>
@@ -1349,8 +1348,8 @@ instead of falling back to a slower engine.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`opensubtitles/en-sampled.txt`](benchmarks/haystacks/opensubtitles/en-sampled.txt) |
-| count(\*) | 1833 |
-| count(hyperscan) | 3724 |
+| count(`hyperscan`) | 3724 |
+| count(`.*`) | 1833 |
 
 
 **letters-ru**
@@ -1363,8 +1362,8 @@ instead of falling back to a slower engine.
 | case-insensitive | `false` |
 | unicode | `true` |
 | haystack-path | [`opensubtitles/ru-sampled.txt`](benchmarks/haystacks/opensubtitles/ru-sampled.txt) |
-| count(\*) | 3475 |
-| count(hyperscan) | 8570 |
+| count(`hyperscan`) | 8570 |
+| count(`.*`) | 3475 |
 
 
 **context**
@@ -1377,8 +1376,8 @@ instead of falling back to a slower engine.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`rust-src-tools-3b0d4813.txt`](benchmarks/haystacks/rust-src-tools-3b0d4813.txt) |
-| count(\*) | 53 |
-| count(hyperscan) | 109 |
+| count(`hyperscan`) | 109 |
+| count(`.*`) | 53 |
 
 
 **capitals**
@@ -1391,8 +1390,8 @@ instead of falling back to a slower engine.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`rust-src-tools-3b0d4813.txt`](benchmarks/haystacks/rust-src-tools-3b0d4813.txt) |
-| count(\*) | 11 |
-| count(hyperscan) | 237 |
+| count(`hyperscan`) | 237 |
+| count(`.*`) | 11 |
 
 
 **compile-context**
@@ -1405,7 +1404,7 @@ instead of falling back to a slower engine.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `abcdefghij blah blah blah Result blib blab klmnopqrst` |
-| count | 1 |
+| count(`.*`) | 1 |
 
 
 **compile-capitals**
@@ -1418,8 +1417,8 @@ instead of falling back to a slower engine.
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `Crazy Janey Mission Man Wild Billy Greasy Lake Hazy Davy Kil [.. snip ..]` |
-| count(\*) | 1 |
-| count(hyperscan) | 12 |
+| count(`hyperscan`) | 12 |
+| count(`.*`) | 1 |
 
 
 </details>
@@ -1504,7 +1503,7 @@ similar to other backtrackers.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack-path | [`wild/unstructured-to-json.log`](benchmarks/haystacks/wild/unstructured-to-json.log) |
-| count | 600 |
+| count(`.*`) | 600 |
 
 
 **compile**
@@ -1517,7 +1516,7 @@ similar to other backtrackers.)
 | case-insensitive | `false` |
 | unicode | `false` |
 | haystack | `2022/06/17 06:25:22 I4: [17936:140245395805952:(17998)]: (8f [.. snip ..]` |
-| count | 1 |
+| count(`.*`) | 1 |
 
 
 </details>
