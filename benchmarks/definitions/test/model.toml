@@ -1,7 +1,12 @@
 analysis = '''
-This is a collection of benchmarks that are generally meant to test aspects of
-functionality of regex engines and benchmark model support, and less to measure
-how fast they are.
+These benchmarks are meant to test that each benchmark model passes a basic
+check for a particular regex engine. These don't exhaustively test every nook
+and cranny of each model. It does include basic things like ensuring span
+counts are correct and that `\r` and `\n` are treated as line terminators in
+the `grep` and `grep-captures` models.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements.
 '''
 
 [[bench]]
