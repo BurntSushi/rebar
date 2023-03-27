@@ -334,13 +334,16 @@ impl Flattened {
         // us then associate each measurement with a definition.
         let mut map = BTreeMap::new();
         for m in measurements.iter() {
-            anyhow::ensure!(
-                set.contains(&(m.name.clone(), m.engine.clone())),
-                "could not find measurement for benchmark '{}' and engine \
-                 '{}' in set of benchmark definitions",
-                m.name,
-                m.engine,
-            );
+            if !set.contains(&(m.name.clone(), m.engine.clone())) {
+                log::warn!(
+                    "could not find measurement for benchmark '{}' and engine \
+                     '{}' in set of benchmark definitions, so rebar will drop \
+                     the measurement and continue",
+                    m.name,
+                    m.engine,
+                );
+                continue;
+            }
             let result = map
                 .entry(m.name.clone())
                 .or_insert(BTreeMap::default())
