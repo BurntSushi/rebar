@@ -98,3 +98,23 @@ engines = [
   'dotnet/nobacktrack',
   'perl',
 ]
+
+[[bench]]
+model = 'compile'
+name = 'compile-real'
+regex = '(\s*)((?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)'
+haystack = '# noqa'
+count = 1
+engines = [
+  'rust/regex/meta',
+  'rust/regex',
+  'rust/regexold',
+  're2',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+]
