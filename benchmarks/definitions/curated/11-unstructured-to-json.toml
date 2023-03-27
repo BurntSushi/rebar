@@ -56,19 +56,19 @@ regex = { path = "wild/unstructured-to-json.txt" }
 haystack = { path = "wild/unstructured-to-json.log" }
 count = 600
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
-  'perl',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -78,16 +78,16 @@ regex = { path = "wild/unstructured-to-json.txt" }
 haystack = '''2022/06/17 06:25:22 I4: [17936:140245395805952:(17998)]: (8fb074fc-c766-498b-b224-8b660126b2c0): Searching for query 'dummy query' {/src/master/mastersearchattrs.cc:MasterSearchAttributes():40}'''
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

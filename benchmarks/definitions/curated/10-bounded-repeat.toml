@@ -45,20 +45,20 @@ count = [
   { engine = 'hyperscan', count = 3724 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -72,18 +72,18 @@ count = [
   { engine = 'hyperscan', count = 8570 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -96,19 +96,19 @@ count = [
   { engine = 'hyperscan', count = 109 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -121,19 +121,19 @@ count = [
   { engine = 'hyperscan', count = 237 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -143,18 +143,18 @@ regex = '[A-Za-z]{10}\s+(?s:.){0,100}Result(?s:.){0,100}\s+[A-Za-z]{10}'
 haystack = 'abcdefghij blah blah blah Result blib blab klmnopqrst'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -167,16 +167,16 @@ count = [
   { engine = 'hyperscan', count = 12 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

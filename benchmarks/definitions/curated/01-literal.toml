@@ -37,20 +37,20 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-sampled.txt" }
 count = 513
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -61,20 +61,20 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-sampled.txt" }
 count = 522
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -85,20 +85,20 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt" }
 count = 724
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -110,20 +110,20 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt" }
 count = 746
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -134,18 +134,18 @@ unicode = true
 haystack = { path = "opensubtitles/zh-sampled.txt" }
 count = 30
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

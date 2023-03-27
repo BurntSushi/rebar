@@ -75,17 +75,17 @@ regex = { path = "wild/parol-veryl.txt", per-line = "alternate" }
 haystack = { path = "wild/parol-veryl.vl" }
 count = 124_800
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'perl',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 Note that we don't include Hyperscan here because it doesn't support the
@@ -103,16 +103,16 @@ regex = { path = "wild/parol-veryl.txt", per-line = "alternate" }
 haystack = 'abcdefg_foobar'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 This measures how long it takes to a compile a moderately large lexer.
@@ -128,8 +128,8 @@ count = [
   { engine = 'hyperscan', count = 669_500 },
 ]
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 analysis = '''
 Hyperscan reports everything that matches, including overlapping matches,

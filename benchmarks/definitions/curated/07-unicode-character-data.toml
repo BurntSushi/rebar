@@ -30,19 +30,19 @@ regex = { path = "wild/ucd-parse.txt" }
 haystack = { path = "wild/UnicodeData-15.0.0.txt" }
 count = 558_784
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
-  'perl',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -52,16 +52,16 @@ regex = { path = "wild/ucd-parse.txt" }
 haystack = '249D;PARENTHESIZED LATIN SMALL LETTER B;So;0;L;<compat> 0028 0062 0029;;;;N;;;;;'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

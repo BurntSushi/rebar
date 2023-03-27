@@ -49,17 +49,17 @@ count = [
   { engine = 'hyperscan', count = 547_662 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'hyperscan',
-  'perl',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 As with many other benchmarks, Hyperscan reports all matches, even ones that
@@ -80,15 +80,15 @@ count = [
   { engine = 'dotnet/compiled', count = 111_825 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
+  'dotnet/compiled',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 `regress` is included here despite its `\d` not being Unicode-aware (as
@@ -120,17 +120,17 @@ count = [
   { engine = 'hyperscan', count = 10 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 Notice that `regress` is now include in the ASCII benchmark, because in
@@ -149,14 +149,14 @@ unicode = true
 haystack = "۲۰۱۰-۰۳-۱۴"
 count = 5
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
+  'dotnet/compiled',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 We use "extended arabic-indic digits" to represent the same date, `2010-03-14`,

@@ -46,18 +46,18 @@ regex = '''(('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|").*?(\n^.*?){0,4}(('
 haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'perl',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -67,20 +67,20 @@ regex = '((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))'
 haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2',
-  'pcre2/jit',
-  'python/re',
-  'python/regex',
-  'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
   'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -90,17 +90,17 @@ regex = '''(('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|").*?(\n^.*?){0,4}(('
 haystack = '"AIDAABCDEFGHIJKLMNOP""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -110,17 +110,17 @@ regex = '((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))'
 haystack = 'AIDAABCDEFGHIJKLMNOP'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  'regress',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

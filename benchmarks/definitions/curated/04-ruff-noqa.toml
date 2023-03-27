@@ -64,18 +64,18 @@ regex = '(\s*)((?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)'
 haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = 84
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
-  'perl',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -85,18 +85,18 @@ regex = '(?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?'
 haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = 44
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
+  'perl',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
-  'perl',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -106,15 +106,15 @@ regex = '(\s*)((?i:# noqa)(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)'
 haystack = '# noqa'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'dotnet/compiled',
-  'dotnet/nobacktrack',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
