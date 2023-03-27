@@ -50,6 +50,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 We specifically write out `[0-9A-Za-z_]` instead of using `\w` because some
@@ -70,6 +71,7 @@ count = [
   { engine = '*', count = 107_391 },
   { engine = 'dotnet/compiled', count = 53_960 },
   { engine = 'dotnet/nobacktrack', count = 53_960 },
+  { engine = 'perl', count = 53_960 },
 ]
 engines = [
   'rust/regex/meta',
@@ -79,6 +81,7 @@ engines = [
   'python/regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 `regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
@@ -86,6 +89,12 @@ aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
 
 For `dotnet/compiled`, since the length of matching spans is in the number of
 UTF-16 code units, its expected count is smaller.
+
+For `perl`, it has the same count as `dotnet/compiled`, but only because it
+counts total encoded codepoints. Since every match span in this benchmark
+seemingly corresponds to codepoints in the basic multi-lingual plane, it
+follows that the number of UTF-16 code units is equivalent to the number of
+codepoints.
 '''
 
 [[bench]]
@@ -106,6 +115,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 We specifically write out `[0-9A-Za-z_]` instead of using `\w` because some
@@ -126,6 +136,7 @@ count = [
   { engine = '*', count = 5481 },
   { engine = 'dotnet/compiled', count = 2747 },
   { engine = 'dotnet/nobacktrack', count = 2747 },
+  { engine = 'perl', count = 2747 },
 ]
 engines = [
   'rust/regex/meta',
@@ -135,6 +146,7 @@ engines = [
   'python/regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 `regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
@@ -142,4 +154,10 @@ aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
 
 For `dotnet/compiled`, since the length of matching spans is in the number of
 UTF-16 code units, its expected count is smaller.
+
+For `perl`, it has the same count as `dotnet/compiled`, but only because it
+counts total encoded codepoints. Since every match span in this benchmark
+seemingly corresponds to codepoints in the basic multi-lingual plane, it
+follows that the number of UTF-16 code units is equivalent to the number of
+codepoints.
 '''

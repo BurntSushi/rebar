@@ -50,6 +50,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]
@@ -73,6 +74,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]
@@ -96,6 +98,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]
@@ -120,6 +123,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]
@@ -143,4 +147,5 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]

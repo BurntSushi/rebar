@@ -75,6 +75,7 @@ engines = [
   'python/regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]
@@ -95,4 +96,5 @@ engines = [
   'python/regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]

@@ -57,6 +57,7 @@ engines = [
   'python/re',
   'python/regex',
   'dotnet/compiled',
+  'perl',
 ]
 
 [[bench]]
@@ -79,6 +80,7 @@ engines = [
   'hyperscan',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]

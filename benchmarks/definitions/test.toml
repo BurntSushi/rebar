@@ -30,6 +30,7 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 This benchmark is a way to test the most basic capabilities of probably almost
@@ -64,6 +65,7 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 This is like `count`, but uses the `count-spans` model to ensure the count is
@@ -92,6 +94,7 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 This is like `count`, but uses the `count-captures` model to ensure the runner
@@ -124,6 +127,7 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 This is like `count`, but uses the `grep` model to ensure the runner program
@@ -153,6 +157,7 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 This is like `count`, but uses the `grep-captures` model to ensure the runner
@@ -187,6 +192,7 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 analysis = '''
 This is like `count`, but uses the `compile` model to ensure the count is

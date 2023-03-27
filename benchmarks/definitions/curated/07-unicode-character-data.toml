@@ -42,6 +42,7 @@ engines = [
   'python/regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]
 
 [[bench]]

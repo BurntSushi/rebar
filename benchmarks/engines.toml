@@ -279,6 +279,20 @@ args = ["build", "-c", "Release"]
 bin = "dotnet"
 args = ["clean", "-c", "Release"]
 
+# Perl's regex engine.
+#
+# URL: https://perldoc.perl.org/perlre
+[[engine]]
+name = "perl"
+cwd = "engines/perl"
+[engine.version]
+bin = "perl"
+args = ["--version"]
+regex = 'This is perl 5, .+\(v(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\)'
+[engine.run]
+bin = "perl"
+args = ["main.pl"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and

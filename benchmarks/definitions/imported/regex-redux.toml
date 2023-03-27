@@ -32,4 +32,5 @@ engines = [
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'perl',
 ]

@@ -59,6 +59,7 @@ engines = [
   'python/re',
   'python/regex',
   'hyperscan',
+  'perl',
 ]
 analysis = '''
 As with many other benchmarks, Hyperscan reports all matches, even ones that
@@ -104,6 +105,8 @@ compilation error. As far as I know, Hyperscan doesn't expose any knobs for
 increasing this limit.
 
 `dotnet/compiled` gets a different count here, but it's not clear why.
+
+`perl` is left out of this benchmark because it times out.
 '''
 
 [[bench]]
