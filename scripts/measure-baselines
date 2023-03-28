@@ -11,8 +11,13 @@
 # then record new measurements for a regex engine that's changing while still
 # comparing it against a previous baseline.
 
+usage() {
+  echo "Usage: $(basename "$0") [--verify --verbose --curated] [<engine> ...]"
+}
+
 verify=
 verbose=
+curated=
 while true; do
   case "$1" in
     --verify)
@@ -23,12 +28,16 @@ while true; do
       verbose=--verbose
       shift
       ;;
+    --curated)
+      curated=1
+      shift
+      ;;
     -h|--help)
-      echo "Usage: $(basename "$0") [--verify] [<engine> ...]"
+      usage
       exit 0
       ;;
     -*)
-      echo "Usage: $(basename "$0") [--verify] [<engine> ...]"
+      usage
       exit 1
       ;;
     *)
@@ -61,8 +70,12 @@ for name_with_slashes in $engines; do
   path="$dir/$name.csv"
   echo "=== $path ==="
   if [ -n "$verify" ]; then
-    rebar measure -e "$pat" "$verify" "$verbose"
+    rebar measure -f '!^test/' -e "$pat" "$verify" "$verbose"
   else
-    rebar measure -e "$pat" | tee "$path"
+    if [ -n "$curated" ]; then
+      rebar measure -f '^curated/' -e "$pat" | tee "$path"
+    else
+      rebar measure -f '!^test/' -e "$pat" | tee "$path"
+    fi
   fi
 done
