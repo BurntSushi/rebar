@@ -54,6 +54,15 @@ work will be done without actually doing it.
     Usage::MAX_WARMUP_TIME,
     Filter::USAGE_MODEL,
     Usage::new(
+        "-t/--test",
+        "Alias for --verify --verbose.",
+        r#"
+An alias for --verify --verbose. The combination of --verify and --verbose is
+quite common for being able to confirm that benchmarks run successfully and
+being able to see the full error messages if anything goes wrong.
+"#,
+    ),
+    Usage::new(
         "--timeout <duration>",
         "Kill a benchmark if it exceeds this.",
         r#"
@@ -315,6 +324,10 @@ impl Config {
                 }
                 Arg::Short('m') | Arg::Long("model") => {
                     c.model_filter.add(args::parse(p, "-m/--model")?);
+                }
+                Arg::Short('t') | Arg::Long("test") => {
+                    c.verbose = true;
+                    c.verify = true;
                 }
                 Arg::Long("timeout") => {
                     let hdur =

@@ -124,8 +124,8 @@ name = "multi"
 regex = { path = "wild/parol-veryl.txt", per-line = "pattern" }
 haystack = { path = "wild/parol-veryl.vl" }
 count = [
-  { engine = '*', count = 150_600 },
   { engine = 'hyperscan', count = 669_500 },
+  { engine = '.*', count = 150_600 },
 ]
 engines = [
   'hyperscan',

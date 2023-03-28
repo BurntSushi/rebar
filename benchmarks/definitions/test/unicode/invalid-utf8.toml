@@ -1,0 +1,191 @@
+analysis = '''
+These benchmarks test the support (or not) of invalid UTF-8 in the regex
+engine. These tests tend to exclude regex engines that only work on Unicode
+strings, where "Unicode string" is something like "a valid sequence of code
+units" (in its encoded form) or "a valid sequence of Unicode codepoints" (in
+its decoded form). If a regex engine only works on Unicode strings, then it, by
+definition, cannot accept invalid UTF-8.
+
+Some regex engines can run on invalid UTF-8. Usually this just means invalid
+UTF-8 is treated as if it were `U+FFFD` (the Unicode replacement codepoint), or
+they're matched as their raw bytes which typically don't match most constructs.
+
+Note that we don't test other cases like invalid UTF-16. While I don't know for
+certain, for example, I believe .NET's regex engine can search any arbitrary
+sequence of `Char` values, which in turn corresponds to any sequence of
+unsigned 16-bit integers. We don't test this because rebar generally works with
+UTF-8 (or rather, arbitrary byte sequences), and it is up to the runner program
+to convert this into a format that can be searched by the regex engine. So in
+order to test invalid UTF-16, we'd either have to natively support UTF-16 or
+use some kind of encoding scheme (like WTF-8) that permits us to represent
+invalid UTF-16 losslessly in what is typically a UTF-8 sequence.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+'''
+
+[[bench]]
+model = "count"
+name = "dot-matches-xFF"
+regex = '.'
+haystack = { path = "one-byte-xFF.txt" }
+count = 1
+engines = [
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support searching arbitrary bytes.
+
+`regress` does not support searching arbitrary bytes, only valid UTF-8.
+'''
+
+[[bench]]
+model = "count"
+name = "dot-no-matches-xFF"
+regex = '.'
+unicode = true
+haystack = { path = "one-byte-xFF.txt" }
+count = [
+  # Go doesn't have a Unicode mode or not, it always matches one codepoint at a
+  # time. It treats invalid UTF-8 as a sequence of U+FFFD codepoints, and since
+  # '.' matches all codepoints sans '\n', '.' matches '\xFF'.
+  { engine = 'go/regexp', count = 1 },
+  # I don't understand enough about how Perl's regex engine works to explain
+  # this. The Perl runner program calls 'utf8::decode' on the haystack (and
+  # pattern) when Unicode mode is enabled. One would think this would result
+  # in an error if the haystack is invalid UTF-8, as it is here, but Perl is
+  # silent. So probably it does a lossy decode?
+  { engine = 'perl', count = 1 },
+  { engine = '.*', count = 0 },
+]
+engines = [
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support searching arbitrary bytes.
+
+`hyperscan` does not support searching invalid UTF-8 when Unicode mode is
+enabled.
+
+`python/*` does not support searching invalid UTF-8 when Unicode mode is
+enabled.
+
+`regress` does not support searching arbitrary bytes, only valid UTF-8.
+'''
+
+[[bench]]
+model = "count"
+name = "dot-matches-codepoint-prefix"
+regex = '.'
+haystack = { path = "pile-of-poo-prefix.txt" }
+count = 3
+engines = [
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support searching arbitrary bytes.
+
+`regress` does not support searching arbitrary bytes, only valid UTF-8.
+
+N.B. The `pile-of-poo-prefix.txt` haystack consists of the bytes
+`\xF0\x9F\x92`, which corresponds to a valid prefix of 💩. A regex engine
+that works by matching one codepoint at a time could _lossily_ decode this as
+one single `U+FFFD` (replacement) corresponding to a single valid prefix of
+a valid codepoing (this is known as "substitution of maximal subparts"). It
+could also choose to decode it as three distinct `U+FFFD` codepoints, each one
+corresponding to a byte in the valid prefix. `go/regexp` is an example of a
+regex engine that does the latter. (RE2 does not, really, because it matches
+one byte at a time, like the Rust regex engine.)
+'''
+
+[[bench]]
+model = "count"
+name = "dot-no-matches-codepoint-prefix"
+regex = '.'
+unicode = true
+haystack = { path = "pile-of-poo-prefix.txt" }
+count = [
+  # Go doesn't have a Unicode mode or not, it always matches one codepoint at
+  # a time. It treats invalid UTF-8 as a sequence of U+FFFD codepoints, and
+  # since '.' matches all codepoints sans '\n', '.' matches a 3-byte prefix of
+  # a 4-byte codepoint 3 times.
+  { engine = 'go/regexp', count = 3 },
+  # I don't understand enough about how Perl's regex engine works to explain
+  # this. The Perl runner program calls 'utf8::decode' on the haystack (and
+  # pattern) when Unicode mode is enabled. One would think this would result
+  # in an error if the haystack is invalid UTF-8, as it is here, but Perl is
+  # silent. So probably it does a lossy decode and treats each invalid byte as
+  # U+FFFD like Go does?
+  { engine = 'perl', count = 3 },
+  { engine = '.*', count = 0 },
+]
+engines = [
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support searching arbitrary bytes.
+
+`hyperscan` does not support searching invalid UTF-8 when Unicode mode is
+enabled.
+
+`python/*` does not support searching invalid UTF-8 when Unicode mode is
+enabled.
+
+`regress` does not support searching arbitrary bytes, only valid UTF-8.
+'''
+
+[[bench]]
+model = "count"
+name = "xFF-matches-xFF"
+regex = '\xFF'
+haystack = { path = "one-byte-xFF.txt" }
+count = 1
+engines = [
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support searching arbitrary bytes.
+
+`go/regexp` supports searching invalid UTF-8, but does not support searching
+for specific invalid UTF-8 bytes.
+
+`regress` does not support searching arbitrary bytes, only valid UTF-8.
+'''

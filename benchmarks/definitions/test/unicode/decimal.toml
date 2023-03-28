@@ -1,0 +1,73 @@
+analysis = '''
+These benchmarks test the functionality of `\d`. A `\d` is generally either
+equivalent to `[0-9]`, or it's equivalent to the definition offered
+in [UTS#18][uts18]. UTS#18 defines it as `\p{gc=Decimal_Number}`.
+
+Where regex engines differ is the extent to which this can be toggled. Some
+regex engines support both definitions. Some support *only* the ASCII variant
+and some support *only* the Unicode variant. Unlike `\w` and `\s`, it is
+sometimes the case that regex engines with otherwise decent Unicode support
+will actually still fix `\d` to `[0-9]`, likely because it's *usually* what you
+want. Otherwise, things like `\d{4}-\d{2}-\d{2}` end up matching a lot more
+than a simple date.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+
+[uts18]: https://unicode.org/reports/tr18/
+'''
+
+[[bench]]
+model = "count"
+name = "ascii-only"
+regex = '\d'
+haystack = '᠕'
+count = [
+  # .NET doesn't permit disabling the Unicode variant of \d.
+  { engine = 'dotnet.*', count = 1 },
+  { engine = '.*', count = 0 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+
+[[bench]]
+model = "count"
+name = "unicode"
+regex = '\d'
+unicode = true
+haystack = '᠕'
+count = [
+  # None of these regex engines support the Unicode variant of \w.
+  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]

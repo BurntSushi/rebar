@@ -66,8 +66,8 @@ name = "original"
 regex = '''(?:(?:"|'|\]|\}|\\|\d|(?:nan|infinity|true|false|null|undefined|symbol|math)|`|-|\+)+[)]*;?((?:\s|-|~|!|\{\}|\|\||\+)*.*(?:.*=.*)))'''
 haystack = 'math x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 count = [
-  { engine = '*', count = 107 },
   { engine = 'hyperscan', count = 5757 },
+  { engine = '.*', count = 107 },
 ]
 engines = [
   'dotnet/compiled',
@@ -92,8 +92,8 @@ name = "simplified-short"
 regex = '.*.*=.*'
 haystack = 'x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 count = [
-  { engine = '*', count = 102 },
   { engine = 'hyperscan', count = 5252 },
+  { engine = '.*', count = 102 },
 ]
 engines = [
   'dotnet/compiled',
@@ -118,8 +118,8 @@ name = "simplified-long"
 regex = '.*.*=.*'
 haystack = { path = "cloud-flare-redos.txt" }
 count = [
-  { engine = '*', count = 10000 },
   { engine = 'hyperscan', count = 50004999 },
+  { engine = '.*', count = 10000 },
 ]
 engines = [
   'dotnet/compiled',

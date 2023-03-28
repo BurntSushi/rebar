@@ -85,6 +85,10 @@ impl std::str::FromStr for ShortHumanDuration {
             )
             .unwrap()
         });
+        // Special case: if we have 0, then it's the same regardless of units.
+        if s == "0" {
+            return Ok(ShortHumanDuration::default());
+        }
         let caps = match RE.captures(s) {
             Some(caps) => caps,
             None => anyhow::bail!(

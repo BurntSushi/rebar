@@ -60,11 +60,11 @@ regex = '\pL{100}'
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
-  { engine = '*', count = 1244 },
   # Maybe a different version of Unicode?
   { engine = 'go/regexp', count = 1201 },
   # Maybe a different version of Unicode?
   { engine = 'pcre2/jit', count = 1203 },
+  { engine = '.*', count = 1244 },
 ]
 engines = [
   'rust/regex/meta',
@@ -143,10 +143,10 @@ regex = '\p{Greek}+'
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
-  { engine = '*', count = 36 },
   # Perhaps a different version of Unicode?
   { engine = 'pcre2', count = 38 },
   { engine = 'pcre2/jit', count = 38 },
+  { engine = '.*', count = 36 },
 ]
 engines = [
   'rust/regex/meta',

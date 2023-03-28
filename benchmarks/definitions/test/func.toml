@@ -1,0 +1,95 @@
+analysis = '''
+These benchmarks test various pieces of functionality of regex engines. If a
+regex engine *isn't* in a particular benchmark, then it should be assumed that
+it fails in some way.
+
+We leave out testing Unicode functionality since it represents a huge can of
+worms. See the `unicode` directory for a whole suite of tests.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+'''
+
+# N.B. We don't currently have any engines in rebar with exclusively
+# leftmost-longest semantics. If one is added, then we should add a new test
+# checking that 'samwise' is reported as a match here.
+[[bench]]
+model = "count-spans"
+name = "leftmost-first"
+regex = 'sam|samwise'
+haystack = 'samwise'
+count = 3
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`hyperscan` isn't included here since it reports all possible matches. So it
+matches both `sam` and `samwise` here.
+'''
+
+[[bench]]
+model = "count"
+name = "dollar-only-matches-end"
+regex = '$'
+haystack = "\n\n"
+count = [
+  { engine = 'go/regexp|re2|regress|rust/regex.*', count = 1 },
+  { engine = '.*', count = 2 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+Some regex engines permit `$` to match *both* at the end of a haystack and
+immediately for `\n` when `\n` is the last character in the haystack. Note that
+this is *without* enabling multi-line mode. If multi-line mode were enabled,
+then all regex engines would match this haystack 3 times.
+'''
+
+[[bench]]
+model = "count"
+name = "non-greedy"
+regex = '[a-z]+?'
+haystack = 'abc'
+count = 3
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]

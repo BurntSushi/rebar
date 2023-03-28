@@ -429,18 +429,17 @@ pub struct Definition {
     pub options: DefinitionOptions,
     pub haystack: Arc<[u8]>,
     pub haystack_path: Option<String>,
-    pub count: BTreeMap<String, u64>,
+    pub count: Vec<CountEngine>,
     pub engines: Vec<Engine>,
     pub analysis: Option<String>,
 }
 
 impl Definition {
     pub fn count(&self, engine: &str) -> anyhow::Result<u64> {
-        if let Some(&count) = self.count.get(engine) {
-            return Ok(count);
-        }
-        if let Some(&count) = self.count.get("*") {
-            return Ok(count);
+        for ce in self.count.iter() {
+            if ce.re.is_match(engine) {
+                return Ok(ce.count);
+            }
         }
         anyhow::bail!("no count available for engine '{}'", engine)
     }
@@ -547,6 +546,13 @@ impl std::fmt::Display for DefinitionName {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         self.full.fmt(f)
     }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CountEngine {
+    pub re: Regex,
+    pub engine: String,
+    pub count: u64,
 }
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, serde::Deserialize)]
@@ -896,26 +902,28 @@ impl WireDefinition {
         }
     }
 
-    fn count(&self) -> anyhow::Result<BTreeMap<String, u64>> {
+    fn count(&self) -> anyhow::Result<Vec<CountEngine>> {
         match self.count {
             WireCount::Engines(ref engine_counts) => {
-                let mut map = BTreeMap::new();
-                for ec in engine_counts.iter() {
-                    anyhow::ensure!(
-                        !map.contains_key(&ec.engine),
-                        "duplicate engine '{}' for count in benchmark '{}'",
-                        ec.engine,
-                        self.name,
-                    );
-                    map.insert(ec.engine.clone(), ec.count);
+                let mut counts = vec![];
+                for wire in engine_counts.iter() {
+                    let pat = format!("^(?:{})$", wire.engine);
+                    let re = regex::Regex::new(&pat).context(
+                        "failed to parse engine count name as regex",
+                    )?;
+                    counts.push(CountEngine {
+                        re: Regex(re),
+                        engine: wire.engine.clone(),
+                        count: wire.count,
+                    });
                 }
-                Ok(map)
+                Ok(counts)
             }
-            WireCount::All(count) => {
-                let mut map = BTreeMap::new();
-                map.insert("*".to_string(), count);
-                Ok(map)
-            }
+            WireCount::All(count) => Ok(vec![CountEngine {
+                re: Regex(regex::Regex::new(r"^.*$").unwrap()),
+                engine: r".*".to_string(),
+                count,
+            }]),
         }
     }
 }
@@ -1321,10 +1329,12 @@ mod tests {
             .collect()
     }
 
-    fn count_all(count: u64) -> BTreeMap<String, u64> {
-        let mut map = BTreeMap::new();
-        map.insert("*".to_string(), count);
-        map
+    fn count_all(count: u64) -> Vec<CountEngine> {
+        vec![CountEngine {
+            re: Regex(regex::Regex::new(r"^.*$").unwrap()),
+            engine: r".*".to_string(),
+            count,
+        }]
     }
 
     #[test]

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# This script prints a TOML formatted list of "meaningful" engines, each on
+# their own line.
+#
+# "meaningful engine" includes every engine except for the several "internal"
+# engines that I've setup with rebar for use in the development of the regex
+# crate. There are several of them, and adding them to every benchmark would
+# be quite noisy.
+
+rg 'name = "([^"]+)"' -or $'  \'$1\',' benchmarks/engines.toml \
+  | rg -v 'rust/regex/(dense|sparse|hybrid|onepass|backtrack|pikevm|nfa|hir|ast)' \
+  | rg -v regexold \
+  | rg -v aho-corasick \
+  | rg -v memmem \
+  | sort

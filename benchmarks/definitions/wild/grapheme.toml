@@ -28,9 +28,9 @@ regex = { path = "wild/grapheme.txt" }
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 unicode = true
 count = [
-  { engine = '*', count = 7_382_210 },
   # Maybe a different version of Unicode?
   { engine = 'python/regex', count = 6_832_947 },
+  { engine = '.*', count = 7_382_210 },
 ]
 engines = [
   'rust/regex/meta',

@@ -66,8 +66,8 @@ regex = '[a-zA-Z]{50}'
 haystack = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 unicode = false
 count = [
-  { engine = "*", count = 1 },
-  { engine = "hyperscan", count = 3},
+  { engine = 'hyperscan', count = 3},
+  { engine = '.*', count = 1 },
 ]
 engines = [
   'rust/regex/meta',
@@ -91,10 +91,10 @@ regex = '(?m)^.+$'
 haystack = { path = "lines-with-invalid-utf8.txt" }
 unicode = true
 count = [
-  { engine = '*', count = 3 },
   # Go handles invalid UTF-8 differently, by assuming U+FFFD. Since '.' matches
   # any codepoint, that includes U+FFFD.
   { engine = 'go/regexp', count = 4 },
+  { engine = '.*', count = 3 },
 ]
 engines = [
   'rust/regex/meta',

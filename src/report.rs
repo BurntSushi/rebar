@@ -1019,17 +1019,14 @@ fn markdown_result_group<W: Write>(
             }
             writeln!(wtr, " |")?;
         }
-        if defm.def.count.len() == 1 && defm.def.count.contains_key("*") {
-            writeln!(wtr, "| count | {} |", defm.def.count["*"])?;
-        } else {
-            for (engine, count) in defm.def.count.iter() {
-                writeln!(
-                    wtr,
-                    "| count({}) | {} |",
-                    engine.replace("*", r"\*"),
-                    count
-                )?;
-            }
+        for ec in defm.def.count.iter() {
+            writeln!(
+                wtr,
+                "| count(`{}`) | {} |",
+                ec.engine,
+                // engine.replace("*", r"\*"),
+                ec.count,
+            )?;
         }
 
         writeln!(wtr, "")?;

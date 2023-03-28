@@ -407,9 +407,9 @@ regex = '.*'
 haystack = { path = "sherlock.txt" }
 unicode = true
 count = [
-  { engine = '*', count = 581_881 },
   # Not sure what's going on with regress here.
   { engine = 'regress', count = 568_829 },
+  { engine = '.*', count = 581_881 },
 ]
 engines = [
   'rust/regex/meta',

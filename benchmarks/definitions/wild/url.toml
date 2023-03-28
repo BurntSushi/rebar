@@ -13,8 +13,8 @@ regex = { path = "wild/url.txt" }
 haystack = 'https://google.com'
 case-insensitive = true
 count = [
-  { engine = "*", count = 1 },
-  { engine = "hyperscan", count = 2 },
+  { engine = 'hyperscan', count = 2 },
+  { engine = '.*', count = 1 },
 ]
 engines = [
   'rust/regex/meta',

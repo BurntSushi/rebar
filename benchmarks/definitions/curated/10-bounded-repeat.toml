@@ -41,8 +41,8 @@ name = "letters-en"
 regex = '[A-Za-z]{8,13}'
 haystack = { path = "opensubtitles/en-sampled.txt", line-end = 5_000 }
 count = [
-  { engine = '*', count = 1833 },
   { engine = 'hyperscan', count = 3724 },
+  { engine = '.*', count = 1833 },
 ]
 engines = [
   'dotnet/compiled',
@@ -68,8 +68,8 @@ regex = '\p{L}{8,13}'
 unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 5_000 }
 count = [
-  { engine = '*', count = 3475 },
   { engine = 'hyperscan', count = 8570 },
+  { engine = '.*', count = 3475 },
 ]
 engines = [
   'dotnet/compiled',
@@ -81,6 +81,7 @@ engines = [
   'perl',
   'python/regex',
   're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
@@ -92,8 +93,8 @@ name = "context"
 regex = '[A-Za-z]{10}\s+(?s:.){0,100}Result(?s:.){0,100}\s+[A-Za-z]{10}'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = [
-  { engine = '*', count = 53 },
   { engine = 'hyperscan', count = 109 },
+  { engine = '.*', count = 53 },
 ]
 engines = [
   'dotnet/compiled',
@@ -117,8 +118,8 @@ name = "capitals"
 regex = '(?:[A-Z][a-z]+\s*){10,100}'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = [
-  { engine = '*', count = 11 },
   { engine = 'hyperscan', count = 237 },
+  { engine = '.*', count = 11 },
 ]
 engines = [
   'dotnet/compiled',
@@ -163,8 +164,8 @@ name = "compile-capitals"
 regex = '(?:[A-Z][a-z]+\s*){10,100}'
 haystack = 'Crazy Janey Mission Man Wild Billy Greasy Lake Hazy Davy Killer Joe'
 count = [
-  { engine = '*', count = 1 },
   { engine = 'hyperscan', count = 12 },
+  { engine = '.*', count = 1 },
 ]
 engines = [
   'dotnet/compiled',

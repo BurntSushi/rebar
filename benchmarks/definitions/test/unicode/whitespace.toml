@@ -1,0 +1,73 @@
+analysis = '''
+These benchmarks test the functionality of `\s`. A `\s` is generally either
+equivalent to `[\t\n\v\f\r ]`, or it's equivalent to the definition offered
+in [UTS#18][uts18]. UTS#18 defines it as `\p{Whitespace}`.
+
+Where regex engines differ is the extent to which this can be toggled. Some
+regex engines support both definitions. Some support *only* the ASCII variant
+and some support *only* the Unicode variant.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+
+[uts18]: https://unicode.org/reports/tr18/
+'''
+
+[[bench]]
+model = "count"
+name = "ascii-only"
+regex = '\s'
+haystack = "\u2000"
+count = [
+  # .NET doesn't permit disabling the Unicode variant of \s.
+  { engine = 'dotnet.*', count = 1 },
+  # These are ECMAScript engines where \s is always Unicode-aware. (It's
+  # probably no coincidence that \p{Whitespace} exists entirely within the
+  # BMP.)
+  { engine = 'regress', count = 1 },
+  { engine = '.*', count = 0 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+
+[[bench]]
+model = "count"
+name = "unicode"
+regex = '\s'
+unicode = true
+haystack = "\u2000"
+count = [
+  # None of these regex engines support the Unicode variant of \s.
+  { engine = 'go/regexp|re2', count = 0 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]

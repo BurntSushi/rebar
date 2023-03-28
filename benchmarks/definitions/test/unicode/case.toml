@@ -1,0 +1,94 @@
+analysis = '''
+These benchmarks test the functionality of Unicode-aware case insensitive
+matching. Specifically, we look for whether Unicode-aware case insensitive
+matching is supported at all, and also whether it can be disabled.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+
+[uts18]: https://unicode.org/reports/tr18/
+'''
+
+[[bench]]
+model = "count"
+name = "ascii-only"
+regex = 's'
+case-insensitive = true
+haystack = 'ſ'
+count = [
+  # None of these engines support disabling Unicode-aware case insensitivity.
+  { engine = 'go/regexp|regress', count = 1 },
+  { engine = '.*', count = 0 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+
+[[bench]]
+model = "count"
+name = "ascii-with-unicode"
+regex = 's'
+unicode = true
+case-insensitive = true
+haystack = 'ſ'
+count = [
+  # .NET doesn't seem to case fold ASCII characters to Unicode characters.
+  # The .NET runner program uses the invariant culture. I couldn't tell from
+  # the docs whether this is intended behavior or not.
+  { engine = 'dotnet.*', count = 0 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+
+[[bench]]
+model = "count"
+name = "unicode"
+regex = 'Δ'
+unicode = true
+case-insensitive = true
+haystack = 'δ'
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]

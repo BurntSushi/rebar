@@ -1,0 +1,63 @@
+analysis = '''
+These benchmarks test the support (or not) of UTF-8 in the regex engine.
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+'''
+
+[[bench]]
+model = "count"
+name = "dot-matches-byte"
+regex = '.'
+haystack = '💩'
+count = 4
+engines = [
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` the fundamental atom of matching always seems to be a single UTF-16
+code unit. (Which is quite interesting in this case, as it results in splitting
+a codepoint.)
+
+`go/regexp` the fundamental atom of matching is always one codepoint.
+
+`regress` the fundamental atom of matching is always one codepoint.
+'''
+
+[[bench]]
+model = "count"
+name = "dot-matches-codepoint"
+regex = '.'
+unicode = true
+haystack = '💩'
+count = [
+  # For engines that treat spans as a sequence of UTF-16 code units.
+  # Since a pile of poo is outside the BMP, this uses a surrogate pair, which
+  # consists of two UTF-16 code units.
+  { engine = 'dotnet.*', count = 2 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]

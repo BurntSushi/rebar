@@ -1,0 +1,234 @@
+analysis = '''
+These benchmarks test the support of the `Letter` Unicode general category
+alias. It is an alias for the union of the `Uppercase_Letter` (`Lu`),
+`Lowercase_Letter` (`Ll`), `Titlecase_Letter` (`Lt`), `Modifier_Letter` (`Lm`)
+and `Other_Letter` (`Lo`) general categories.
+
+Basically, almost all regex engines these days support something like `\pL`.
+But regex engines differ in the way one can syntactically represent `\pL`. It's
+kind of all over the place. [UTS#18][utf18] technically covers what should be
+supported, but not all regex engines comply. (And some even very intentionally
+do not comply, for example, ECMAScript.)
+
+These benchmarks aren't really intended to be used for collecting timing
+measurements. These are just about verifying functionality.
+
+[uts18]: https://unicode.org/reports/tr18/
+'''
+
+[[bench]]
+model = "count"
+name = "pL-matches-nonbmp-delta"
+regex = '\pL'
+unicode = true
+haystack = '𝛅'
+count = 1
+engines = [
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support `\pL` syntax. It instead requires `\p{L}`.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`regress` has support for Unicode character classes, but not `\pL` syntax.
+'''
+
+[[bench]]
+model = "count"
+name = "pLbraced-matches-bmp-delta"
+regex = '\p{L}'
+unicode = true
+haystack = 'δ'
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`python/re` doesn't support Unicode character classes at all.
+
+N.B. This matches a Greek delta that is within the BMP. The test below matches
+a different variant of a Greek delta that is *outside* the BMP. Why distinguish
+these? Because it matters for some regex engines!
+'''
+
+[[bench]]
+model = "count"
+name = "pLbraced-matches-nonbmp-delta"
+regex = '\p{L}'
+unicode = true
+haystack = '𝛅'
+count = [
+  { engine = 'dotnet.*', count = 0 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` doesn't match anything here, which is arguably incorrect but
+probably a known and `wontfix` bug I imagine? See the note below.
+
+`python/re` doesn't support Unicode character classes at all.
+
+N.B. This is a particularly interesting case for regex engines that are based
+on UTF-16, because it exposes whether they treat UTF-16 code units as the
+fundamental atom of matching, or if they treat codepoints as the atom of
+matching. For proper Unicode support, you really want the latter. (Of course,
+some regex engines permit toggling what is the fundamental atom of matching,
+but I don't believe .NET does.) Since it looks like .NET uses UTF-16 code units
+as the atom of matching, and since character classes generally can only match
+one atom, it follows that .NET can't match codepoints outside the BMP with a
+character class because such codepoints consist of surrogate pairs.
+'''
+
+[[bench]]
+model = "count"
+name = "pLetter-matches-nonbmp-delta"
+regex = '\p{Letter}'
+unicode = true
+haystack = 'δ'
+count = 1
+engines = [
+  'perl',
+  'python/regex',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support `\p{Letter}` syntax.
+
+`go/regexp` does not support `\p{Letter}` syntax.
+
+`hyperscan` does not support `\p{Letter}` syntax.
+
+`pcre2/*` does not support `\p{Letter}` syntax.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`re2` does not support `\p{Letter}` syntax.
+'''
+
+[[bench]]
+model = "count"
+name = "pLetter-casei-matches-nonbmp-delta"
+regex = '\p{lEtTeR}'
+unicode = true
+haystack = 'δ'
+count = 1
+engines = [
+  'perl',
+  'python/regex',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support `\p{Letter}` syntax.
+
+`go/regexp` does not support `\p{Letter}` syntax.
+
+`hyperscan` does not support `\p{Letter}` syntax.
+
+`pcre2/*` does not support `\p{Letter}` syntax.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`re2` does not support `\p{Letter}` syntax.
+
+`regress` has support for Unicode character classes, but doesn't support the
+"loose matching" required by UTS#18. I believe this is due to an intentional
+ECMAScript restriction.
+'''
+
+[[bench]]
+model = "count"
+name = "pLetter-gc-equals-matches-nonbmp-delta"
+regex = '\p{gc=Letter}'
+unicode = true
+haystack = 'δ'
+count = 1
+engines = [
+  'perl',
+  'python/regex',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support `\p{Letter}` syntax.
+
+`go/regexp` does not support `\p{Letter}` syntax.
+
+`hyperscan` does not support `\p{Letter}` syntax.
+
+`pcre2/*` does not support `\p{Letter}` syntax.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`re2` does not support `\p{Letter}` syntax.
+'''
+
+[[bench]]
+model = "count"
+name = "pLetter-gc-colon-matches-nonbmp-delta"
+regex = '\p{gc:Letter}'
+unicode = true
+haystack = 'δ'
+count = 1
+engines = [
+  'perl',
+  'python/regex',
+  'rust/regex',
+  'rust/regex/meta',
+]
+analysis = '''
+`dotnet/*` does not support `\p{Letter}` syntax.
+
+`go/regexp` does not support `\p{Letter}` syntax.
+
+`hyperscan` does not support `\p{Letter}` syntax.
+
+`pcre2/*` does not support `\p{Letter}` syntax.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`re2` does not support `\p{Letter}` syntax.
+
+`regress` has support for Unicode character classes, but when specifying the
+property name (`gc` in this case), it requires the use of `=` instead of also
+permitting `:` as required by UTS#18. I believe this is due to an intentional
+ECMAScript restriction.
+'''

@@ -45,8 +45,8 @@ regex = { path = "wild/date.txt" }
 case-insensitive = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
-  { engine = '*', count = 111_817 },
   { engine = 'hyperscan', count = 547_662 },
+  { engine = '.*', count = 111_817 },
 ]
 engines = [
   'go/regexp',
@@ -76,8 +76,8 @@ case-insensitive = true
 unicode = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
-  { engine = '*', count = 111_841 },
   { engine = 'dotnet/compiled', count = 111_825 },
+  { engine = '.*', count = 111_841 },
 ]
 engines = [
   'dotnet/compiled',
@@ -116,8 +116,8 @@ regex = { path = "wild/date.txt" }
 case-insensitive = true
 haystack = "2010-03-14"
 count = [
-  { engine = '*', count = 5 },
   { engine = 'hyperscan', count = 10 },
+  { engine = '.*', count = 5 },
 ]
 engines = [
   'go/regexp',
