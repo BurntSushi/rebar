@@ -45,6 +45,8 @@ engines = [
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
 
+`java/*` does not support searching arbitrary bytes.
+
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
 '''
 
@@ -79,6 +81,8 @@ engines = [
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
 
+`java/*` does not support searching arbitrary bytes.
+
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
@@ -108,6 +112,8 @@ engines = [
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
+
+`java/*` does not support searching arbitrary bytes.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
 
@@ -155,6 +161,8 @@ engines = [
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
 
+`java/*` does not support searching arbitrary bytes.
+
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
@@ -183,6 +191,8 @@ engines = [
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
+
+`java/*` does not support searching arbitrary bytes.
 
 `go/regexp` supports searching invalid UTF-8, but does not support searching
 for specific invalid UTF-8 bytes.

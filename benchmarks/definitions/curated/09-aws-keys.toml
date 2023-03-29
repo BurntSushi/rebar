@@ -48,6 +48,7 @@ count = 0
 engines = [
   'dotnet/compiled',
   'go/regexp',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -71,6 +72,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -92,6 +94,7 @@ count = 1
 engines = [
   'dotnet/compiled',
   'go/regexp',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -114,6 +117,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',

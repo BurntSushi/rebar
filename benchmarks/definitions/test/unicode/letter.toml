@@ -26,6 +26,7 @@ count = 1
 engines = [
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -55,6 +56,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -88,6 +90,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -108,10 +111,12 @@ on UTF-16, because it exposes whether they treat UTF-16 code units as the
 fundamental atom of matching, or if they treat codepoints as the atom of
 matching. For proper Unicode support, you really want the latter. (Of course,
 some regex engines permit toggling what is the fundamental atom of matching,
-but I don't believe .NET does.) Since it looks like .NET uses UTF-16 code units
-as the atom of matching, and since character classes generally can only match
-one atom, it follows that .NET can't match codepoints outside the BMP with a
-character class because such codepoints consist of surrogate pairs.
+but I don't believe .NET does.) Since it looks like .NET uses UTF-16 code
+units as the atom of matching, and since character classes generally can only
+match one atom, it follows that .NET can't match codepoints outside the BMP
+with a character class because such codepoints consist of surrogate pairs.
+Interestingly, Java handles this case correctly, despite also representing a
+`char` as a single UTF-16 code unit.
 '''
 
 [[bench]]
@@ -134,6 +139,8 @@ analysis = '''
 `go/regexp` does not support `\p{Letter}` syntax.
 
 `hyperscan` does not support `\p{Letter}` syntax.
+
+`java/*` does not support `\p{Letter}` syntax.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
 
@@ -161,6 +168,8 @@ analysis = '''
 `go/regexp` does not support `\p{Letter}` syntax.
 
 `hyperscan` does not support `\p{Letter}` syntax.
+
+`java/*` does not support `\p{Letter}` syntax.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
 
@@ -194,6 +203,8 @@ analysis = '''
 
 `hyperscan` does not support `\p{Letter}` syntax.
 
+`java/*` does not support `\p{Letter}` syntax.
+
 `pcre2/*` does not support `\p{Letter}` syntax.
 
 `python/re` doesn't support Unicode character classes at all.
@@ -220,6 +231,8 @@ analysis = '''
 `go/regexp` does not support `\p{Letter}` syntax.
 
 `hyperscan` does not support `\p{Letter}` syntax.
+
+`java/*` does not support `\p{Letter}` syntax.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
 

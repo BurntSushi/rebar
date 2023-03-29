@@ -51,6 +51,7 @@ count = [
 engines = [
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -76,11 +77,12 @@ case-insensitive = true
 unicode = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
-  { engine = 'dotnet/compiled', count = 111_825 },
+  { engine = 'dotnet/compiled|java/hotspot', count = 111_825 },
   { engine = '.*', count = 111_841 },
 ]
 engines = [
   'dotnet/compiled',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -122,6 +124,7 @@ count = [
 engines = [
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -150,6 +153,7 @@ haystack = "۲۰۱۰-۰۳-۱۴"
 count = 5
 engines = [
   'dotnet/compiled',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',

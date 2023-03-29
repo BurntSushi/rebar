@@ -293,6 +293,28 @@
     bin = "perl"
     args = ["main.pl"]
 
+# Java's regex engine on the HotSpot VM.
+#
+# URL: https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+[[engine]]
+  name = "java/hotspot"
+  cwd = "engines/java"
+  [engine.version]
+    bin = "java"
+    args = ["Main", "version"]
+    # We specifically require a mention of 'HotSpot' to avoid accidentally
+    # benchmarking something other than what we advertise.
+    regex = '^Java HotSpot.*VM (?P<version>.*)'
+  [engine.run]
+    bin = "java"
+    args = ["Main"]
+  [[engine.build]]
+    bin = "javac"
+    args = ["Main.java"]
+  [[engine.clean]]
+    bin = "sh"
+    args = ["-c", "rm *.class"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and

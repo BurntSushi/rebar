@@ -43,6 +43,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -68,14 +69,15 @@ regex = '\b\w+\b'
 unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
 count = [
-  { engine = 'dotnet/compiled', count = 53_960 },
-  { engine = 'dotnet/nobacktrack', count = 53_960 },
+  { engine = 'dotnet.*', count = 53_960 },
+  { engine = 'java.*', count = 53_960 },
   { engine = 'perl', count = 53_960 },
   { engine = '.*', count = 107_391 },
 ]
 engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -108,6 +110,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -133,14 +136,15 @@ regex = '\b\w{12,}\b'
 unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
 count = [
-  { engine = 'dotnet/compiled', count = 2747 },
-  { engine = 'dotnet/nobacktrack', count = 2747 },
+  { engine = 'dotnet.*', count = 2747 },
+  { engine = 'java.*', count = 2747 },
   { engine = 'perl', count = 2747 },
   { engine = '.*', count = 5481 },
 ]
 engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',

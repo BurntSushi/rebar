@@ -29,6 +29,8 @@ a codepoint.)
 
 `go/regexp` the fundamental atom of matching is always one codepoint.
 
+`java/*` the fundamental atom of matching is always one codepoint.
+
 `regress` the fundamental atom of matching is always one codepoint.
 '''
 
@@ -39,9 +41,12 @@ regex = '.'
 unicode = true
 haystack = '💩'
 count = [
-  # For engines that treat spans as a sequence of UTF-16 code units.
-  # Since a pile of poo is outside the BMP, this uses a surrogate pair, which
-  # consists of two UTF-16 code units.
+  # For engines that treat spans as a sequence of UTF-16 code units. Since a
+  # pile of poo is outside the BMP, this uses a surrogate pair, which consists
+  # of two UTF-16 code units.
+  #
+  # Actually this seems to only apply to .NET. Java correctly treats this as a
+  # single match despite also using strings represented by UTF-16 code units.
   { engine = 'dotnet.*', count = 2 },
   { engine = '.*', count = 1 },
 ]
@@ -51,6 +56,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'perl',
