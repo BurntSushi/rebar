@@ -111,7 +111,6 @@ engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
-  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',

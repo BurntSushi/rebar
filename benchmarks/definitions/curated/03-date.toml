@@ -124,7 +124,6 @@ count = [
 engines = [
   'go/regexp',
   'hyperscan',
-  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -153,7 +152,6 @@ haystack = "۲۰۱۰-۰۳-۱۴"
 count = 5
 engines = [
   'dotnet/compiled',
-  'java/hotspot',
   'pcre2',
   'pcre2/jit',
   'python/re',
