@@ -22,38 +22,38 @@
 #
 # URL: https://github.com/rust-lang/regex
 [[engine]]
-name = "rust/regex"
-cwd = "engines/rust/regex"
-[engine.version]
-bin = "./target/release/main"
-args = ["--version"]
-[engine.run]
-bin = "./target/release/main"
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex"
+  cwd = "engines/rust/regex"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # The regress regex engine, written in Rust. It is meant to support EcmaScript
 # syntax.
 #
 # URL: https://github.com/ridiculousfish/regress
 [[engine]]
-name = "regress"
-cwd = "engines/regress"
-[engine.version]
-bin = "./target/release/main"
-args = ["--version"]
-[engine.run]
-bin = "./target/release/main"
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "regress"
+  cwd = "engines/regress"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # The RE2 regex engine out of Google, written in C++. Responsible for
 # rekindling interest in using automata for regex engine implementations. Also
@@ -62,19 +62,19 @@ args = ["clean"]
 #
 # URL: https://github.com/google/re2
 [[engine]]
-name = "re2"
-cwd = "engines/re2"
-[engine.version]
-bin = "./target/release/main"
-args = ["--version"]
-[engine.run]
-bin = "./target/release/main"
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "re2"
+  cwd = "engines/re2"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # PCRE2 brings "Perl compatible regular expressions" to C as a standalone
 # library. This engine uses the "standard" PCRE2 API that utilizes an
@@ -82,20 +82,20 @@ args = ["clean"]
 #
 # URL: https://github.com/PCRE2Project/pcre2
 [[engine]]
-name = "pcre2"
-cwd = "engines/pcre2"
-[engine.version]
-bin = "./target/release/main"
-args = ["interp", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["interp"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "pcre2"
+  cwd = "engines/pcre2"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["interp", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["interp"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # PCRE2 brings "Perl compatible regular expressions" to C as a standalone
 # library. This engine uses PCRE2's homegrown JIT built via the sljit compiler.
@@ -103,83 +103,83 @@ args = ["clean"]
 # URL: https://github.com/PCRE2Project/pcre2
 # URL: https://github.com/zherczeg/sljit
 [[engine]]
-name = "pcre2/jit"
-cwd = "engines/pcre2"
-[engine.version]
-bin = "./target/release/main"
-args = ["jit", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["jit"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "pcre2/jit"
+  cwd = "engines/pcre2"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["jit", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["jit"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # The regex engine included as part of Go's standard library. It's ancestor is
 # RE2, although it lacks RE2's lazy DFA.
 #
 # URL: https://pkg.go.dev/regexp
 [[engine]]
-name = "go/regexp"
-cwd = "engines/go"
-[engine.version]
-bin = "./main"
-args = ["version"]
-regex = 'go(?P<version>[0-9]\.[0-9]+\.[0-9]+)'
-[engine.run]
-bin = "./main"
-[[engine.build]]
-bin = "go"
-args = ["build"]
-[[engine.clean]]
-bin = "rm"
-args = ["-f", "main"]
+  name = "go/regexp"
+  cwd = "engines/go"
+  [engine.version]
+    bin = "./main"
+    args = ["version"]
+    regex = 'go(?P<version>[0-9]\.[0-9]+\.[0-9]+)'
+  [engine.run]
+    bin = "./main"
+  [[engine.build]]
+    bin = "go"
+    args = ["build"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-f", "main"]
 
 # The regex engine included as part of Python's standard library.
 #
 # URL: https://docs.python.org/3/library/re.html
 [[engine]]
-name = "python/re"
-cwd = "engines/python"
-[engine.version]
-bin = "ve/bin/python"
-args = ["--version"]
-regex = '(?m)^Python (?P<version>.+)$'
-[engine.run]
-bin = "ve/bin/python"
-args = ["main.py", "re"]
-[[engine.build]]
-bin = "virtualenv"
-args = ["ve"]
-[[engine.clean]]
-bin = "rm"
-args = ["-rf", "./ve"]
+  name = "python/re"
+  cwd = "engines/python"
+  [engine.version]
+    bin = "ve/bin/python"
+    args = ["--version"]
+    regex = '(?m)^Python (?P<version>.+)$'
+  [engine.run]
+    bin = "ve/bin/python"
+    args = ["main.py", "re"]
+  [[engine.build]]
+    bin = "virtualenv"
+    args = ["ve"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-rf", "./ve"]
 
 # The third party Python 'regex' module. Supports oodles of features.
 #
 # URL: https://github.com/mrabarnett/mrab-regex
 [[engine]]
-name = "python/regex"
-cwd = "engines/python"
-[engine.version]
-bin = "ve/bin/pip"
-args = ["show", "regex"]
-regex = '(?m)^Version: (?P<version>.+)$'
-[engine.run]
-bin = "ve/bin/python"
-args = ["main.py", "regex"]
-[[engine.build]]
-bin = "virtualenv"
-args = ["ve"]
-[[engine.build]]
-bin = "ve/bin/pip"
-args = ["install", "regex"]
-[[engine.clean]]
-bin = "rm"
-args = ["-rf", "./ve"]
+  name = "python/regex"
+  cwd = "engines/python"
+  [engine.version]
+    bin = "ve/bin/pip"
+    args = ["show", "regex"]
+    regex = '(?m)^Version: (?P<version>.+)$'
+  [engine.run]
+    bin = "ve/bin/python"
+    args = ["main.py", "regex"]
+  [[engine.build]]
+    bin = "virtualenv"
+    args = ["ve"]
+  [[engine.build]]
+    bin = "ve/bin/pip"
+    args = ["install", "regex"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-rf", "./ve"]
 
 # The venerable Hyperscan regex engine. Notable for its best-in-class literal
 # optimizations, support for stream searching and excellent support for
@@ -188,8 +188,8 @@ args = ["-rf", "./ve"]
 # reports the position of every match instead of the leftmost-first or
 # leftmost-longest match.
 #
-# Sadly, it looks like Hyperscan might be a dead project. We should consider
-# switching (or just adding) Vectorscan...
+# Sadly, it looks like Hyperscan might be a dead (or nearly dead) project. We
+# should consider switching (or just adding) Vectorscan...
 #
 # URL: https://github.com/intel/hyperscan
 #
@@ -202,38 +202,38 @@ args = ["-rf", "./ve"]
 #
 # URL: https://github.com/flier/rust-hyperscan
 [[engine]]
-name = "hyperscan"
-cwd = "engines/hyperscan"
-[engine.version]
-bin = "./target/release/main"
-args = ["--version"]
-[engine.run]
-bin = "./target/release/main"
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "hyperscan"
+  cwd = "engines/hyperscan"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # .NET's default or interpreter regex engine.
 #
 # URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
 [[engine]]
-name = "dotnet"
-cwd = "engines/dotnet"
-[engine.version]
-bin = "bin/Release/net7.0/main"
-args = ["version"]
-[engine.run]
-bin = "bin/Release/net7.0/main"
-args = ["interp"]
-[[engine.build]]
-bin = "dotnet"
-args = ["build", "-c", "Release"]
-[[engine.clean]]
-bin = "dotnet"
-args = ["clean", "-c", "Release"]
+  name = "dotnet"
+  cwd = "engines/dotnet"
+  [engine.version]
+    bin = "bin/Release/net7.0/main"
+    args = ["version"]
+  [engine.run]
+    bin = "bin/Release/net7.0/main"
+    args = ["interp"]
+  [[engine.build]]
+    bin = "dotnet"
+    args = ["build", "-c", "Release"]
+  [[engine.clean]]
+    bin = "dotnet"
+    args = ["clean", "-c", "Release"]
 
 # .NET's "compiled" regex engine.
 #
@@ -241,20 +241,20 @@ args = ["clean", "-c", "Release"]
 #
 # URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
 [[engine]]
-name = "dotnet/compiled"
-cwd = "engines/dotnet"
-[engine.version]
-bin = "bin/Release/net7.0/main"
-args = ["version"]
-[engine.run]
-bin = "bin/Release/net7.0/main"
-args = ["compiled"]
-[[engine.build]]
-bin = "dotnet"
-args = ["build", "-c", "Release"]
-[[engine.clean]]
-bin = "dotnet"
-args = ["clean", "-c", "Release"]
+  name = "dotnet/compiled"
+  cwd = "engines/dotnet"
+  [engine.version]
+    bin = "bin/Release/net7.0/main"
+    args = ["version"]
+  [engine.run]
+    bin = "bin/Release/net7.0/main"
+    args = ["compiled"]
+  [[engine.build]]
+    bin = "dotnet"
+    args = ["build", "-c", "Release"]
+  [[engine.clean]]
+    bin = "dotnet"
+    args = ["clean", "-c", "Release"]
 
 # .NET's "non-backtracking" regex engine.
 #
@@ -264,34 +264,34 @@ args = ["clean", "-c", "Release"]
 #
 # URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions
 [[engine]]
-name = "dotnet/nobacktrack"
-cwd = "engines/dotnet"
-[engine.version]
-bin = "bin/Release/net7.0/main"
-args = ["version"]
-[engine.run]
-bin = "bin/Release/net7.0/main"
-args = ["nobacktrack"]
-[[engine.build]]
-bin = "dotnet"
-args = ["build", "-c", "Release"]
-[[engine.clean]]
-bin = "dotnet"
-args = ["clean", "-c", "Release"]
+  name = "dotnet/nobacktrack"
+  cwd = "engines/dotnet"
+  [engine.version]
+    bin = "bin/Release/net7.0/main"
+    args = ["version"]
+  [engine.run]
+    bin = "bin/Release/net7.0/main"
+    args = ["nobacktrack"]
+  [[engine.build]]
+    bin = "dotnet"
+    args = ["build", "-c", "Release"]
+  [[engine.clean]]
+    bin = "dotnet"
+    args = ["clean", "-c", "Release"]
 
 # Perl's regex engine.
 #
 # URL: https://perldoc.perl.org/perlre
 [[engine]]
-name = "perl"
-cwd = "engines/perl"
-[engine.version]
-bin = "perl"
-args = ["--version"]
-regex = 'This is perl 5, .+\(v(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\)'
-[engine.run]
-bin = "perl"
-args = ["main.pl"]
+  name = "perl"
+  cwd = "engines/perl"
+  [engine.version]
+    bin = "perl"
+    args = ["--version"]
+    regex = 'This is perl 5, .+\(v(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\)'
+  [engine.run]
+    bin = "perl"
+    args = ["main.pl"]
 
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
@@ -313,56 +313,56 @@ args = ["main.pl"]
 # caller to pass that mutable scratch space directly, unlike the higher level
 # regex crate API.)
 [[engine]]
-name = "rust/regex/meta"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["meta", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["meta"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/meta"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["meta", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["meta"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # The "dense DFA" regex engine. Basically, a full DFA with a classic table
 # based transition table.
 [[engine]]
-name = "rust/regex/dense"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["dense", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["dense"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/dense"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["dense", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["dense"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # The "sparse DFA" regex engine. A full DFA, but represents its transition
 # table using a sparse format. Basically, slower transitions but less memory.
 [[engine]]
-name = "rust/regex/sparse"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["sparse", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["sparse"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/sparse"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["sparse", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["sparse"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # A hybrid NFA/DFA or "lazy DFA." Like a DFA, but builds itself during a
 # search. It avoids the worst case exponential time/space complexity of fully
@@ -370,20 +370,20 @@ args = ["clean"]
 # state) are compiled for each byte in the haystack. Main downside is that in
 # the worst cases, search can be quite slow.
 [[engine]]
-name = "rust/regex/hybrid"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["hybrid", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["hybrid"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/hybrid"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["hybrid", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["hybrid"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # A full DFA limited to a subset of regexes that are "one pass." That is,
 # conceptually, the regex does not require backtracking. Because of this
@@ -394,168 +394,168 @@ args = ["clean"]
 # The main upside of a one-pass DFA is that it can resolve capture groups and
 # handle Unicode word boundaries.
 [[engine]]
-name = "rust/regex/onepass"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["onepass", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["onepass"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/onepass"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["onepass", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["onepass"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # A bounded backtracking engine. Only used for small haystacks/regexes. It
 # avoids worst case exponential time in exchange for heap space used to ensure
 # any combination of haystack position and NFA state are only visited once.
 [[engine]]
-name = "rust/regex/backtrack"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["backtrack", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["backtrack"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/backtrack"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["backtrack", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["backtrack"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # The Thompson NFA construction adapted to support capture groups, aka, the
 # "Pike VM." Can handle everything and has worst case linear time/space
 # complexity (with the regex held constant), but is usually quite slow in
 # practice because of the overhead of NFA simulation.
 [[engine]]
-name = "rust/regex/pikevm"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["pikevm", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["pikevm"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/pikevm"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["pikevm", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["pikevm"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # This is for benchmarking NFA compilation times. It doesn't make sense to use
 # this for anything other than a 'model = "compile"' benchmark.
 [[engine]]
-name = "rust/regex/nfa"
-cwd = "engines/rust/regex-automata"
-[engine.version]
-bin = "./target/release/main"
-args = ["nfa", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["nfa"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/nfa"
+  cwd = "engines/rust/regex-automata"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["nfa", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["nfa"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # This is for benchmarking HIR translation times. It doesn't make sense to use
 # this for anything other than a 'model = "compile"' benchmark.
 [[engine]]
-name = "rust/regex/hir"
-cwd = "engines/rust/regex-syntax"
-[engine.version]
-bin = "./target/release/main"
-args = ["hir", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["hir"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/hir"
+  cwd = "engines/rust/regex-syntax"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["hir", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["hir"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # This is for benchmarking AST parsing times. It doesn't make sense to use
 # this for anything other than a 'model = "compile"' benchmark.
 [[engine]]
-name = "rust/regex/ast"
-cwd = "engines/rust/regex-syntax"
-[engine.version]
-bin = "./target/release/main"
-args = ["ast", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["ast"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regex/ast"
+  cwd = "engines/rust/regex-syntax"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["ast", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["ast"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 
 # A fully compiled Aho-Corasick DFA. This is sometimes used in the meta regex
 # engine.
 [[engine]]
-name = "rust/aho-corasick/dfa"
-cwd = "engines/rust/aho-corasick"
-[engine.version]
-bin = "./target/release/main"
-args = ["dfa", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["dfa"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/aho-corasick/dfa"
+  cwd = "engines/rust/aho-corasick"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["dfa", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["dfa"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # A fully compiled Aho-Corasick NFA. This is sometimes used in the meta regex
 # engine.
 [[engine]]
-name = "rust/aho-corasick/nfa"
-cwd = "engines/rust/aho-corasick"
-[engine.version]
-bin = "./target/release/main"
-args = ["nfa", "--version"]
-[engine.run]
-bin = "./target/release/main"
-args = ["nfa"]
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/aho-corasick/nfa"
+  cwd = "engines/rust/aho-corasick"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["nfa", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["nfa"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # Single substring search. Used whenever possible to accelerate searches.
 # Utilizes heuristic frequency distribution of bytes, SIMD, Two-Way, memchr and
 # Rabin-Karp.
 [[engine]]
-name = "rust/memchr/memmem"
-cwd = "engines/rust/memchr"
-[engine.version]
-bin = "./target/release/main"
-args = ["--version"]
-[engine.run]
-bin = "./target/release/main"
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/memchr/memmem"
+  cwd = "engines/rust/memchr"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
 
 # OLD RUST REGEX ENGINE
 
@@ -569,16 +569,16 @@ args = ["clean"]
 # you'll have to also uncomment some lines in rebar's Cargo.toml, as it is not
 # compiled in by default.
 [[engine]]
-name = "rust/regexold"
-cwd = "engines/rust/regex-old"
-[engine.version]
-bin = "./target/release/main"
-args = ["--version"]
-[engine.run]
-bin = "./target/release/main"
-[[engine.build]]
-bin = "cargo"
-args = ["build", "--release"]
-[[engine.clean]]
-bin = "cargo"
-args = ["clean"]
+  name = "rust/regexold"
+  cwd = "engines/rust/regex-old"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
