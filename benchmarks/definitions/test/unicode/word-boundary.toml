@@ -18,6 +18,8 @@ haystack = 'δ'
 count = [
   # .NET doesn't permit disabling the Unicode variant of \b.
   { engine = 'dotnet.*', count = 2 },
+  # ICU doesn't permit disabling the Unicode variant of \b.
+  { engine = 'icu', count = 2 },
   { engine = '.*', count = 0 },
 ]
 engines = [
@@ -26,6 +28,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -57,6 +60,7 @@ engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -86,7 +90,7 @@ count = [
   #
   # Notice that dotnet is not included here, despite the fact that
   # \p{Join_Control} is not part of the definition of \w!
-  { engine = 'hyperscan|pcre2.*|python/re', count = 0 },
+  { engine = 'hyperscan|icu|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 2 },
 ]
 engines = [
@@ -94,6 +98,7 @@ engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -120,7 +125,7 @@ count = [
   # None of these regex engines support the Unicode variant of \b.
   { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   # None of these include \p{gc=Mark} in their definition of \b.
-  { engine = 'hyperscan|pcre2.*|python/re', count = 0 },
+  { engine = 'hyperscan|icu|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 2 },
 ]
 engines = [
@@ -128,6 +133,7 @@ engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -162,6 +168,7 @@ engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -198,6 +205,7 @@ engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',

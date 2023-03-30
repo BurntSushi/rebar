@@ -50,6 +50,8 @@ count = [
   { engine = 'dotnet.*', count = 111_825 },
   # Hyperscan reports all possible matches, so its total span count is higher.
   { engine = 'hyperscan', count = 547_662 },
+  # ICU doesn't provide a way to disable Unicode.
+  { engine = 'icu', count = 111_825 },
   # I don't know why the count span differs here. Note that this matches
   # v8's count when Unicode mode is enabled as well, which suggests that the
   # number of matches doesn't change. (Which makes sense, because \w, \s and
@@ -80,6 +82,7 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -109,11 +112,12 @@ unicode = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
   # These engines all count spans of UTF-16 code units.
-  { engine = 'dotnet/compiled|java/hotspot|javascript/v8', count = 111_825 },
+  { engine = 'dotnet/compiled|icu|java/hotspot|javascript/v8', count = 111_825 },
   { engine = '.*', count = 111_841 },
 ]
 engines = [
   'dotnet/compiled',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -157,6 +161,7 @@ count = [
 engines = [
   'go/regexp',
   'hyperscan',
+  'icu',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -189,6 +194,7 @@ count = [
 ]
 engines = [
   'dotnet/compiled',
+  'icu',
   'pcre2',
   'pcre2/jit',
   'python/re',

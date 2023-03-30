@@ -23,8 +23,8 @@ name = "ascii-only"
 regex = '\d'
 haystack = '᠕'
 count = [
-  # .NET doesn't permit disabling the Unicode variant of \d.
-  { engine = 'dotnet.*', count = 1 },
+  # These don't permit disabling the Unicode variant of \d.
+  { engine = 'dotnet.*|icu', count = 1 },
   { engine = '.*', count = 0 },
 ]
 engines = [
@@ -33,6 +33,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -63,6 +64,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',

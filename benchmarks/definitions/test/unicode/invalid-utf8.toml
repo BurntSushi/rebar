@@ -45,6 +45,8 @@ engines = [
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
 
+`icu` does not support searching arbitrary bytes.
+
 `java/*` does not support searching arbitrary bytes.
 
 `javascript/*` does not support searching arbitrary bytes.
@@ -86,6 +88,8 @@ analysis = '''
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
+`icu` does not support searching arbitrary bytes.
+
 `java/*` does not support searching arbitrary bytes.
 
 `javascript/*` does not support searching arbitrary bytes.
@@ -116,6 +120,8 @@ engines = [
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
+
+`icu` does not support searching arbitrary bytes.
 
 `java/*` does not support searching arbitrary bytes.
 
@@ -170,6 +176,8 @@ analysis = '''
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
+`icu` does not support searching arbitrary bytes.
+
 `java/*` does not support searching arbitrary bytes.
 
 `javascript/*` does not support searching arbitrary bytes.
@@ -199,6 +207,8 @@ engines = [
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
+
+`icu` does not support searching arbitrary bytes.
 
 `java/*` does not support searching arbitrary bytes.
 

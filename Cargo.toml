@@ -28,6 +28,7 @@ members = [
 # this list, then '.vim/coc-settings.json' probably also needs to be updated.
 exclude = [
   "engines/hyperscan",
+  "engines/icu",
   "engines/pcre2",
   "engines/re2",
   "engines/regress",

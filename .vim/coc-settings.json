@@ -1,6 +1,7 @@
 {
   "rust-analyzer.linkedProjects": [
     "engines/hyperscan/Cargo.toml",
+    "engines/icu/Cargo.toml",
     "engines/pcre2/Cargo.toml",
     "engines/re2/Cargo.toml",
     "engines/regress/Cargo.toml",

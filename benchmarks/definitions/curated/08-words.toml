@@ -36,6 +36,7 @@ haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
 count = [
   { engine = 'dotnet/compiled', count = 56_601 },
   { engine = 'dotnet/nobacktrack', count = 56_601 },
+  { engine = 'icu', count = 56_601 },
   { engine = '.*', count = 56_691 },
 ]
 engines = [
@@ -43,6 +44,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -71,6 +73,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
 count = [
   { engine = 'dotnet.*', count = 53_960 },
+  { engine = 'icu', count = 53_960 },
   { engine = 'java.*', count = 53_960 },
   { engine = 'perl', count = 53_960 },
   { engine = '.*', count = 107_391 },
@@ -78,6 +81,7 @@ count = [
 engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'icu',
   'java/hotspot',
   'pcre2',
   'pcre2/jit',
@@ -111,6 +115,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -139,6 +144,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 2_500 }
 count = [
   { engine = 'dotnet.*', count = 2747 },
+  { engine = 'icu', count = 2747 },
   { engine = 'java.*', count = 2747 },
   { engine = 'perl', count = 2747 },
   { engine = '.*', count = 5481 },
@@ -146,6 +152,7 @@ count = [
 engines = [
   'dotnet/compiled',
   'dotnet/nobacktrack',
+  'icu',
   'java/hotspot',
   'pcre2',
   'pcre2/jit',

@@ -338,6 +338,24 @@
     bin = "node"
     args = ["main.js"]
 
+# A C++ regex engine bundled with ICU.
+#
+# URL: https://unicode-org.github.io/icu/userguide/strings/regexp.html
+[[engine]]
+  name = "icu"
+  cwd = "engines/icu"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and

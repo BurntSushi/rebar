@@ -38,6 +38,8 @@ engines = [
 analysis = '''
 `dotnet/*` does not support `\pL` syntax. It instead requires `\p{L}`.
 
+`icu` does not support `\pL` syntax. It instead requires `\p{L}`.
+
 `javascript/*` has support for Unicode character classes, but not `\pL` syntax.
 
 `python/re` doesn't support Unicode character classes at all.
@@ -58,6 +60,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -93,6 +96,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -131,6 +135,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'icu',
   'javascript/v8',
   'perl',
   'python/regex',
@@ -162,6 +167,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'icu',
   'perl',
   'python/regex',
   'rust/regex',
@@ -199,6 +205,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'icu',
   'javascript/v8',
   'perl',
   'python/regex',
@@ -242,12 +249,11 @@ analysis = '''
 
 `hyperscan` does not support `\p{Letter}` syntax.
 
+`icu` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
+
 `java/*` does not support `\p{Letter}` syntax.
 
-`javascript/*` has support for Unicode character classes, but when specifying
-the property name (`gc` in this case), it requires the use of `=` instead
-of also permitting `:` as required by UTS#18. I believe this is due to an
-intentional ECMAScript restriction.
+`javascript/*` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
 
@@ -255,8 +261,5 @@ intentional ECMAScript restriction.
 
 `re2` does not support `\p{Letter}` syntax.
 
-`regress` has support for Unicode character classes, but when specifying the
-property name (`gc` in this case), it requires the use of `=` instead of also
-permitting `:` as required by UTS#18. I believe this is due to an intentional
-ECMAScript restriction.
+`regress` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
 '''

@@ -17,7 +17,7 @@ case-insensitive = true
 haystack = 'ſ'
 count = [
   # None of these engines support disabling Unicode-aware case insensitivity.
-  { engine = 'go/regexp|regress', count = 1 },
+  { engine = 'go/regexp|icu|regress', count = 1 },
   { engine = '.*', count = 0 },
 ]
 engines = [
@@ -26,6 +26,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -59,6 +60,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -86,6 +88,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',

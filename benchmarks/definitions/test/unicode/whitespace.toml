@@ -21,6 +21,8 @@ haystack = "\u2000"
 count = [
   # .NET doesn't permit disabling the Unicode variant of \s.
   { engine = 'dotnet.*', count = 1 },
+  # ICU doesn't permit disabling the Unicode variant of \s.
+  { engine = 'icu', count = 1 },
   # These are ECMAScript engines where \s is always Unicode-aware. (It's
   # probably no coincidence that \p{Whitespace} exists entirely within the
   # BMP.)
@@ -33,6 +35,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
@@ -63,6 +66,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'icu',
   'java/hotspot',
   'javascript/v8',
   'pcre2',
