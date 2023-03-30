@@ -336,8 +336,8 @@ impl Flattened {
         for m in measurements.iter() {
             if !set.contains(&(m.name.clone(), m.engine.clone())) {
                 log::warn!(
-                    "could not find measurement for benchmark '{}' and engine \
-                     '{}' in set of benchmark definitions, so rebar will drop \
+                    "could not find '{}' and engine '{}' in set of benchmark \
+                     definitions, so rebar will drop \
                      the measurement and continue",
                     m.name,
                     m.engine,
