@@ -18,10 +18,10 @@ measurements. These are just about verifying functionality.
 
 [[bench]]
 model = "count"
-name = "pL-matches-nonbmp-delta"
+name = "pL-matches-bmp-delta"
 regex = '\pL'
 unicode = true
-haystack = '𝛅'
+haystack = 'δ'
 count = 1
 engines = [
   'go/regexp',
@@ -37,6 +37,8 @@ engines = [
 ]
 analysis = '''
 `dotnet/*` does not support `\pL` syntax. It instead requires `\p{L}`.
+
+`javascript/*` has support for Unicode character classes, but not `\pL` syntax.
 
 `python/re` doesn't support Unicode character classes at all.
 
@@ -57,6 +59,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -91,6 +94,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -121,12 +125,13 @@ Interestingly, Java handles this case correctly, despite also representing a
 
 [[bench]]
 model = "count"
-name = "pLetter-matches-nonbmp-delta"
+name = "pLetter-matches-bmp-delta"
 regex = '\p{Letter}'
 unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'javascript/v8',
   'perl',
   'python/regex',
   'regress',
@@ -151,7 +156,7 @@ analysis = '''
 
 [[bench]]
 model = "count"
-name = "pLetter-casei-matches-nonbmp-delta"
+name = "pLetter-casei-matches-bmp-delta"
 regex = '\p{lEtTeR}'
 unicode = true
 haystack = 'δ'
@@ -171,6 +176,10 @@ analysis = '''
 
 `java/*` does not support `\p{Letter}` syntax.
 
+`javascript/*` has support for Unicode character classes, but doesn't
+support the "loose matching" required by UTS#18. I believe this is due to an
+intentional ECMAScript restriction.
+
 `pcre2/*` does not support `\p{Letter}` syntax.
 
 `python/re` doesn't support Unicode character classes at all.
@@ -184,12 +193,13 @@ ECMAScript restriction.
 
 [[bench]]
 model = "count"
-name = "pLetter-gc-equals-matches-nonbmp-delta"
+name = "pLetter-gc-equals-matches-bmp-delta"
 regex = '\p{gc=Letter}'
 unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'javascript/v8',
   'perl',
   'python/regex',
   'regress',
@@ -214,7 +224,7 @@ analysis = '''
 
 [[bench]]
 model = "count"
-name = "pLetter-gc-colon-matches-nonbmp-delta"
+name = "pLetter-gc-colon-matches-bmp-delta"
 regex = '\p{gc:Letter}'
 unicode = true
 haystack = 'δ'
@@ -233,6 +243,11 @@ analysis = '''
 `hyperscan` does not support `\p{Letter}` syntax.
 
 `java/*` does not support `\p{Letter}` syntax.
+
+`javascript/*` has support for Unicode character classes, but when specifying
+the property name (`gc` in this case), it requires the use of `=` instead
+of also permitting `:` as required by UTS#18. I believe this is due to an
+intentional ECMAScript restriction.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
 

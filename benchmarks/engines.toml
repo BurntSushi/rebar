@@ -315,6 +315,29 @@
     bin = "sh"
     args = ["-c", "rm *.class"]
 
+# Javascript's regex engine from v8.
+#
+# URL: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp
+#
+# Also known as irregexp:
+# https://blog.chromium.org/2009/02/irregexp-google-chromes-new-regexp.html
+#
+# Note that v8 also has an experimental non-backtracking regex engine[1] that
+# might be interesting to include as well, but it's not clear what the best way
+# to include it is.
+#
+# [1]: https://v8.dev/blog/non-backtracking-regexp
+[[engine]]
+  name = "javascript/v8"
+  cwd = "engines/javascript"
+  [engine.version]
+    bin = "node"
+    args = ["--version"]
+    regex = 'v(?P<version>.*)'
+  [engine.run]
+    bin = "node"
+    args = ["main.js"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and

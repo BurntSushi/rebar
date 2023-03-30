@@ -34,6 +34,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',

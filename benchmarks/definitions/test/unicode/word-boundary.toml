@@ -27,6 +27,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -46,7 +47,7 @@ unicode = true
 haystack = 'δ'
 count = [
   # None of these regex engines support the Unicode variant of \b.
-  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   # This looks like a bug. Notably, pcre2/jit differs from it!
   { engine = 'pcre2', count = 1 },
   { engine = '.*', count = 2 },
@@ -57,6 +58,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -79,7 +81,7 @@ unicode = true
 haystack = "\u200D"
 count = [
   # None of these regex engines support the Unicode variant of \b.
-  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   # None of these include \p{Join_Control} in their definition of \b.
   #
   # Notice that dotnet is not included here, despite the fact that
@@ -93,6 +95,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -115,7 +118,7 @@ unicode = true
 haystack = "\u0322"
 count = [
   # None of these regex engines support the Unicode variant of \b.
-  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   # None of these include \p{gc=Mark} in their definition of \b.
   { engine = 'hyperscan|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 2 },
@@ -126,6 +129,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -148,7 +152,7 @@ unicode = true
 haystack = '᠕'
 count = [
   # None of these regex engines support the Unicode variant of \b.
-  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   # This looks like a bug. Notably, pcre2/jit differs from it!
   { engine = 'pcre2', count = 1 },
   { engine = '.*', count = 2 },
@@ -159,6 +163,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -181,7 +186,7 @@ unicode = true
 haystack = '⁀'
 count = [
   # None of these regex engines support the Unicode variant of \b.
-  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   # None of these include \p{gc=Connector_Punctuation} in their definition
   # of \b, although, they all at least include `_`, which is part of
   # `Connector_Punctuation`.
@@ -194,6 +199,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',

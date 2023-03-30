@@ -24,7 +24,7 @@ count = [
   # These are ECMAScript engines where \s is always Unicode-aware. (It's
   # probably no coincidence that \p{Whitespace} exists entirely within the
   # BMP.)
-  { engine = 'regress', count = 1 },
+  { engine = 'javascript.*|regress', count = 1 },
   { engine = '.*', count = 0 },
 ]
 engines = [
@@ -34,6 +34,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -63,6 +64,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',

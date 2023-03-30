@@ -10,29 +10,44 @@ model = "count"
 name = "dot-matches-byte"
 regex = '.'
 haystack = '💩'
-count = 4
+count = [
+  # .NET always treats the UTF-16 code unit as the fundamental atom of
+  # matching.
+  { engine = 'dotnet.*', count = 2 },
+  # Go always treats a single codepoint as the fundamental atom of matching and
+  # there is no way to disable it.
+  { engine = 'go/regexp', count = 1 },
+  # Java does seem to always treat the fundamental atom of matching as a single
+  # codepoint, and not a UTF-16 code unit (unlike .NET).
+  { engine = 'java/.*', count = 1 },
+  # Javascript, when Unicode mode is disabled, treats the UTF-16 code unit as
+  # the fundamental atom of matching.
+  { engine = 'javascript.*', count = 2 },
+  # regress seems to differ from Javascript here (where Unicode mode is
+  # disabled). It seems to always treats the fundamental atom matching
+  # as one codepoint (quite sensibly), but ECMAScript RegExps require that
+  # the atom be the UTF-16 code unit when Unicode mode isn't enabled.
+  { engine = 'regress', count = 1 },
+  { engine = '.*', count = 4 },
+]
 engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
   'hyperscan',
+  'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
   'python/re',
   'python/regex',
   're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
 ]
-analysis = '''
-`dotnet/*` the fundamental atom of matching always seems to be a single UTF-16
-code unit. (Which is quite interesting in this case, as it results in splitting
-a codepoint.)
-
-`go/regexp` the fundamental atom of matching is always one codepoint.
-
-`java/*` the fundamental atom of matching is always one codepoint.
-
-`regress` the fundamental atom of matching is always one codepoint.
-'''
 
 [[bench]]
 model = "count"
@@ -57,6 +72,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',

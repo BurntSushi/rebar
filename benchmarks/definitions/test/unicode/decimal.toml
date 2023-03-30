@@ -34,6 +34,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -53,7 +54,7 @@ unicode = true
 haystack = '᠕'
 count = [
   # None of these regex engines support the Unicode variant of \w.
-  { engine = 'go/regexp|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -63,6 +64,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
