@@ -36,14 +36,13 @@ unsafe impl Sync for Regex {}
 
 impl std::fmt::Debug for Regex {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.pattern)
+        write!(f, "Regex({:?})", self.pattern)
     }
 }
 
 impl Drop for Regex {
     fn drop(&mut self) {
-        // SAFETY: By construction, both the compile context and the code
-        // objects are valid.
+        // SAFETY: By construction, the code object is valid.
         unsafe {
             pcre2_code_free_8(self.code.as_ptr());
         }
