@@ -94,7 +94,7 @@ engines = [
 [[bench]]
 model = "count"
 name = "context"
-regex = '[A-Za-z]{10}\s+(?s:.){0,100}Result(?s:.){0,100}\s+[A-Za-z]{10}'
+regex = '[A-Za-z]{10}\s+[\s\S]{0,100}Result[\s\S]{0,100}\s+[A-Za-z]{10}'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = [
   { engine = 'hyperscan', count = 109 },
@@ -106,12 +106,14 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
   'python/re',
   'python/regex',
   're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
@@ -132,12 +134,14 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'javascript/v8',
   'pcre2',
   'pcre2/jit',
   'perl',
   'python/re',
   'python/regex',
   're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',

@@ -26,9 +26,9 @@ anyone with more experience with v8 and irregexp, I would welcome feedback.
 
 ## No support for inline flags
 
-Like the `regress` (another ECMAScript regex engine), this regex engine has
-no support for inline flags. So for example, syntax like `(?s:.)` or `(?i:abc)`
-is not allowed.
+Like the `regress` engine (another ECMAScript regex engine), this regex engine
+has no support for inline flags. So for example, syntax like `(?s:.)` or
+`(?i:abc)` is not allowed.
 
 ## Unicode
 

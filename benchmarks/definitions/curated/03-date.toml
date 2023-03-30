@@ -45,15 +45,39 @@ regex = { path = "wild/date.txt" }
 case-insensitive = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
+  # .NET counts spans of UTF-16 code units, which is the likely reason for
+  # the difference here.
+  { engine = 'dotnet.*', count = 111_825 },
   # Hyperscan reports all possible matches, so its total span count is higher.
   { engine = 'hyperscan', count = 547_662 },
-  # Unknown why the count span differs here.
+  # I don't know why the count span differs here. Note that this matches
+  # v8's count when Unicode mode is enabled as well, which suggests that the
+  # number of matches doesn't change. (Which makes sense, because \w, \s and
+  # \d are all unaffected by Unicode mode in ECMAScript regex engines.) So my
+  # best guess without looking into it is that the count differs from regress
+  # (another ECMAScript engine) because this counts UTF-16 code units while the
+  # regress runner program counts UTF-8 code units. This is also consistent
+  # with .NET's count, which also uses UTF-16 code units.
   { engine = 'javascript/v8', count = 111_825 },
   # Unknown why the count span differs here.
   { engine = 'regress', count = 111_841 },
+  # Why does Java report the same count as engines that work on UTF-8 despite
+  # Java using UTF-16 code units? My thinking here is that since Unicode mode
+  # is disabled here, Java only finds ASCII matches (as is consistent with the
+  # intent for disabling Unicode mode). And in that case, the number of ASCII
+  # bytes and the number of UTF-16 code units in any given match will always
+  # be equivalent.
+  #
+  # The difference is in how non-Unicode mode is handled. In .NET, it is
+  # impossible to prevent [\w\s\d] from being Unicode-aware (presumably unless
+  # you enable its ECMAScript mode). Similarly, in ECMAScript engines like
+  # javascript/v8 and regress, \s is always Unicode-aware where as \w and \d
+  # are never Unicode aware (regardless of whether Unicode mode is enabled
+  # or not).
   { engine = '.*', count = 111_817 },
 ]
 engines = [
+  'dotnet/compiled',
   'go/regexp',
   'hyperscan',
   'java/hotspot',
@@ -84,6 +108,7 @@ case-insensitive = true
 unicode = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
+  # These engines all count spans of UTF-16 code units.
   { engine = 'dotnet/compiled|java/hotspot|javascript/v8', count = 111_825 },
   { engine = '.*', count = 111_841 },
 ]
