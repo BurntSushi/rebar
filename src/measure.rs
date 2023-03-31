@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     io::{BufReader, Read},
     path::PathBuf,
     sync::Arc,
@@ -103,6 +104,20 @@ lining up.
 
 This collects all errors reported and prints them. If no errors occurred, then
 this prints nothing and exits successfully.
+"#,
+    ),
+    Usage::new(
+        "--bencher",
+        "Save timings to Bencher.",
+        r#"
+Save timings to Bencher.
+
+This saves timings to Bencher.
+Each regex engine is considered its own branch.
+The testing environment used when collecting the timings is the testbed.
+The `rebar` benchmark path is the benchmark name.
+The median latency is the metric kind.
+See https://bencher.dev/docs/explanation/benchmarking for more information.
 "#,
     ),
 ];
@@ -226,6 +241,12 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         // collection of various aggregate statistics (mean+/-stddev, median,
         // min, max).
         let agg = b.aggregate(b.collect(config.verbose));
+
+        // Save timings to Bencher.
+        if config.bencher {
+            bencher_run(&agg)?;
+        }
+
         // Our aggregate is initially captured in terms of how long it takes to
         // execute each iteration of the benchmark. But for searching, this is
         // not particularly intuitive. Instead, we convert strict timings into
@@ -247,6 +268,64 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         // progress is being made.
         wtr.flush()?;
     }
+    Ok(())
+}
+
+/// Save timings using `bencher run`
+pub fn bencher_run(agg: &Measurement) -> anyhow::Result<()> {
+    let mut bmf = HashMap::new();
+    let Some(throughput) = &agg.aggregate.tputs else {
+        return Ok(());
+    };
+
+    // Get throughput value
+    let throughput = throughput.median.as_bytes_per_second();
+
+    // Use the throughput as the value
+    // TODO: create types for this or publish bencher types
+    let mut metric = HashMap::with_capacity(1);
+    metric.insert("value", throughput);
+
+    // Use the built in throughout metric kind
+    // TODO: create a custom metric kind that has bytes / second as its units
+    // This should probably be pushed back until we have everything else sorted out
+    // to help keep the final data clean
+    let mut latency = HashMap::with_capacity(1);
+    latency.insert("throughput", metric);
+    bmf.insert(agg.name.clone(), latency);
+
+    let engine_slug = slug::slugify(&agg.engine);
+    let bmf_str = serde_json::to_string(&bmf)?;
+
+    // In order to run this command you will need
+    // `BENCHER_API_TOKEN` set as an environment variable.
+    // If you want to avoid that for now uncomment the `--local` flag below.
+    let echo_command = std::process::Command::new("echo")
+        .arg(bmf_str)
+        .stdout(std::process::Stdio::piped())
+        .spawn()?;
+
+    let _bencher_command = std::process::Command::new("bencher")
+        .stdin(std::process::Stdio::from(
+            echo_command
+                .stdout
+                .ok_or_else(|| anyhow::anyhow!("Failed to run"))?,
+        ))
+        .args([
+            "run",
+            "--project",
+            "rebar",
+            "--branch",
+            &engine_slug,
+            "--testbed",
+            // TODO: actually set this to something useful
+            "localhost",
+            "--adapter",
+            "json",
+            // "--local",
+        ])
+        .spawn()?;
+
     Ok(())
 }
 
@@ -277,6 +356,8 @@ struct Config {
     verify: bool,
     /// When enabled, print extra stuff where appropriate.
     verbose: bool,
+    /// Save timings to Bencher.
+    bencher: bool,
 }
 
 impl Config {
@@ -341,6 +422,9 @@ impl Config {
                 }
                 Arg::Long("verify") => {
                     c.verify = true;
+                }
+                Arg::Long("bencher") => {
+                    c.bencher = true;
                 }
                 _ => return Err(arg.unexpected().into()),
             }
