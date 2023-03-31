@@ -25,17 +25,25 @@ use crate::{
     util::ShortHumanDuration,
 };
 
-// BREADCRUMBS: Add a flag to exclude regex engines from the top-level summary
-// table. For example, I want to include regex/automata/meta in some of the
-// benchmarks as a useful comparison point, but it probably shouldn't be listed
-// in the top-level summary because it participates in too few benchmarks. It
-// would just overall confuse things.
-
 const USAGES: &[Usage] = &[
     Usage::BENCH_DIR,
     Filter::USAGE_ENGINE,
     Filter::USAGE_BENCH,
     Filter::USAGE_MODEL,
+    Usage::new(
+        "--intersection",
+        "Only consider benchmarks for which all engines participate.",
+        r#"
+When this flag is set, benchmarks that do not include all regex engines will
+be excluded from the report. The set of all regex engines is determined by
+unioning the sets of all measurements given to this command.
+
+This is applied after the various filters. So for example, one could pass a
+filter like `-e '^(rust/regex|hyperscan)$'` to limit a comparison to only those
+two regex engines. That is, only benchmarks containing measurements for both
+'rust/regex' and 'hyperscan' will be included.
+"#,
+    ),
     Usage::new(
         "--ratio",
         "Show ratios next to timings.",
@@ -60,7 +68,7 @@ regex engines. In particular, being in so few benchmarks can ultimately skew
 the overall ranking in a way that makes it very confusing to interpret.
 
 Note that this doesn't impact the geometric means computed for other regex
-engines. For example, if an exclude regex engine did the best in a benchmark,
+engines. For example, if an excluded regex engine did the best in a benchmark,
 then other engines in that benchmark will have a speed ratio above 1.
 "#,
     ),
@@ -156,6 +164,8 @@ struct Config {
     engine_filter: Filter,
     /// A filter to be applied to benchmark model name.
     model_filter: Filter,
+    /// Whether to only consider benchmarks containing all regex engines.
+    intersection: bool,
     /// The statistic we want to compare.
     stat: Stat,
     /// A pattern for excluding regex engines from the summary table.
@@ -190,6 +200,9 @@ impl Config {
                 Arg::Short('m') | Arg::Long("model") => {
                     c.model_filter.add(args::parse(p, "-m/--model")?);
                 }
+                Arg::Long("intersection") => {
+                    c.intersection = true;
+                }
                 Arg::Long("ratio") => {
                     c.ratio = true;
                 }
@@ -221,9 +234,6 @@ impl Config {
     ///
     /// This uses the given measurements to setup a filter that only reads
     /// benchmark definitions (and engines) for the measurements given.
-    ///
-    /// This also ensures that every measurement has a corresponding benchmark
-    /// definition.
     fn read_benchmarks(
         &self,
         measurements: &[Measurement],
@@ -268,7 +278,11 @@ impl Config {
     fn read_measurements(&self) -> anyhow::Result<Vec<Measurement>> {
         let mut measurements = vec![];
         // A set of (benchmark full name, regex engine name) pairs.
-        let mut seen: BTreeSet<(String, String)> = BTreeSet::new();
+        // let mut seen: BTreeSet<(String, String)> = BTreeSet::new();
+        // A map from benchmark full name to the set of regex engines
+        // for which we have measurements.
+        let mut name_to_engines: BTreeMap<String, BTreeSet<String>> =
+            BTreeMap::new();
         for csv_path in self.csv_paths.iter() {
             let mut rdr = csv::Reader::from_path(csv_path)
                 .with_context(|| csv_path.display().to_string())?;
@@ -290,16 +304,30 @@ impl Config {
                 if !self.model_filter.include(&m.model) {
                     continue;
                 }
-                let pair = (m.name.clone(), m.engine.clone());
+                if !name_to_engines.contains_key(&m.name) {
+                    name_to_engines.insert(m.name.clone(), BTreeSet::new());
+                }
+                let is_new = name_to_engines
+                    .entry(m.name.clone())
+                    .or_insert_with(|| BTreeSet::new())
+                    .insert(m.engine.clone());
                 anyhow::ensure!(
-                    !seen.contains(&pair),
-                    "duplicate benchmark with name {} and regex engine {}",
+                    is_new,
+                    "duplicate measurement with name {} and regex engine {}",
                     m.name,
                     m.engine,
                 );
-                seen.insert(pair);
                 measurements.push(m);
             }
+        }
+        if self.intersection {
+            let engines_len = name_to_engines
+                .values()
+                .map(|set| set.len())
+                .max()
+                .unwrap_or(0);
+            measurements
+                .retain(|m| name_to_engines[&m.name].len() == engines_len);
         }
         Ok(measurements)
     }
@@ -402,6 +430,7 @@ impl Flattened {
     /// in the report could wind up being quite misleading if we don't take
     /// it directly from measurements.
     fn engines(&self, c: &Config) -> anyhow::Result<Vec<Engine>> {
+        #[derive(Debug)]
         struct EngineDist {
             name: String,
             version: String,
@@ -426,7 +455,7 @@ impl Flattened {
                 anyhow::ensure!(
                     e.version == m.version,
                     "found two different versions in measurements \
-                         for engine '{}': '{}' and '{}'",
+                     for engine '{}': '{}' and '{}'",
                     m.engine,
                     e.version,
                     m.version,
@@ -463,7 +492,6 @@ impl Flattened {
                 }
             })
             .collect();
-        // engines.sort_by(|e1, e2| e1.geomean.total_cmp(&e2.geomean));
         Ok(engines)
     }
 }
