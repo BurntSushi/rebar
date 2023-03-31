@@ -8,7 +8,12 @@
 # crate. There are several of them, and adding them to every benchmark would
 # be quite noisy.
 
-rg 'name = "([^"]+)"' -or $'  \'$1\',' benchmarks/engines.toml \
+if [ "$1" = "--quote" ]; then
+  quote=$'  \'$1\','
+else
+  quote=$'$1'
+fi
+rg 'name = "([^"]+)"' -or "$quote" benchmarks/engines.toml \
   | rg -v 'rust/regex/(dense|sparse|hybrid|onepass|backtrack|pikevm|nfa|hir|ast)' \
   | rg -v regexold \
   | rg -v aho-corasick \

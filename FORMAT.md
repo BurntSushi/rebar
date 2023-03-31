@@ -57,7 +57,7 @@ knows how to execute. Every regex engine is composed of the following parts:
 * A name, which must be unique.
 * A way to retrieve the version of the regex engine. This also must serve as
 a receipt that the regex engine is available to run. For example, if the
-version is unavailable, then the `-i/--ignore-broken-engines` rebar flag will
+version is unavailable, then the `-i/--ignore-missing-engines` rebar flag will
 behave as if those engines don't exist. (And thus reduce noisy error output.)
 * A way to run the regex engine via a process.
 * Optionally, a way to build the regex engine. For example, Go's regex engine
@@ -76,6 +76,12 @@ omitted, the working directory defaults to the working directory of `rebar`.
 * `version` - A TOML table specifying how to get the version of this regex
 engine.
 * `run` - A TOML table specifying a command to run the regex engine.
+* `dependency` - An array of TOML tables specifying commands to run to check
+that the necessary dependencies are installed. These are present strictly to
+improve failure modes. Build tools often assume the existence of certain things
+that are installed and output very strange and difficult to diagnose error
+messages when they aren't. These commands are meant to help make those sorts
+of errors easier to comprehend by catching them earlier.
 * `build` - An array of TOML tables specifying commands to run to build the
 regex engine.
 * `clean` - An array of TOML tables specifying commands to run to clean the
@@ -96,8 +102,8 @@ of your environment's `PATH` to be resolved.
 * `envs` - An optional array of environment variables. Each environment
 variable is itself a table, with string keys `name` and `value`.
 
-Finally, the `version` table is a combination of the command table described
-above and the following keys:
+The `version` table is a combination of the command table described above and
+the following keys:
 
 * `file` - In lieu of a command, the version string may be read from a file.
 Note that if this is used, the file should be generated as part of the `build`
@@ -107,29 +113,44 @@ _should_ serve as a recept that the regex engine is available to read.
 output of the command that was run or the `file` that was specified. The regex
 must have a capturing group with name `version`.
 
+The `dependency` table is a combination of the command table described above
+and the following keys:
+
+* `regex` - An optional regular expression used to search the output of
+the dependency command. If the regex search fails, then the dependency is
+considered unavailable and the regex engine won't build.
+
 Here's a quick example that shows how Python's `regex` engine is defined (this
 is the third party `regex` module and not the standard library `re` module):
 
 ```toml
 [[engine]]
-name = "python/regex"
-cwd = "external/python"
-[engine.version]
-bin = "ve/bin/pip"
-args = ["show", "regex"]
-regex = '(?m)^Version: (?P<version>.+)$'
-[engine.run]
-bin = "ve/bin/python"
-args = ["main.py", "regex"]
-[[engine.build]]
-bin = "virtualenv"
-args = ["ve"]
-[[engine.build]]
-bin = "ve/bin/pip"
-args = ["install", "regex"]
-[[engine.clean]]
-bin = "rm"
-args = ["-rf", "./ve"]
+  name = "python/regex"
+  cwd = "external/python"
+  [engine.version]
+    bin = "ve/bin/pip"
+    args = ["show", "regex"]
+    regex = '(?m)^Version: (?P<version>.+)$'
+  [engine.run]
+    bin = "ve/bin/python"
+    args = ["main.py", "regex"]
+  [[engine.dependency]]
+    bin = "python"
+    args = ["--version"]
+    regex = '(?m)^Python 3\.'
+  [[engine.dependency]]
+    bin = "virtualenv"
+    args = ["--version"]
+    regex = '(?m)^virtualenv\s+'
+  [[engine.build]]
+    bin = "virtualenv"
+    args = ["ve"]
+  [[engine.build]]
+    bin = "ve/bin/pip"
+    args = ["install", "regex"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-rf", "./ve"]
 ```
 
 ## Benchmark definition TOML Format

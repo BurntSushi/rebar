@@ -69,6 +69,12 @@
     args = ["--version"]
   [engine.run]
     bin = "./target/release/main"
+  [[engine.dependency]]
+    bin = "cc"
+    args = ["--version"]
+  [[engine.dependency]]
+    bin = "c++"
+    args = ["--version"]
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]
@@ -90,6 +96,9 @@
   [engine.run]
     bin = "./target/release/main"
     args = ["interp"]
+  [[engine.dependency]]
+    bin = "cc"
+    args = ["--version"]
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]
@@ -111,6 +120,9 @@
   [engine.run]
     bin = "./target/release/main"
     args = ["jit"]
+  [[engine.dependency]]
+    bin = "cc"
+    args = ["--version"]
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]
@@ -151,6 +163,14 @@
   [engine.run]
     bin = "ve/bin/python"
     args = ["main.py", "re"]
+  [[engine.dependency]]
+    bin = "python"
+    args = ["--version"]
+    regex = '(?m)^Python 3\.'
+  [[engine.dependency]]
+    bin = "virtualenv"
+    args = ["--version"]
+    regex = '(?m)^virtualenv\s+'
   [[engine.build]]
     bin = "virtualenv"
     args = ["ve"]
@@ -171,6 +191,10 @@
   [engine.run]
     bin = "ve/bin/python"
     args = ["main.py", "regex"]
+  [[engine.dependency]]
+    bin = "virtualenv"
+    args = ["--version"]
+    regex = '(?m)^virtualenv\s+'
   [[engine.build]]
     bin = "virtualenv"
     args = ["ve"]
@@ -209,6 +233,12 @@
     args = ["--version"]
   [engine.run]
     bin = "./target/release/main"
+  [[engine.dependency]]
+    bin = "cc"
+    args = ["--version"]
+  [[engine.dependency]]
+    bin = "c++"
+    args = ["--version"]
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]
@@ -228,6 +258,10 @@
   [engine.run]
     bin = "bin/Release/net7.0/main"
     args = ["interp"]
+  [[engine.dependency]]
+    bin = "dotnet"
+    args = ["--list-sdks"]
+    regex = '(?m)^7\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -249,6 +283,10 @@
   [engine.run]
     bin = "bin/Release/net7.0/main"
     args = ["compiled"]
+  [[engine.dependency]]
+    bin = "dotnet"
+    args = ["--list-sdks"]
+    regex = '(?m)^7\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -272,6 +310,10 @@
   [engine.run]
     bin = "bin/Release/net7.0/main"
     args = ["nobacktrack"]
+  [[engine.dependency]]
+    bin = "dotnet"
+    args = ["--list-sdks"]
+    regex = '(?m)^7\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -349,6 +391,10 @@
     args = ["--version"]
   [engine.run]
     bin = "./target/release/main"
+  [[engine.dependency]]
+    bin = "pkg-config"
+    args = ["--libs", "--cflags", "icu-uc", "icu-i18n"]
+    regex = '(?m)^-licui18n -licuuc -licudata\b'
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]

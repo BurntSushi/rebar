@@ -1,10 +1,10 @@
 use std::{io::Write, path::PathBuf};
 
-use {anyhow::Context, lexopt::Arg};
+use {anyhow::Context, bstr::ByteSlice, lexopt::Arg};
 
 use crate::{
     args::{self, Color, Filter, Usage},
-    format::benchmarks::Engines,
+    format::benchmarks::{Engine, Engines},
     util,
 };
 
@@ -25,10 +25,16 @@ If building a runner program fails, then a short error message is printed.
 Building then continues with the other runner programs. Rebar in general does
 *not* need to have every runner program build successfully in order to run.
 If a runner program fails to build, then collecting measurements will show
-an error. But those can be squashed with the -i/--ignore-broken-engines flag.
+an error. But those can be squashed with the -i/--ignore-missing-engines flag.
+
+If a regex engine fails to build, then running this command again with the
+environment variable RUSTLOG set to 'debug' will show more output from the
+failing commands.
+
+Use the -e/--engine flag to build a subset of engines.
 
 USAGE:
-    rebar build [<engine> ...]
+    rebar build [-e <engine> ...]
 
 OPTIONS:
 {options}
@@ -41,62 +47,108 @@ OPTIONS:
 
 pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let c = Config::parse(p)?;
-    let engines = Engines::from_file(&c.dir.join("engines.toml"), None)?;
+    let engines = Engines::from_file(&c.dir.join("engines.toml"), |e| {
+        c.engine_filter.include(&e.name)
+    })?;
 
     let mut printed_note = false;
+    let mut printed_dep_note = false;
     let mut out = std::io::stdout().lock();
     let mut stderr = c.color.stderr();
     'ENGINES: for e in engines.list.iter() {
-        if !c.engine_filter.include(&e.name) {
-            continue;
+        for dep in e.dependency.iter() {
+            let mut stdcmd = dep.run.command()?;
+            let out = match util::output(&mut stdcmd) {
+                Ok(out) => out,
+                Err(err) => {
+                    util::colorize_label(&mut stderr, |w| {
+                        write!(w, "{}: ", e.name)
+                    })?;
+                    util::colorize_error(&mut stderr, |w| {
+                        write!(w, "dependency command failed: ")
+                    })?;
+                    writeln!(stderr, "{}", err)?;
+                    print_dep_note(&mut stderr, e, &mut printed_dep_note)?;
+                    print_note(&mut stderr, e, &mut printed_note)?;
+                    continue 'ENGINES;
+                }
+            };
+            if let Some(ref re) = dep.regex {
+                if !re.is_match(&out) {
+                    util::colorize_label(&mut stderr, |w| {
+                        write!(w, "{}: ", e.name)
+                    })?;
+                    util::colorize_error(&mut stderr, |w| {
+                        write!(
+                            w,
+                            "dependency command did not \
+                             print expected output: ",
+                        )
+                    })?;
+                    writeln!(
+                        stderr,
+                        "could not find match for {:?} in output of {:?}",
+                        re.as_str(),
+                        stdcmd,
+                    )?;
+                    print_dep_note(&mut stderr, e, &mut printed_dep_note)?;
+                    print_note(&mut stderr, e, &mut printed_note)?;
+                    if out.trim_with(|c| c.is_whitespace()).is_empty() {
+                        log::debug!(
+                            "output for dependency command {:?}: <EMPTY>",
+                            stdcmd,
+                        );
+                    } else {
+                        log::debug!(
+                            "output for dependency command {:?}: {}",
+                            stdcmd,
+                            out,
+                        );
+                    }
+                    continue 'ENGINES;
+                }
+            }
         }
-        let prefix = e.name.clone();
         if e.build.is_empty() {
             if e.is_missing_version() {
-                writeln!(
-                    out,
-                    "{}: no build steps, but version is missing",
-                    prefix
-                )?;
+                util::colorize_label(&mut stderr, |w| {
+                    write!(w, "{}: ", e.name)
+                })?;
+                util::colorize_error(&mut stderr, |w| {
+                    writeln!(w, "no build steps, but version is missing")
+                })?;
+                print_note(&mut stderr, e, &mut printed_note)?;
             } else {
-                writeln!(out, "{}: nothing to do", prefix)?;
+                util::colorize_label(&mut stderr, |w| {
+                    write!(w, "{}: ", e.name)
+                })?;
+                writeln!(out, "nothing to do")?;
             }
             continue;
         }
         for cmd in e.build.iter() {
-            let mut proccmd = cmd.command()?;
-            writeln!(out, "{}: running: {:?}", prefix, proccmd)?;
-            let out = match util::output(&mut proccmd) {
+            let mut stdcmd = cmd.command()?;
+            util::colorize_label(&mut stderr, |w| write!(w, "{}: ", e.name))?;
+            writeln!(out, "running: {:?}", stdcmd)?;
+            let out = match util::output(&mut stdcmd) {
                 Ok(out) => out,
                 Err(err) => {
-                    let mut spec = termcolor::ColorSpec::new();
-                    spec.set_fg(Some(termcolor::Color::Red)).set_bold(true);
-                    stderr.set_color(&spec)?;
-                    write!(stderr, "{}: build failed: ", prefix)?;
-                    stderr.reset()?;
+                    util::colorize_label(&mut stderr, |w| {
+                        write!(w, "{}: ", e.name)
+                    })?;
+                    util::colorize_error(&mut stderr, |w| {
+                        write!(w, "build failed: ")
+                    })?;
                     writeln!(stderr, "{}", err)?;
-                    if !printed_note {
-                        let mut spec = termcolor::ColorSpec::new();
-                        spec.set_fg(Some(termcolor::Color::Blue))
-                            .set_bold(true);
-                        stderr.set_color(&spec)?;
-                        write!(stderr, "note: ")?;
-                        stderr.reset()?;
-                        writeln!(
-                            stderr,
-                            "run `RUST_LOG=debug rebar build -e '^{}$'` \
-                             to see more details",
-                            e.name,
-                        )?;
-                        printed_note = true;
-                    }
+                    print_note(&mut stderr, e, &mut printed_note)?;
                     continue 'ENGINES;
                 }
             };
             log::trace!("stdout: {:?}", out);
         }
         let version = e.version_config.get()?;
-        writeln!(out, "{}: build complete for version {}", prefix, version)?;
+        util::colorize_label(&mut stderr, |w| write!(w, "{}: ", e.name))?;
+        writeln!(out, "build complete for version {}", version)?;
     }
     Ok(())
 }
@@ -131,4 +183,42 @@ impl Config {
         }
         Ok(c)
     }
+}
+
+fn print_dep_note<W: termcolor::WriteColor>(
+    mut wtr: W,
+    engine: &Engine,
+    printed: &mut bool,
+) -> anyhow::Result<()> {
+    if *printed {
+        return Ok(());
+    }
+    util::colorize_note(&mut wtr, |w| write!(w, "note: "))?;
+    writeln!(
+        wtr,
+        "a dependency that is required to build '{}' could \
+         not be found, either because it isn't installed \
+         or because it didn't behave as expected",
+        engine.name,
+    )?;
+    *printed = true;
+    Ok(())
+}
+
+fn print_note<W: termcolor::WriteColor>(
+    mut wtr: W,
+    engine: &Engine,
+    printed: &mut bool,
+) -> anyhow::Result<()> {
+    if *printed {
+        return Ok(());
+    }
+    util::colorize_note(&mut wtr, |w| write!(w, "note: "))?;
+    writeln!(
+        wtr,
+        "run `RUST_LOG=debug rebar build -e '^{}$'` to see more details",
+        engine.name,
+    )?;
+    *printed = true;
+    Ok(())
 }

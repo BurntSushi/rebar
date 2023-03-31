@@ -250,7 +250,7 @@ impl Config {
         filters
             .name(bench_filter)
             .engine(engine_filter)
-            .ignore_broken_engines(true);
+            .ignore_missing_engines(true);
         let mut benchmarks = Benchmarks::from_dir(&self.dir, &filters)?;
         // Sort benchmarks by their group name so that they appear in a
         // consistent order. We retain the order of benchmarks within a

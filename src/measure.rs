@@ -23,13 +23,15 @@ const USAGES: &[Usage] = &[
     Filter::USAGE_ENGINE,
     Filter::USAGE_BENCH,
     Usage::new(
-        "-i, --ignore-broken-engines",
-        "Silently suppress broken regex engines.",
+        "-i, --ignore-missing-engines",
+        "Silently suppress missing regex engines.",
         r#"
-This silently suppresses "broken" regex engines. Broken in this context means
-a regex engine whose version information could not be known. This might happen
-due to an improperly configured 'engines.toml', or it might just be because the
-regex engine isn't available for one reason or another.
+This silently suppresses "missing" regex engines. "Missing" in this context
+means a regex engine whose version information could not be found. This might
+happen due to an improperly configured 'engines.toml', or it might just be
+because the regex engine isn't available for one reason or another. Usually
+that's because it failed to build, which should result in an error appearing
+during 'rebar build'.
 
 This option is useful for when you just want to implicitly filter out any regex
 engines that cannot be benchmarked. Otherwise, an attempt will still be made
@@ -265,7 +267,7 @@ struct Config {
     /// When enabled, just filter out engines for which version information
     /// is not known. (Usually this means the regex engine is unavailable for
     /// one reason or another.)
-    ignore_broken_engines: bool,
+    ignore_missing_engines: bool,
     /// Whether to just list the benchmarks that will be executed and
     /// then quit. This also tests that all of the benchmark data can be
     /// deserialized.
@@ -297,8 +299,8 @@ impl Config {
                 Arg::Short('f') | Arg::Long("filter") => {
                     c.bench_filter.add(args::parse(p, "-f/--filter")?);
                 }
-                Arg::Short('i') | Arg::Long("ignore-broken-engines") => {
-                    c.ignore_broken_engines = true;
+                Arg::Short('i') | Arg::Long("ignore-missing-engines") => {
+                    c.ignore_missing_engines = true;
                 }
                 Arg::Long("list") => {
                     c.list = true;
@@ -354,7 +356,7 @@ impl Config {
             .name(self.bench_filter.clone())
             .engine(self.engine_filter.clone())
             .model(self.model_filter.clone())
-            .ignore_broken_engines(self.ignore_broken_engines);
+            .ignore_missing_engines(self.ignore_missing_engines);
         Benchmarks::from_dir(&self.dir, &filters)
     }
 }
@@ -468,7 +470,7 @@ impl ExecBenchmark {
         // results.
         //
         // If you don't want to see these errors, then pass
-        // --ignore-broken-engines.
+        // --ignore-missing-engines.
         anyhow::ensure!(
             !self.engine.is_missing_version(),
             "invalid version for regex engine",

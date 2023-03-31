@@ -302,6 +302,47 @@ pub fn write_divider<W: termcolor::WriteColor>(
     Ok(())
 }
 
+/// Colorize the given writer in a "label" style.
+pub fn colorize_label<W: termcolor::WriteColor>(
+    mut wtr: W,
+    mut with: impl FnMut(&mut W) -> std::io::Result<()>,
+) -> anyhow::Result<()> {
+    let mut spec = termcolor::ColorSpec::new();
+    spec.set_bold(true);
+    wtr.set_color(&spec)?;
+    with(&mut wtr)?;
+    wtr.reset()?;
+    Ok(())
+}
+
+/// Colorize the given writer in a "error" style.
+pub fn colorize_error<W: termcolor::WriteColor>(
+    mut wtr: W,
+    mut with: impl FnMut(&mut W) -> std::io::Result<()>,
+) -> anyhow::Result<()> {
+    let mut spec = termcolor::ColorSpec::new();
+    spec.set_fg(Some(termcolor::Color::Red));
+    spec.set_bold(true);
+    wtr.set_color(&spec)?;
+    with(&mut wtr)?;
+    wtr.reset()?;
+    Ok(())
+}
+
+/// Colorize the given writer in a "note" style.
+pub fn colorize_note<W: termcolor::WriteColor>(
+    mut wtr: W,
+    mut with: impl FnMut(&mut W) -> std::io::Result<()>,
+) -> anyhow::Result<()> {
+    let mut spec = termcolor::ColorSpec::new();
+    spec.set_fg(Some(termcolor::Color::Blue));
+    spec.set_bold(true);
+    wtr.set_color(&spec)?;
+    with(&mut wtr)?;
+    wtr.reset()?;
+    Ok(())
+}
+
 /// This runs the given command synchronously. If there was a problem running
 /// the command, then stderr is inspected and its last line is used to
 /// construct the error message returned. (The entire stderr is logged at debug

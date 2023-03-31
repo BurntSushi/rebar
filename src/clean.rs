@@ -1,13 +1,14 @@
-use std::{collections::BTreeSet, io::Write, path::PathBuf};
+use std::{io::Write, path::PathBuf};
 
-use {
-    anyhow::Context,
-    lexopt::{Arg, ValueExt},
+use {anyhow::Context, lexopt::Arg};
+
+use crate::{
+    args::{self, Filter, Usage},
+    format::benchmarks::Engines,
+    util,
 };
 
-use crate::{args::Usage, format::benchmarks::Engines, util};
-
-const USAGES: &[Usage] = &[Usage::BENCH_DIR];
+const USAGES: &[Usage] = &[Usage::BENCH_DIR, Filter::USAGE_ENGINE];
 
 fn usage() -> String {
     format!(
@@ -16,7 +17,7 @@ This removes the artifacts produced by 'rebar build'. This is useful for cases
 where one wants to rebuild one or more regex engines after starting fresh.
 
 USAGE:
-    rebar clean [<engine> ...]
+    rebar clean [-e <engine> ...]
 
 OPTIONS:
 {options}
@@ -29,8 +30,9 @@ OPTIONS:
 
 pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let c = Config::parse(p)?;
-    let engines =
-        Engines::from_file(&c.dir.join("engines.toml"), c.refs().as_ref())?;
+    let engines = Engines::from_file(&c.dir.join("engines.toml"), |e| {
+        c.engine_filter.include(&e.name)
+    })?;
 
     let mut out = std::io::stdout().lock();
     for e in engines.list.iter() {
@@ -51,7 +53,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
 #[derive(Clone, Debug, Default)]
 struct Config {
     dir: PathBuf,
-    engines: Vec<String>,
+    engine_filter: Filter,
 }
 
 impl Config {
@@ -60,25 +62,18 @@ impl Config {
         c.dir = PathBuf::from("benchmarks");
         while let Some(arg) = p.next()? {
             match arg {
-                Arg::Value(engine) => {
-                    c.engines.push(engine.string()?);
-                }
                 Arg::Short('h') | Arg::Long("help") => {
                     anyhow::bail!("{}", usage())
                 }
                 Arg::Short('d') | Arg::Long("dir") => {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }
+                Arg::Short('e') | Arg::Long("engine") => {
+                    c.engine_filter.add(args::parse(p, "-e/--engine")?);
+                }
                 _ => return Err(arg.unexpected().into()),
             }
         }
         Ok(c)
-    }
-
-    fn refs(&self) -> Option<BTreeSet<String>> {
-        if self.engines.is_empty() {
-            return None;
-        }
-        Some(self.engines.iter().map(|e| e.to_string()).collect())
     }
 }

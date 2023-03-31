@@ -39,8 +39,9 @@ impl Benchmarks {
         // version info for every regex engine in some cases even when we don't
         // need to.
         let enginerefs = wire.engine_references(&filters.engine);
-        let engines =
-            Engines::from_file(&dir.join("engines.toml"), Some(&enginerefs))?;
+        let engines = Engines::from_file(&dir.join("engines.toml"), |e| {
+            enginerefs.contains(&e.name)
+        })?;
         let res = Regexes::new(dir, &wire)?;
         let hays = Haystacks::new(dir, &wire)?;
         let mut defs = vec![];
@@ -105,7 +106,7 @@ pub struct Filters {
     name: Filter,
     model: Filter,
     engine: Filter,
-    ignore_broken_engines: bool,
+    ignore_missing_engines: bool,
 }
 
 impl Filters {
@@ -128,8 +129,8 @@ impl Filters {
         self
     }
 
-    pub fn ignore_broken_engines(&mut self, yes: bool) -> &mut Filters {
-        self.ignore_broken_engines = yes;
+    pub fn ignore_missing_engines(&mut self, yes: bool) -> &mut Filters {
+        self.ignore_missing_engines = yes;
         self
     }
 }
@@ -154,7 +155,7 @@ impl Engines {
 
     pub fn from_file(
         path: &Path,
-        refs: Option<&BTreeSet<String>>,
+        mut include: impl FnMut(&Engine) -> bool,
     ) -> anyhow::Result<Engines> {
         let data = std::fs::read(path).with_context(|| {
             format!("failed to read engines from {}", path.display())
@@ -166,9 +167,7 @@ impl Engines {
             toml::from_str(&data).with_context(|| {
                 format!("error decoding TOML for {}", path.display())
             })?;
-        if let Some(refs) = refs {
-            engines.list.retain(|e| refs.contains(&e.name));
-        }
+        engines.list.retain(|e| include(e));
         for e in engines.list.iter_mut() {
             // Note that validate can modify parts of the engine, e.g.,
             // to populate empty bin names with the path to the current
@@ -196,6 +195,8 @@ pub struct Engine {
     pub version_config: VersionConfig,
     #[serde(skip)]
     pub version: String,
+    #[serde(default)]
+    pub dependency: Vec<Dependency>,
     #[serde(default)]
     pub build: Vec<Command>,
     #[serde(default)]
@@ -282,8 +283,6 @@ impl VersionConfig {
             anyhow::bail!("must set either 'file' or 'run' for version config")
         };
         log::trace!("version command output: {:?}", out.as_bstr());
-        let out =
-            out.to_str().context("version stdout was not valid UTF-8")?;
         let re = match self.regex {
             Some(ref re) => re,
             None => {
@@ -291,7 +290,7 @@ impl VersionConfig {
                     None => anyhow::bail!("version stdout was empty"),
                     Some(last) => last,
                 };
-                return Ok(last.trim().to_string());
+                return Ok(last.to_str()?.trim().to_string());
             }
         };
         anyhow::ensure!(
@@ -313,7 +312,7 @@ impl VersionConfig {
                 re.as_str(),
             ),
         };
-        let version = m.as_str().to_string();
+        let version = m.as_bytes().to_str()?.to_string();
         anyhow::ensure!(
             !version.contains('\n'),
             "version regex {:?} matched a version with a \\n",
@@ -321,6 +320,13 @@ impl VersionConfig {
         );
         Ok(version)
     }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, serde::Deserialize)]
+pub struct Dependency {
+    pub regex: Option<Regex>,
+    #[serde(flatten)]
+    pub run: Command,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, serde::Deserialize)]
@@ -437,7 +443,7 @@ pub struct Definition {
 impl Definition {
     pub fn count(&self, engine: &str) -> anyhow::Result<u64> {
         for ce in self.count.iter() {
-            if ce.re.is_match(engine) {
+            if ce.re.is_match(engine.as_bytes()) {
                 return Ok(ce.count);
             }
         }
@@ -811,7 +817,7 @@ impl WireDefinition {
                     self.name,
                 ),
             };
-            if filters.ignore_broken_engines && e.is_missing_version() {
+            if filters.ignore_missing_engines && e.is_missing_version() {
                 continue;
             }
             resolved.push(e);
@@ -908,7 +914,7 @@ impl WireDefinition {
                 let mut counts = vec![];
                 for wire in engine_counts.iter() {
                     let pat = format!("^(?:{})$", wire.engine);
-                    let re = regex::Regex::new(&pat).context(
+                    let re = regex::bytes::Regex::new(&pat).context(
                         "failed to parse engine count name as regex",
                     )?;
                     counts.push(CountEngine {
@@ -920,7 +926,7 @@ impl WireDefinition {
                 Ok(counts)
             }
             WireCount::All(count) => Ok(vec![CountEngine {
-                re: Regex(regex::Regex::new(r"^.*$").unwrap()),
+                re: Regex(regex::bytes::Regex::new(r"^.*$").unwrap()),
                 engine: r".*".to_string(),
                 count,
             }]),
@@ -1234,7 +1240,7 @@ impl HaystackKey {
 }
 
 #[derive(Clone, Debug)]
-pub struct Regex(regex::Regex);
+pub struct Regex(regex::bytes::Regex);
 
 impl Eq for Regex {}
 
@@ -1245,8 +1251,8 @@ impl PartialEq for Regex {
 }
 
 impl std::ops::Deref for Regex {
-    type Target = regex::Regex;
-    fn deref(&self) -> &regex::Regex {
+    type Target = regex::bytes::Regex;
+    fn deref(&self) -> &regex::bytes::Regex {
         &self.0
     }
 }
@@ -1271,7 +1277,7 @@ impl<'de> serde::Deserialize<'de> for Regex {
             }
 
             fn visit_str<E: Error>(self, v: &str) -> Result<Regex, E> {
-                regex::Regex::new(v)
+                regex::bytes::Regex::new(v)
                     .map(Regex)
                     .map_err(|err| E::custom(err.to_string()))
             }
@@ -1323,6 +1329,7 @@ mod tests {
                     file: None,
                     run: None,
                 },
+                dependency: vec![],
                 build: vec![],
                 clean: vec![],
             })
@@ -1331,7 +1338,7 @@ mod tests {
 
     fn count_all(count: u64) -> Vec<CountEngine> {
         vec![CountEngine {
-            re: Regex(regex::Regex::new(r"^.*$").unwrap()),
+            re: Regex(regex::bytes::Regex::new(r"^.*$").unwrap()),
             engine: r".*".to_string(),
             count,
         }]
