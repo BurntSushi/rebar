@@ -192,6 +192,10 @@
     bin = "ve/bin/python"
     args = ["main.py", "regex"]
   [[engine.dependency]]
+    bin = "python"
+    args = ["--version"]
+    regex = '(?m)^Python 3\.'
+  [[engine.dependency]]
     bin = "virtualenv"
     args = ["--version"]
     regex = '(?m)^virtualenv\s+'
