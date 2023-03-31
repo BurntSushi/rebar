@@ -2,10 +2,12 @@ use std::io::Write;
 
 // helpers and other things
 mod args;
+mod flattened;
 mod format;
 mod util;
 
 // sub-commands
+mod bencher;
 mod build;
 mod clean;
 mod cmp;
@@ -30,6 +32,7 @@ COMMANDS:
     klv       Print the KLV format of a benchmark.
     measure   Capture timings to CSV by running benchmarks.
     report    Print a Markdown formatted report of benchmark results.
+    bencher   Save benchmark results to Bencher.
 
 ";
 
@@ -60,6 +63,7 @@ fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         "klv" => klv::run(p),
         "measure" => measure::run(p),
         "report" => report::run(p),
+        "bencher" => bencher::run(p),
         unk => anyhow::bail!("unrecognized command '{}'", unk),
     }
 }

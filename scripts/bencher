@@ -5,5 +5,3 @@ cd bencher
 cargo install --path services/cli --locked
 cd ..
 rm -r bencher
-
-cargo run -- measure -i --bencher

@@ -170,11 +170,6 @@ impl Throughput {
     pub fn from_bytes_per_second(bytes_per_second: f64) -> Throughput {
         Throughput(bytes_per_second)
     }
-
-    /// Returns the amount of bytes per second.
-    pub fn as_bytes_per_second(&self) -> f64 {
-        self.0
-    }
 }
 
 impl std::fmt::Debug for Throughput {
