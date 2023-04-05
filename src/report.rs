@@ -998,7 +998,7 @@ fn markdown_result_group<W: Write>(
         writeln!(
             wtr,
             "| model | [`{model}`](MODELS.md#{model}) |",
-            model = defm.def.model.as_str()
+            model = defm.def.model
         )?;
         if let Some(ref path) = defm.def.regex_path {
             writeln!(

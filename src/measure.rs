@@ -512,7 +512,7 @@ impl ExecBenchmark {
         let handle_stdin = {
             let klvbench = klv::Benchmark {
                 name: self.def.name.as_str().to_string(),
-                model: self.def.model.as_str().to_string(),
+                model: self.def.model.clone(),
                 regex: klv::Regex {
                     patterns: self
                         .def
@@ -565,11 +565,15 @@ impl ExecBenchmark {
                 Ok(buf)
             }))
         };
-        // Sometimes benchmarks might take a long time. In general, we
-        // try to avoid defining such benchmarks, but maybe different
-        // environments execute things more slowly. This is also useful during
-        // experimentation, where you might not know how long a regex will
-        // take.
+        // Sometimes benchmarks might take a long time, so we periodically
+        // ping the sub-process to see if it's done. If it hasn't finished
+        // after a period of time, we kill the process and report a measurement
+        // failure.
+        //
+        // In general, we try to avoid defining such benchmarks, but maybe
+        // different environments execute things more slowly. This is also
+        // useful during experimentation, where you might not know how long a
+        // regex will take.
         let status = loop {
             let maybe_status =
                 child.try_wait().context("failed to reap process")?;
@@ -578,7 +582,7 @@ impl ExecBenchmark {
             }
             if spawn_start.elapsed() > self.config.timeout {
                 log::debug!(
-                    "benchmark exceeded {:?}, killing process",
+                    "benchmark time exceeded {:?}, killing process",
                     self.config.timeout,
                 );
                 if let Err(err) = child.kill() {
@@ -769,11 +773,17 @@ impl Results {
         }
         // We have no NaNs, so this is fine.
         samples.sort_unstable_by(|x, y| x.partial_cmp(y).unwrap());
-        // We don't expect to have haystacks bigger than 2**64.
-        let haystack_len = if self.benchmark.def.model.record_haystack_len() {
-            u64::try_from(self.benchmark.def.haystack.len()).ok()
-        } else {
-            None
+        let haystack_len = match &*self.benchmark.def.model {
+            // This is somewhat unfortunate. This is, I believe, the *only*
+            // place inside of rebar that cares at all about a specific model
+            // string. It would be nice to remove this, but it seems like we'd
+            // need to add another layer of configuration to do so? That's a
+            // pretty big bummer...
+            "compile" | "regex-redux" => None,
+            _ => {
+                // We don't expect to have haystacks bigger than 2**64.
+                u64::try_from(self.benchmark.def.haystack.len()).ok()
+            }
         };
         let times = AggregateTimes {
             // OK because timings.len() > 0

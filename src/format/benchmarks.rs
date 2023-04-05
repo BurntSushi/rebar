@@ -428,7 +428,7 @@ pub struct CommandEnv {
 
 #[derive(Clone, Eq, PartialEq)]
 pub struct Definition {
-    pub model: DefinitionModel,
+    pub model: String,
     pub name: DefinitionName,
     pub regexes: Arc<[String]>,
     pub regex_path: Option<String>,
@@ -474,64 +474,6 @@ impl std::fmt::Debug for Definition {
             .field("count", &self.count)
             .field("engines", &self.engines)
             .finish()
-    }
-}
-
-/// The type of the benchmark. This basically controls what we're measuring and
-/// how to execute the code under test.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum DefinitionModel {
-    Compile,
-    Count,
-    CountSpans,
-    CountCaptures,
-    Grep,
-    GrepCaptures,
-    RegexRedux,
-}
-
-impl DefinitionModel {
-    /// Returns this model as a name string.
-    pub fn as_str(&self) -> &'static str {
-        match *self {
-            DefinitionModel::Compile => "compile",
-            DefinitionModel::Count => "count",
-            DefinitionModel::CountSpans => "count-spans",
-            DefinitionModel::CountCaptures => "count-captures",
-            DefinitionModel::Grep => "grep",
-            DefinitionModel::GrepCaptures => "grep-captures",
-            DefinitionModel::RegexRedux => "regex-redux",
-        }
-    }
-
-    /// Returns true if this reflects a benchmark where the length of the
-    /// haystack is important for reporting measurements.
-    ///
-    /// Generally speaking, when this is true, measurements will be reported as
-    /// a thoughput. When it's false, measurements will be reported in terms of
-    /// absolute wall clock time.
-    ///
-    /// For example, "compile" benchmarks have a haystack for the purposes of
-    /// verifying the behavior of the regex, but the length of the haystack is
-    /// not relevant for the measurement.
-    pub fn record_haystack_len(&self) -> bool {
-        // Technically the haystack length IS relevant for the regex-redux
-        // benchmark, but the regex-redux benchmark is somewhat special in
-        // that it combines many different regexes (and other operations, such
-        // as replacements). So reporting just a single throughput is kind of
-        // awkward. So instead, we declare its haystack length as irrelevant,
-        // which causes its measurement reporting to be wall clock time.
-        !matches!(
-            *self,
-            DefinitionModel::Compile | DefinitionModel::RegexRedux
-        )
-    }
-}
-
-impl std::fmt::Display for DefinitionModel {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        self.as_str().fmt(f)
     }
 }
 
@@ -683,7 +625,7 @@ impl WireDefinitions {
     /// Retain only the definitions that pass the given filter applied to the
     /// model of each definition.
     fn filter_by_model(&mut self, filter: &Filter) {
-        self.definitions.retain(|def| filter.include(def.model.as_str()));
+        self.definitions.retain(|def| filter.include(&def.model));
     }
 
     /// Retain only the definitions that pass the given filter applied to the
@@ -726,7 +668,7 @@ impl WireDefinitions {
 #[derive(Clone, Debug, serde::Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "kebab-case")]
 struct WireDefinition {
-    model: DefinitionModel,
+    model: String,
     #[serde(skip)]
     name: String,
     #[serde(skip)]
@@ -751,7 +693,7 @@ impl WireDefinition {
         hays: &Haystacks,
     ) -> anyhow::Result<Definition> {
         let def = Definition {
-            model: self.model,
+            model: self.model.clone(),
             name: self.name()?,
             regexes: self.regexes(res)?,
             regex_path: self.regex_path(),
@@ -852,13 +794,6 @@ impl WireDefinition {
                 Arc::from(full.options.transform_from_inline(patterns))
             }
         };
-        if !patterns.is_empty() {
-            anyhow::ensure!(
-                !matches!(self.model, DefinitionModel::RegexRedux),
-                "'regex-redux' benchmark '{}' must not define any regexes",
-                self.name,
-            );
-        }
         Ok(patterns)
     }
 
@@ -1364,7 +1299,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,
@@ -1399,7 +1334,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: Arc::from([]),
             regex_path: None,
@@ -1431,7 +1366,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo", "bar"]),
             regex_path: None,
@@ -1463,7 +1398,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,
@@ -1495,7 +1430,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: Arc::from([]),
             regex_path: None,
@@ -1527,7 +1462,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo", "bar"]),
             regex_path: None,
@@ -1559,7 +1494,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes([r"f\*oo"]),
             regex_path: None,
@@ -1591,7 +1526,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes([r"f\*oo", r"b\*ar"]),
             regex_path: None,
@@ -1623,7 +1558,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,
@@ -1655,7 +1590,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,
@@ -1687,7 +1622,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,
@@ -1719,7 +1654,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,
@@ -1751,7 +1686,7 @@ count = 1
         assert_eq!(1, benches.defs.len());
         let got = &benches.defs[0];
         let expected = Definition {
-            model: DefinitionModel::Count,
+            model: "count".to_string(),
             name: name("group", "test"),
             regexes: regexes(["foo"]),
             regex_path: None,

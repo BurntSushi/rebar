@@ -92,7 +92,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let def = Benchmarks::find_one(&dir, &bench_name)?;
     let klvbench = klv::Benchmark {
         name: def.name.as_str().to_string(),
-        model: def.model.as_str().to_string(),
+        model: def.model.clone(),
         regex: klv::Regex {
             patterns: def.regexes.iter().map(|p| p.to_string()).collect(),
             case_insensitive: def.options.case_insensitive,
