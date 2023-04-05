@@ -343,8 +343,8 @@ sub main {
             $config{"maxwarmuptime"} = int($value);
         }
     }
-    # This is apparently necessarily for Unicode semantics
-    # to apply in regexes. Guess how many times 'utf8::decode'
+    # This is apparently necessary for Unicode semantics to
+    # apply in regexes. Guess how many times 'utf8::decode'
     # is mentioned in 'perlre' or 'perlunicode'. Guess. Just
     # guess.
     #

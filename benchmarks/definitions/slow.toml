@@ -1,19 +1,8 @@
-# These benchmarks test regexes that are known to be slow for at least some
-# regex engines. Usually they are somewhat pathological, but not always.
+analysis = '''
+These benchmarks test regexes that are known to be slow for at least some regex
+engines. Usually they are somewhat pathological, but not always.
+'''
 
-# This one shows a particularly gnarly case where each search scans to the end
-# of the haystack only to discover that there is no match for the first branch.
-# It then reports the last match it did find, which was all the way back at the
-# beginning of the haystack, corresponding to the empty regex on the right
-# hand side of the alternation. Since we find all matches, the search then
-# restarts immediately after the first match, only to scan all the way to the
-# end of the haystack again.
-#
-# Each individual search is linear in the length of the haystack, but the
-# overall iteration for every match is actually quadratic. Unfortunate, but
-# unavoidable.
-#
-# Adapted from: https://github.com/golang/go/issues/11181
 [[bench]]
 model = "count"
 name = "quadratic"
@@ -26,4 +15,17 @@ engines = [
   're2',
   'go/regexp',
 ]
+analysis = '''
+This one shows a particularly gnarly case where each search scans to the end
+of the haystack only to discover that there is no match for the first branch.
+It then reports the last match it did find, which was all the way back at the
+beginning of the haystack, corresponding to the empty regex on the right hand
+side of the alternation. Since we find all matches, the search then restarts
+immediately after the first match, only to scan all the way to the end of the
+haystack again.
 
+Each individual search is linear in the length of the haystack, but the overall
+iteration for every match is actually quadratic. Unfortunate, but unavoidable.
+
+Adapted from: https://github.com/golang/go/issues/11181
+'''

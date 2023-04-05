@@ -429,18 +429,21 @@ have slightly different match counts. One can express different counts for
 different engines by using an array of tables as a value, where each table
 has the following keys:
 
-* `engine` - The name of the engine one is specifying a count for. The special
-`*` value is a catch-all for any engine not in this array. Otherwise, the
-engine name must be an exact match.
+* `engine` - A regex that matches against the engine name. The regex is
+automatically wrapped in `^` and `$` anchors. If an engine doesn't match one of
+the regex patterns given, then an error is raised.
 * `count` - The integer count for the specific engine.
+
+The `engine` regex patterns are matched in order. That is, the first pattern
+to match is the count that will be used.
 
 For example, this specifies a count of `27` for the `hyperscan` engine, and
 `5` for all others:
 
 ```toml
 count = [
-    { engine = "*", count = 5 },
     { engine = "hyperscan", count = 27 },
+    { engine = ".*", count = 5 },
 ]
 ```
 
@@ -450,8 +453,8 @@ not, a comment should explain what's going on and why if possible. Namely,
 counts are a critical part of benchmarking as they provide _some_ assurance
 that regex engines are doing roughly equivalent work. It is very easy to
 misconfigure a regex engine or misunderstand a subtle semantic that leads to
-different match counts that might in turn lead to unintentionally measuring
-something other than what is intended.
+different match counts that might in turn lead to measuring something other
+than what is intended.
 
 ### `engines`
 
