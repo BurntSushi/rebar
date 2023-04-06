@@ -57,9 +57,7 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'icu',
-  'java/hotspot',
   'javascript/v8',
-  'perl',
   'python/re',
   'python/regex',
   're2',
@@ -73,7 +71,15 @@ analysis = '''
 
 `hyperscan` is omitted because the regex is too large.
 
+`java/hotspot` is omitted because we currently don't benchmark Perl regex
+compilation.
+
+`javascript/v8` is omitted because we currently don't benchmark Perl regex
+compilation.
+
 `pcre2/*` are omitted because the regex is too large.
+
+`perl` is omitted because we currently don't benchmark Perl regex compilation.
 '''
 
 [[bench]]
