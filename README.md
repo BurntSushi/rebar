@@ -129,38 +129,41 @@ performance profile of any specific regex engine or workload.
 | [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 2.26 | 35 |
 | [rust/regex](engines/rust/regex) | 1.7.2 | 3.16 | 27 |
 | [pcre2/jit](engines/pcre2) | 10.42 2022-12-11 | 4.58 | 31 |
-| [dotnet/compiled](engines/dotnet) | 7.0.3 | 5.06 | 30 |
-| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 6.75 | 28 |
+| [dotnet/compiled](engines/dotnet) | 7.0.3 | 5.04 | 30 |
+| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 6.79 | 28 |
 | [re2](engines/re2) | 2023-03-01 | 7.84 | 28 |
 | [dotnet/nobacktrack](engines/dotnet) | 7.0.3 | 8.45 | 26 |
 | [javascript/v8](engines/javascript) | 19.7.0 | 13.94 | 24 |
 | [python/regex](engines/python) | 2023.3.23 | 33.07 | 31 |
 | [regress](engines/regress) | 0.5.0 | 33.40 | 24 |
 | [python/re](engines/python) | 3.10.9 | 33.57 | 30 |
-| [java/hotspot](engines/java) | 20+36-2344 | 35.89 | 31 |
-| [perl](engines/perl) | 5.36.0 | 39.69 | 30 |
-| [icu](engines/icu) | 72.1.0 | 40.42 | 31 |
-| [go/regexp](engines/go) | 1.20.1 | 61.85 | 28 |
+| [java/hotspot](engines/java) | 20+36-2344 | 35.90 | 31 |
+| [perl](engines/perl) | 5.36.0 | 39.68 | 30 |
+| [icu](engines/icu) | 72.1.0 | 40.43 | 31 |
+| [go/regexp](engines/go) | 1.20.1 | 61.86 | 28 |
 | [pcre2](engines/pcre2) | 10.42 2022-12-11 | 95.46 | 30 |
 
 #### Summary of compile-time benchmarks
 
 | Engine | Version | Geometric mean of speed ratios | Benchmark count |
 | ------ | ------- | ------------------------------ | --------------- |
+| [perl](engines/perl) | 5.36.0 | 1.00 | 1 |
 | [pcre2](engines/pcre2) | 10.42 2022-12-11 | 1.38 | 10 |
-| [regress](engines/regress) | 0.5.0 | 3.19 | 7 |
-| [icu](engines/icu) | 72.1.0 | 3.27 | 10 |
-| [pcre2/jit](engines/pcre2) | 10.42 2022-12-11 | 6.61 | 10 |
-| [re2](engines/re2) | 2023-03-01 | 13.06 | 9 |
-| [go/regexp](engines/go) | 1.20.1 | 16.82 | 9 |
-| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 19.17 | 10 |
-| [rust/regex](engines/rust/regex) | 1.7.2 | 20.39 | 10 |
-| [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 21.24 | 10 |
-| [dotnet/compiled](engines/dotnet) | 7.0.3 | 21.95 | 9 |
-| [python/re](engines/python) | 3.10.9 | 43.52 | 10 |
+| [icu](engines/icu) | 72.1.0 | 5.18 | 11 |
+| [pcre2/jit](engines/pcre2) | 10.42 2022-12-11 | 5.56 | 11 |
+| [regress](engines/regress) | 0.5.0 | 6.58 | 8 |
+| [javascript/v8](engines/javascript) | 19.7.0 | 15.38 | 1 |
+| [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 17.26 | 14 |
+| [re2](engines/re2) | 2023-03-01 | 20.86 | 10 |
+| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 26.71 | 12 |
+| [go/regexp](engines/go) | 1.20.1 | 29.81 | 10 |
+| [rust/regex](engines/rust/regex) | 1.7.2 | 32.23 | 11 |
+| [dotnet/compiled](engines/dotnet) | 7.0.3 | 36.94 | 10 |
+| [java/hotspot](engines/java) | 20+36-2344 | 70.76 | 1 |
+| [python/re](engines/python) | 3.10.9 | 72.63 | 11 |
 | [dotnet/nobacktrack](engines/dotnet) | 7.0.3 | 129.01 | 6 |
-| [python/regex](engines/python) | 2023.3.23 | 136.46 | 10 |
-| [hyperscan](engines/hyperscan) | 5.4.1 2023-02-22 | 3438.34 | 4 |
+| [python/regex](engines/python) | 2023.3.23 | 228.26 | 11 |
+| [hyperscan](engines/hyperscan) | 5.4.1 2023-02-22 | 434.16 | 7 |
 
 ### Benchmark Groups
 
@@ -1599,22 +1602,22 @@ similar to other backtrackers.)
 
 TODO
 
-| Engine | single | multi |
-| - | - | - |
-| dotnet/compiled | 1291.6 KB/s | - |
-| go/regexp | 569.2 KB/s | - |
-| hyperscan | - | **8.3 GB/s** |
-| icu | 146.2 KB/s | - |
-| java/hotspot | 109.2 KB/s | - |
-| javascript/v8 | 28.4 KB/s | - |
-| perl | 130.4 MB/s | - |
-| python/re | 174.4 KB/s | - |
-| python/regex | 140.8 KB/s | - |
-| re2 | 5.6 MB/s | - |
-| regress | 84.0 KB/s | - |
-| rust/regex | 179.1 MB/s | - |
-| rust/regex/meta | **709.8 MB/s** | 182.8 MB/s |
-| rust/regexold | 30.1 KB/s | - |
+| Engine | single | multi | compile-single | compile-multi |
+| - | - | - | - | - |
+| dotnet/compiled | 1459.0 KB/s | - | 11.26ms | - |
+| go/regexp | 566.2 KB/s | - | 14.49ms | - |
+| hyperscan | - | **8.2 GB/s** | - | 20.29ms |
+| icu | 145.8 KB/s | - | 1.46ms | - |
+| java/hotspot | 108.6 KB/s | - | 198.83us | - |
+| javascript/v8 | 28.8 KB/s | - | 43.21us | - |
+| perl | 131.6 MB/s | - | **2.81us** | - |
+| python/re | 174.4 KB/s | - | 34.26ms | - |
+| python/regex | 141.3 KB/s | - | 110.00ms | - |
+| re2 | 5.6 MB/s | - | 3.97ms | - |
+| regress | 83.6 KB/s | - | 2.96ms | - |
+| rust/regex | 179.1 MB/s | - | 8.82ms | - |
+| rust/regex/meta | **710.8 MB/s** | 183.4 MB/s | 7.81ms | **16.80ms** |
+| rust/regexold | 25.9 KB/s | - | 7.83ms | - |
 
 <details>
 <summary>Show individual benchmark parameters.</summary>
@@ -1652,18 +1655,51 @@ TODO
 Only `hyperscan` and `rust/regex/meta` are included because they are the only
 regex engines to support multi-pattern regexes.
 
+**compile-single**
+
+| Parameter | Value |
+| --------- | ----- |
+| full name | `curated/12-dictionary/compile-single` |
+| model | [`compile`](MODELS.md#compile) |
+| regex-path | [`dictionary/english/length-15.txt`](benchmarks/regexes/dictionary/english/length-15.txt) |
+| case-insensitive | `false` |
+| unicode | `true` |
+| haystack | `Zubeneschamali's` |
+| count(`.*`) | 1 |
+
+`dotnet/nobacktrack` is omitted because the regex is too large.
+
+`hyperscan` is omitted because the regex is too large.
+
+`pcre2/*` are omitted because the regex is too large.
+
+**compile-multi**
+
+| Parameter | Value |
+| --------- | ----- |
+| full name | `curated/12-dictionary/compile-multi` |
+| model | [`compile`](MODELS.md#compile) |
+| regex-path | [`dictionary/english/length-15.txt`](benchmarks/regexes/dictionary/english/length-15.txt) |
+| case-insensitive | `false` |
+| unicode | `true` |
+| haystack | `Zubeneschamali's` |
+| count(`.*`) | 1 |
+
+Only `hyperscan` and `rust/regex/meta` are included because they are the only
+regex engines to support multi-pattern regexes.
+
 </details>
 
 ### noseyparker
 
 TODO
 
-| Engine | single | multi |
-| - | - | - |
-| hyperscan | **4.3 GB/s** | **3.9 GB/s** |
-| pcre2/jit | 12.9 MB/s | - |
-| rust/regex/meta | 132.6 MB/s | 103.2 MB/s |
-| rust/regexold | 9.2 MB/s | - |
+| Engine | single | multi | compile-single | compile-multi |
+| - | - | - | - | - |
+| hyperscan | **4.3 GB/s** | **4.3 GB/s** | 219.71ms | 134.61ms |
+| pcre2/jit | 12.9 MB/s | - | **606.65us** | - |
+| rust/regex/meta | 131.9 MB/s | 103.3 MB/s | 2.44ms | **2.83ms** |
+| rust/regexold | 9.2 MB/s | - | 4.28ms | - |
 
 <details>
 <summary>Show individual benchmark parameters.</summary>
@@ -1679,7 +1715,6 @@ TODO
 | unicode | `false` |
 | haystack-path | [`wild/cpython-226484e4.py`](benchmarks/haystacks/wild/cpython-226484e4.py) |
 | count(`hyperscan`) | 241 |
-| count(`re2`) | 0 |
 | count(`.*`) | 55 |
 
 `dotnet/compiled` is omitted because it times out.
@@ -1716,6 +1751,55 @@ TODO
 | haystack-path | [`wild/cpython-226484e4.py`](benchmarks/haystacks/wild/cpython-226484e4.py) |
 | count(`hyperscan`) | 241 |
 | count(`.*`) | 55 |
+
+Only `hyperscan` and `rust/regex/meta` are included because they are the only
+regex engines to support multi-pattern regexes.
+
+**compile-single**
+
+| Parameter | Value |
+| --------- | ----- |
+| full name | `curated/13-noseyparker/compile-single` |
+| model | [`compile`](MODELS.md#compile) |
+| regex-path | [`wild/noseyparker.txt`](benchmarks/regexes/wild/noseyparker.txt) |
+| case-insensitive | `false` |
+| unicode | `false` |
+| haystack | `TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'` |
+| count(`.*`) | 1 |
+
+`dotnet/compiled` is omitted because it times out.
+
+`dotnet/nobacktrack` is omitted because the regex is too big.
+
+`go/regexp` is omitted because there are bounded repeats that exceed its limit.
+
+`icu` is omitted because it times out.
+
+`java/hotspot` is omitted because it times out.
+
+`javascript/v8` is omitted because it doesn't support inline flags.
+
+`pcre2` is omitted because it times out.
+
+`perl` is omitted because it times out.
+
+`python/*` is omitted because it times out.
+
+`re2` is omitted because it seems to fail and reports a count of `0`.
+
+`regress` is omitted because it doesn't support inline flags.
+
+**compile-multi**
+
+| Parameter | Value |
+| --------- | ----- |
+| full name | `curated/13-noseyparker/compile-multi` |
+| model | [`compile`](MODELS.md#compile) |
+| regex-path | [`wild/noseyparker.txt`](benchmarks/regexes/wild/noseyparker.txt) |
+| case-insensitive | `false` |
+| unicode | `false` |
+| haystack | `TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'` |
+| count(`.*`) | 1 |
 
 Only `hyperscan` and `rust/regex/meta` are included because they are the only
 regex engines to support multi-pattern regexes.

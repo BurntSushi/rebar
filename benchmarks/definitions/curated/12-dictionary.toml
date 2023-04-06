@@ -45,3 +45,49 @@ analysis = '''
 Only `hyperscan` and `rust/regex/meta` are included because they are the only
 regex engines to support multi-pattern regexes.
 '''
+
+[[bench]]
+model = "compile"
+name = "compile-single"
+regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = "alternate" }
+unicode = true
+haystack = "Zubeneschamali's"
+count = 1
+engines = [
+  'dotnet/compiled',
+  'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
+]
+analysis = '''
+`dotnet/nobacktrack` is omitted because the regex is too large.
+
+`hyperscan` is omitted because the regex is too large.
+
+`pcre2/*` are omitted because the regex is too large.
+'''
+
+[[bench]]
+model = "compile"
+name = "compile-multi"
+regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = "pattern" }
+unicode = true
+haystack = "Zubeneschamali's"
+count = 1
+engines = [
+  'hyperscan',
+  'rust/regex/meta',
+]
+analysis = '''
+Only `hyperscan` and `rust/regex/meta` are included because they are the only
+regex engines to support multi-pattern regexes.
+'''
