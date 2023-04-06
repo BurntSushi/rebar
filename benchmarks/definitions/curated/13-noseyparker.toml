@@ -1,0 +1,59 @@
+analysis = '''TODO'''
+
+[[bench]]
+model = "count"
+name = "single"
+regex = { path = "wild/noseyparker.txt", per-line = "alternate" }
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
+count = [
+  { engine = 'hyperscan', count = 241 },
+  { engine = 're2', count = 0 },
+  { engine = '.*', count = 55 },
+]
+engines = [
+  'hyperscan',
+  'pcre2/jit',
+  'rust/regex/meta',
+  'rust/regexold',
+]
+analysis = '''
+`dotnet/compiled` is omitted because it times out.
+
+`dotnet/nobacktrack` is omitted because the regex is too big.
+
+`go/regexp` is omitted because there are bounded repeats that exceed its limit.
+
+`icu` is omitted because it times out.
+
+`java/hotspot` is omitted because it times out.
+
+`javascript/v8` is omitted because it doesn't support inline flags.
+
+`pcre2` is omitted because it times out.
+
+`perl` is omitted because it times out.
+
+`python/*` is omitted because it times out.
+
+`re2` is omitted because it seems to fail and reports a count of `0`.
+
+`regress` is omitted because it doesn't support inline flags.
+'''
+
+[[bench]]
+model = "count"
+name = "multi"
+regex = { path = "wild/noseyparker.txt", per-line = "pattern" }
+haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
+count = [
+  { engine = 'hyperscan', count = 241 },
+  { engine = '.*', count = 55 },
+]
+engines = [
+  'hyperscan',
+  'rust/regex/meta',
+]
+analysis = '''
+Only `hyperscan` and `rust/regex/meta` are included because they are the only
+regex engines to support multi-pattern regexes.
+'''
