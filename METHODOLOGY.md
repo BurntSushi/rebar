@@ -320,6 +320,11 @@ bound. But of course, this would not be a good general purpose regex barometer
 because it doesn't do a good job of representing the diversity of real world
 regex usage.
 
+rebar doesn't quite fall into such an obvious trap as defining benchmarks that
+consist purely of catastrophic backtracking, but it's still exceptionally
+difficult to choose a representative set of benchmarks. Moreover,
+[BIAS](BIAS.md) can also influence benchmark selection in a negative way.
+
 So the question remains: how should benchmarks be chosen? In truth, this is
 still a work-in-progress. I expect the "curated" set of benchmarks (the results
 presented in the [README](README.md)) to evolve over time. Of course, this also

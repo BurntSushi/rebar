@@ -88,7 +88,7 @@ Once you've created that file, you're now ready to test that the results
 reported by each engine match what you expect:
 
 ```
-$ rebar measure -f wild/my-use-case/shebang --verify --verbose
+$ rebar measure -f wild/my-use-case/shebang --test
 wild/my-use-case/shebang,rust/regex,grep-captures,1.7.1,OK
 wild/my-use-case/shebang,re2,grep-captures,2023-03-01,OK
 wild/my-use-case/shebang,pcre2/jit,grep-captures,10.42 2022-12-11,OK
@@ -116,7 +116,7 @@ haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 Now verification should succeed:
 
 ```
-$ rebar measure -f wild/my-use-case/shebang --verify --verbose
+$ rebar measure -f wild/my-use-case/shebang --test
 wild/my-use-case/shebang,rust/regex,grep-captures,1.7.1,OK
 wild/my-use-case/shebang,re2,grep-captures,2023-03-01,OK
 wild/my-use-case/shebang,pcre2/jit,grep-captures,10.42 2022-12-11,OK
@@ -157,9 +157,9 @@ on stdout. Put the program in a new directory `engines/<name>`, add an
 entry for it to [`benchmarks/engines.toml`](benchmarks/engines.toml),
 build it with `rebar build <name>` and add it to the `all` definition in
 [`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml). Add it
-to other relevant definitions. Test it with `rebar measure -e <name> --verify
---verbose`. Finally, submit a PR with rationale for why the regex engine should
-be included.
+to other relevant definitions. Test it with `rebar measure -e <name> --test`.
+Finally, submit a PR with rationale for why the regex engine should be
+included.
 
 Adding a new regex engine to this barometer generally requires doing the
 following things:
@@ -295,7 +295,7 @@ environment.
 possible. If none are appropriate, then please open an issue discussing the
 regex engine and why it should be added.
 5. Test that everything works by running `rebar measure -f '^test/' -e
-go/regexp --verify --verbose`, but with `go/regexp` replaced with the name
+go/regexp --test`, but with `go/regexp` replaced with the name
 of the regex engine you added to `engines.toml`. You should see output like
 `test/model/count,go/regexp,count,1.20.1,OK` (among others).
 6. Add the engine to benchmark definitions as appropriate.
@@ -304,5 +304,5 @@ in your runner program, and include a link to the regex engine. See the README
 files for other engines for examples.
 8. Submit a pull request. Ensure that others are able to checkout your PR,
 run `rebar build <name>` and are able to test it by running `rebar measure -e
-<name> --verify --verbose`. **CI must be able to run `rebar build` in its
-entirety successfully.**
+<name> --test`. **CI must be able to run `rebar build` in its entirety
+successfully.**

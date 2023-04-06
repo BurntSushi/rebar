@@ -4,11 +4,11 @@ regex engine][perlre]. Perl's regex engine uses backtracking.
 This runner program makes a few choices worth highlighting:
 
 * Regexes are specifically compiled using `my $re = qr/.../;`, but in order to
-do an iterative search, they need reformulated in regex syntax like `/$re/g`,
-since it seems the `g` flag cannot be used in combination with `qr/.../`
-syntax. (Which makes sense, since the `g` flag is likely connected to search
-time state, where as `qr/.../` is really about just getting the regex into a
-compiled form.) This also makes sense conceptually, but usingthe syntax
+do an iterative search, they seemingly need to be reformulated in regex syntax
+like `/$re/g`, since it seems the `g` flag cannot be used in combination with
+`qr/.../` syntax. (Which makes sense, since the `g` flag is likely connected to
+search time state, where as `qr/.../` is really about just getting the regex
+into a compiled form.) This also makes sense conceptually, but using the syntax
 `/$re/g` to execute a search kind of makes it _look_ like the regex is being
 re-compiled. We do _not_ want to measure regex compilation during a search if
 we can help it. So the question is: does `/$re/g` re-compile `$re` if `$re` is
