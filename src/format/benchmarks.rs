@@ -928,16 +928,21 @@ struct WireRegexOptions {
 
 impl WireRegexOptions {
     fn transform_from_file(&self, raw: &str) -> Vec<String> {
-        let patterns = match self.per_line {
-            WireRegexOptionPerLine::None => vec![raw.trim().to_string()],
+        match self.per_line {
+            WireRegexOptionPerLine::None => {
+                self.transform(vec![raw.trim().to_string()])
+            }
             WireRegexOptionPerLine::Alternate => {
-                vec![raw.lines().collect::<Vec<&str>>().join("|")]
+                let mut pats = raw.lines().map(|p| p.to_string()).collect();
+                pats = self.transform(pats);
+                pats =
+                    pats.into_iter().map(|p| format!("(?:{})", p)).collect();
+                vec![pats.join("|")]
             }
             WireRegexOptionPerLine::Pattern => {
-                raw.lines().map(|x| x.to_string()).collect::<Vec<String>>()
+                self.transform(raw.lines().map(|x| x.to_string()).collect())
             }
-        };
-        self.transform(patterns)
+        }
     }
 
     fn transform_from_inline(&self, patterns: &[String]) -> Vec<String> {

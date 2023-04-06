@@ -261,7 +261,7 @@ patterns.
 options). If `path` is present, then `patterns` must not be. When read from a
 file, the contents are first trimmed of whitespace.
 * `literal` - Whether to treat the regex pattern as a literal. Enabling this
-will cause the pattern to have all special meta characters escaped before
+will cause each pattern to have all special meta characters escaped before
 giving it to the regex engine to compile.
 * `per-line` - Specifies how to read regexes from a file. This only has an
 effect when `path` is present. When `per-line` is absent, then the file is
