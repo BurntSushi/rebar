@@ -147,22 +147,19 @@ performance profile of any specific regex engine or workload.
 
 | Engine | Version | Geometric mean of speed ratios | Benchmark count |
 | ------ | ------- | ------------------------------ | --------------- |
-| [perl](engines/perl) | 5.36.0 | 1.00 | 1 |
 | [pcre2](engines/pcre2) | 10.42 2022-12-11 | 1.38 | 10 |
-| [icu](engines/icu) | 72.1.0 | 5.18 | 11 |
+| [icu](engines/icu) | 72.1.0 | 2.94 | 11 |
+| [regress](engines/regress) | 0.5.0 | 3.01 | 8 |
 | [pcre2/jit](engines/pcre2) | 10.42 2022-12-11 | 5.56 | 11 |
-| [regress](engines/regress) | 0.5.0 | 6.58 | 8 |
-| [javascript/v8](engines/javascript) | 19.7.0 | 15.38 | 1 |
-| [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 17.26 | 14 |
-| [re2](engines/re2) | 2023-03-01 | 20.86 | 10 |
-| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 26.71 | 12 |
-| [go/regexp](engines/go) | 1.20.1 | 29.81 | 10 |
-| [rust/regex](engines/rust/regex) | 1.7.2 | 32.23 | 11 |
-| [dotnet/compiled](engines/dotnet) | 7.0.3 | 36.94 | 10 |
-| [java/hotspot](engines/java) | 20+36-2344 | 70.76 | 1 |
-| [python/re](engines/python) | 3.10.9 | 72.63 | 11 |
+| [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 11.04 | 14 |
+| [re2](engines/re2) | 2023-03-01 | 11.16 | 10 |
+| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 15.86 | 12 |
+| [go/regexp](engines/go) | 1.20.1 | 15.95 | 10 |
+| [rust/regex](engines/rust/regex) | 1.7.2 | 18.25 | 11 |
+| [dotnet/compiled](engines/dotnet) | 7.0.3 | 19.77 | 10 |
+| [python/re](engines/python) | 3.10.9 | 41.14 | 11 |
 | [dotnet/nobacktrack](engines/dotnet) | 7.0.3 | 129.01 | 6 |
-| [python/regex](engines/python) | 2023.3.23 | 228.26 | 11 |
+| [python/regex](engines/python) | 2023.3.23 | 129.29 | 11 |
 | [hyperscan](engines/hyperscan) | 5.4.1 2023-02-22 | 434.16 | 7 |
 
 ### Benchmark Groups
@@ -1607,10 +1604,10 @@ TODO
 | dotnet/compiled | 1459.0 KB/s | - | 11.26ms | - |
 | go/regexp | 566.2 KB/s | - | 14.49ms | - |
 | hyperscan | - | **8.2 GB/s** | - | 20.29ms |
-| icu | 145.8 KB/s | - | 1.46ms | - |
-| java/hotspot | 108.6 KB/s | - | 198.83us | - |
-| javascript/v8 | 28.8 KB/s | - | 43.21us | - |
-| perl | 131.6 MB/s | - | **2.81us** | - |
+| icu | 145.8 KB/s | - | **1.46ms** | - |
+| java/hotspot | 108.6 KB/s | - | - | - |
+| javascript/v8 | 28.8 KB/s | - | - | - |
+| perl | 131.6 MB/s | - | - | - |
 | python/re | 174.4 KB/s | - | 34.26ms | - |
 | python/regex | 141.3 KB/s | - | 110.00ms | - |
 | re2 | 5.6 MB/s | - | 3.97ms | - |
@@ -1671,7 +1668,15 @@ regex engines to support multi-pattern regexes.
 
 `hyperscan` is omitted because the regex is too large.
 
+`java/hotspot` is omitted because we currently don't benchmark Perl regex
+compilation.
+
+`javascript/v8` is omitted because we currently don't benchmark Perl regex
+compilation.
+
 `pcre2/*` are omitted because the regex is too large.
+
+`perl` is omitted because we currently don't benchmark Perl regex compilation.
 
 **compile-multi**
 
