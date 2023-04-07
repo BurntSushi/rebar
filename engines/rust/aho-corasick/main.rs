@@ -114,7 +114,7 @@ fn compile(
          'case-insensitive = true'"
     );
     let ac = AhoCorasick::builder()
-        .kind(kind)
+        .kind(Some(kind))
         .match_kind(MatchKind::LeftmostFirst)
         .ascii_case_insensitive(b.regex.case_insensitive)
         .prefilter(false)
