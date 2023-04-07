@@ -1,4 +1,49 @@
-analysis = '''TODO'''
+analysis = '''
+This benchmark measures how well regex engines do when asked to look for
+matches for many different patterns. The patterns come from the [Nosey Parker]
+project, which finds secrets and sensitive
+information in textual data and source repositories. Nosey Parker operates
+principally by defining a number of rules for detecting secrets (for example,
+AWS API keys), and then looking for matches of those rules in various corpora.
+The rules are, as you might have guessed, defined as regular expressions.
+
+I went through each of its rules and extracted a total of 96 regular
+expressions, as of [commit `be8c26e8`][be8c26e8]. These 96 regexes make up the
+`single` and `multi` benchmarks below, with `single` corresponding to joining
+all of patterns into one big alternations and `multi` corresponding to treating
+each pattern as its own regex. In the latter case, only the `rust/regex/meta`
+and `hyperscan` engines are measured, since they are the only ones to support
+multi-regex matching.
+
+This is a particularly brutal benchmark. Most regex engines can't deal with it
+at all, and will either reject it at compilation time for being too big or
+simple take longer than we're willing to wait. (rebar imposes a reasonable
+timeout for all benchmarks, and if the timeout is exceeded, no measurements are
+collected.)
+
+Hyperscan is in its own class here. Hyperscan was purpose built to deal with
+the multi-pattern use case, and it deals with it *very* well here. The specific
+patterns also put this in its wheelhouse because they all have some kind of
+literal string in them. Hyperscan uses a [literal searching and finite automata
+decomposition strategy][hyperpub] to quickly identify candidate matches and
+avoids doing redundant work. Although how it all fits together and avoids
+pitfalls such as worst case quadratic search time doesn't appear to be written
+down anywhere.
+
+`rust/regex/meta` just barely does serviceably here. It uses its lazy DFA to
+handle this regex, but with the default cache sizes, profiling suggests that it
+is spending a lot of its time building the DFA. It's plausible that increasing
+the cache size for such a big regex would let it execute searches faster.
+
+`pcre2/jit` doesn't do as well here, but one might expect that because it is
+a backtracking engine. With that said, no other backtracking engine could deal
+with this regex at all, so `pcre2/jit` is doing quite well relative to other
+backtracking engines.
+
+[Nosey Parker]: https://github.com/praetorian-inc/noseyparker
+[be8c26e8]: https://github.com/praetorian-inc/noseyparker/commit/be8c26e8b2e8550f101ae62c3f374d0226808214
+[hyperpub]: https://www.usenix.org/system/files/nsdi19-wang-xiang.pdf
+'''
 
 [[bench]]
 model = "count"
@@ -16,27 +61,18 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-`dotnet/compiled` is omitted because it times out.
-
-`dotnet/nobacktrack` is omitted because the regex is too big.
-
-`go/regexp` is omitted because there are bounded repeats that exceed its limit.
-
-`icu` is omitted because it times out.
-
-`java/hotspot` is omitted because it times out.
-
-`javascript/v8` is omitted because it doesn't support inline flags.
-
-`pcre2` is omitted because it times out.
-
-`perl` is omitted because it times out.
-
-`python/*` is omitted because it times out.
-
-`re2` is omitted because it seems to fail and reports a count of `0`.
-
-`regress` is omitted because it doesn't support inline flags.
+* `dotnet/compiled` is omitted because it times out.
+* `dotnet/nobacktrack` is omitted because the regex is too big.
+* `go/regexp` is omitted because there are bounded repeats that exceed its
+limit.
+* `icu` is omitted because it times out.
+* `java/hotspot` is omitted because it times out.
+* `javascript/v8` is omitted because it doesn't support inline flags.
+* `pcre2` is omitted because it times out.
+* `perl` is omitted because it times out.
+* `python/*` is omitted because it times out.
+* `re2` is omitted because it seems to fail and reports a count of `0`.
+* `regress` is omitted because it doesn't support inline flags.
 '''
 
 [[bench]]
@@ -70,27 +106,7 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-`dotnet/compiled` is omitted because it times out.
-
-`dotnet/nobacktrack` is omitted because the regex is too big.
-
-`go/regexp` is omitted because there are bounded repeats that exceed its limit.
-
-`icu` is omitted because it times out.
-
-`java/hotspot` is omitted because it times out.
-
-`javascript/v8` is omitted because it doesn't support inline flags.
-
-`pcre2` is omitted because it times out.
-
-`perl` is omitted because it times out.
-
-`python/*` is omitted because it times out.
-
-`re2` is omitted because it seems to fail and reports a count of `0`.
-
-`regress` is omitted because it doesn't support inline flags.
+We only include the engines that are measured in the `single` benchmark.
 '''
 
 [[bench]]
@@ -104,6 +120,5 @@ engines = [
   'rust/regex/meta',
 ]
 analysis = '''
-Only `hyperscan` and `rust/regex/meta` are included because they are the only
-regex engines to support multi-pattern regexes.
+We only include the engines that are measured in the `multi` benchmark.
 '''
