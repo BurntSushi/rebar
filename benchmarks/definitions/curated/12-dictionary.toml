@@ -1,10 +1,110 @@
-analysis = '''TODO'''
+analysis = '''
+This benchmark highlights how well each regex engine does searching for a small
+dictionary of words. The dictionary is made up of about 2,500 words, where
+every word is at least 15 bytes in length. The number of words was chosen to
+be small enough that _most_ regex engines can execute a search in reasonable
+time. The bigger minimum length of each word was chosen in order to make this
+a throughput benchmark. That is, there is only one match found here, so this
+benchmark is measuring the raw speed with which an engine can handle a big
+alternation of plain literals.
+
+Most regex engines run quite slowly here. `perl`, `re2` and `rust/regex` lead
+the pack with throughput measured in MB/s, while the rest are measured in
+KB/s. One might think that this is a benchmark that would manifest as a bright
+dividing line between finite automata engines and backtracking engines. Namely,
+finite automata engines should handle all of the alternations in "parallel,"
+where as backtrackers will essentially try to match each alternate at each
+position in the haystack (owch). Indeed, this seems _mostly_ true, but `perl`
+(a backtracker) does quite well while `go/regexp` (a finite automata engine)
+does quite poorly. Moreover, what explains the differences between `perl`,
+`re2` and `rust/regex`?
+
+There are several knots to untangle here.
+
+First, we'll tackle the reason why `go/regexp` has a poor showing here. The
+answer lies in how the Thompson NFA construction works. A Thompson NFA can be
+built in worst case linear time (in the size of the pattern), but in exchange,
+it has _epsilson transitions_ in its state graph. Epsilon transitions are
+transitions in a finite state machine that are followed without consuming
+any input. In a case like `foo|bar|quux`, you can think of the corresponding
+Thompson NFA (very loosely) as creating a single starting state with three
+epsilon transitions to each of `foo`, `bar` and `quux`. In a Thompson NFA
+simulation (i.e., a regex search using a Thompson NFA), all of these epsilon
+transitions have to be continually followed at every position in the haystack.
+With a large number of alternations, the amount of time spent shuffling through
+these epsilon transitions can be quite enormous. While the search time remains
+linear with respect to the size of the haystack, the "constant" factor here
+(i.e., the size of the regex pattern) can become quite large. In other words,
+a Thompson NFA scales poorly with respect to the size of the pattern. In this
+particular case, a Thompson NFA just doesn't do any better than a backtracker.
+
+The second knot to untangle here is why `perl` does so well despite being a
+backtracker. While I'm not an expert on Perl internals, it appears to do well
+here because of something called a _trie optimization_. That is, Perl's regex
+engine will transform large alternations like this into an equivalent but
+much more efficient structure by essentially building a trie and encoding it
+into the regex itself. It turns out that `rust/regex` does the same thing,
+because the exact same optimization helps a backtracker in the same way it
+helps a Thompson NFA simulation. The optimization exploits the fact that the
+branches in the alternation are not truly independent and actually share a lot
+of overlap. Without the optimization, the branches are treated as completely
+independent and one must brute force their way through each one.
+
+So what does this trie optimization look like? Consider a regex like
+`zapper|z|zap`. There is quite a bit of redundant structure. With some
+care, and making sure to preserve leftmost-first match semantics, it can be
+translated to the equivalent pattern `z(apper||ap)`. Notice how in the pattern
+we started with, the alternation needs to be dealt with for every byte in the
+haystack, because you never know which branch is going to match, if any. But in
+the latter case, you now don't even need to consider the alternation until the
+byte `z` matches, which is likely to be quite rare.
+
+Indeed, the algorithm for constructing such a pattern effectively proceeds by
+building a trie from the original alternation, and then converting the trie
+back to whatever intermediate representation the regex engine uses.
+
+The last knot to untangle is to explain the differences between `perl`, `re2`
+and `rust/regex`. Perl still uses a backtracking strategy, but with the trie
+optimization described above, it can try much fewer things for each position
+in the haystack. But what's going on with `re2` and `rust/regex`? In this
+case, `re2` uses the Thompson NFA simulation, but `re2` does not use the trie
+optimization described above, so it gets stuck in a lot epsilon transition
+shuffling. Finally, `rust/regex` does the trie optimization _and_ uses its lazy
+DFA internally for this case. `re2` probably could too, but both libraries use
+various heuristics for deciding which engine to use. In this case, the regex
+might be too big for `re2` to use its lazy DFA.
+
+OK, that wraps up discussion of the `single` benchmark. But what is the `multi`
+benchmark? Where `single` represents combining all words in the dictionary into
+a single pattern, `multi` represents a strategy where each word is treated as
+its own distinct pattern. In the `single` case, Hyperscan actually rejects
+the pattern for being too large, but is happy to deal with it if each word
+is treated as its own pattern. The main semantic difference between these
+strategies is that the `multi` approach permits not only identifying where a
+match occurred, but *which* word in the dictionary matched. And this is done
+without using capture groups.
+
+Hyperscan does really well here. While its source code is difficult penetrate,
+my understanding is that Hyperscan uses its "FDR" algorithm here, which is
+essentially SIMD-ified variant of multi-substring Shift-Or. This benchmark
+represents Hyperscan's bread and butter: multi-pattern search.
+
+`rust/regex` actually does _worse_ in the `multi` case versus the `single`
+case. `rust/regex`'s support for multi-pattern search is still young, and in
+particular, the multi-pattern case currently inhibits the trie optimization
+discussed above.
+
+Finally, we also include compile-time benchmarks for each of the above cases in
+order to give an idea of how long it takes to build a regex from a dictionary
+like this. I don't have much to say here other than to call out the fact
+that the trie optimization does have a meaningful impact on regex compile
+times in the `rust/regex` case at least.
+'''
 
 [[bench]]
 model = "count"
 name = "single"
 regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = "alternate" }
-unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
@@ -34,7 +134,6 @@ analysis = '''
 model = "count"
 name = "multi"
 regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = "pattern" }
-unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
@@ -50,7 +149,6 @@ regex engines to support multi-pattern regexes.
 model = "compile"
 name = "compile-single"
 regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = "alternate" }
-unicode = true
 haystack = "Zubeneschamali's"
 count = 1
 engines = [
@@ -86,7 +184,6 @@ compilation.
 model = "compile"
 name = "compile-multi"
 regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = "pattern" }
-unicode = true
 haystack = "Zubeneschamali's"
 count = 1
 engines = [
