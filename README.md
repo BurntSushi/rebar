@@ -1838,7 +1838,7 @@ with this regex at all, so `pcre2/jit` is doing quite well relative to other
 backtracking engines.
 
 [Nosey Parker]: https://github.com/praetorian-inc/noseyparker
-[be8c26e8]: https://github.com/praetorian-inc/noseyparker/commit/be8c26e8b2e8550f101ae62c3f374d0226808214
+[be8c26e8]: https://github.com/praetorian-inc/noseyparker/tree/be8c26e8b2e8550f101ae62c3f374d0226808214
 [hyperpub]: https://www.usenix.org/system/files/nsdi19-wang-xiang.pdf
 
 | Engine | single | multi | compile-single | compile-multi |
