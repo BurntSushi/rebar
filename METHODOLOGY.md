@@ -94,7 +94,7 @@ project to just the regex crate. That is, I only cared about the first half of
 the problem described above. But then I started getting curious about how other
 regex engines performed on similar tasks. And especially, I wanted to learn
 about optimization techniques that other regex engines used that I might be
-able to port.
+able to learn from.
 
 So I started adding other regex engines to the predecessor of rebar. I started
 with only the PCRE2 and RE2 regex engines, which I accomplished by binding them
@@ -147,8 +147,8 @@ samples have been collected, they should be sent back to rebar.
 
 Runner programs accept a simple format describing the benchmark (discussed in
 the next section) on `stdin`, and must output samples in a comma-delimited
-format to `stdout`. Each CSV record contains the two fields described above: a
-duration (in nanoseconds) and a verification count.
+format to `stdout`. Each comma-delimited record contains the two fields
+described above: a duration (in nanoseconds) and a verification count.
 
 ### Communicating Benchmark Parameters to Subprocesses
 
@@ -194,11 +194,10 @@ just exist as a bridge for `rebar` to gather measurements. They don't *need* to
 be user facing programs.
 
 I eventually settled on (3) because it became obvious that neither the patterns
-nor the haystack could not be passed as process arguments due to their size.
-So, some kind of format to encode the parameters would be needed. But which
-format?
+nor the haystack could be passed as process arguments due to their size. So,
+some kind of format to encode the parameters would be needed. But which format?
 
-A natural format to choose here would be JSON, due to its ubiquitous support
+A natural format to choose here would be JSON due to its ubiquitous support
 in a variety of programming environments. But as mentioned in a previous
 section, I wanted to keep runner programs as simple as I could. This doesn't
 just include the source code itself, but also the operation, maintenance and
@@ -208,11 +207,12 @@ environments come with a JSON parser built-in and not all programming
 environments make it easy to add dependencies, I decided against JSON or any
 other similarly complex format.
 
-Instead, came up with my own very simple format called [KLV](KLV.md), which
+Instead, I came up with my own very simple format called [KLV](KLV.md), which
 is an initialism for "key-length-value." It's essentially the standard
 prefix-length encoding commonly found in binary formats, but done in a plain
 text format. The plain text format makes the benchmark parameters human
-readable.
+readable. (I'm sure I didn't invent this format. What I mean is that there is
+no specification, and I didn't copy the precise format from any other source.)
 
 Thus, benchmark runner programs work by reading the entirety of `stdin`,
 parsing it as a sequence of key-length-value entries, repeatedly running the
@@ -371,7 +371,7 @@ In theory, I would like to capture both of these things, but have not had the
 time to dig into how I would go about it.
 
 But let's go back to time. Merely collecting a bunch of timing samples is not
-enough. Namely, a single regex search may be executing thousands (or more)
+enough. Namely, a single regex search may be executed thousands (or more)
 times. A human just cannot feasibly look at thousands of data points for every
 regex engine across every workload. So instead, we need to choose a way to
 represent a collection these data points in some aggregate form. There are a
