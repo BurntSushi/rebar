@@ -1,18 +1,11 @@
-#![allow(warnings)]
-
 use std::{
     collections::{BTreeMap, BTreeSet},
     io::Write,
     path::{Path, PathBuf},
-    sync::Arc,
-    time::Duration,
 };
 
 use {
-    anyhow::Context,
-    bstr::ByteSlice,
-    lexopt::{Arg, ValueExt},
-    once_cell::sync::Lazy,
+    anyhow::Context, bstr::ByteSlice, lexopt::ValueExt, once_cell::sync::Lazy,
     regex::Regex,
 };
 
@@ -74,9 +67,6 @@ then other engines in that benchmark will have a speed ratio above 1.
     ),
     Units::USAGE,
 ];
-
-const SPLICE_BEGIN: &str = "<!-- BEGIN: report -->";
-const SPLICE_END: &str = "<!-- END: report -->";
 
 fn usage() -> String {
     format!(
@@ -245,15 +235,15 @@ impl Config {
         engine_names.sort();
         engine_names.dedup();
         let pat = format!("^(?:{})$", engine_names.join("|"));
-        let mut engine_filter = Filter::from_pattern(&pat)
+        let engine_filter = Filter::from_pattern(&pat)
             .context("failed to build filter for engine names")?;
 
-        let mut bench_names: Vec<String> = measurements
+        let bench_names: Vec<String> = measurements
             .iter()
             .map(|m| regex_syntax::escape(&m.name))
             .collect();
         let pat = format!("^(?:{})$", bench_names.join("|"));
-        let mut bench_filter = Filter::from_pattern(&pat)
+        let bench_filter = Filter::from_pattern(&pat)
             .context("failed to build filter for benchmark names")?;
 
         let mut filters = Filters::new();
@@ -444,7 +434,7 @@ impl Flattened {
         let mut map: BTreeMap<String, EngineDist> = BTreeMap::new();
         for defm in self.results.iter() {
             for m in defm.measurements.values() {
-                let mut e = map.entry(m.engine.clone()).or_insert_with(|| {
+                let e = map.entry(m.engine.clone()).or_insert_with(|| {
                     EngineDist {
                         name: m.engine.clone(),
                         version: m.version.clone(),
@@ -467,7 +457,7 @@ impl Flattened {
                 }
             }
         }
-        let mut engines: Vec<Engine> = map
+        let engines: Vec<Engine> = map
             .into_iter()
             .map(|(_, edist)| {
                 let count_compile = edist.ratios_compile.len();
@@ -649,37 +639,9 @@ impl Tree {
         imp(self, &mut f, 0, 0)
     }
 
-    /// Returns the children of this node, but flattened. That is, if this
-    /// node has only one non-leaf child, then it is skipped and the flattened
-    /// children of that child are returned.
-    ///
-    /// This always returns an empty slice for leaf nodes.
-    fn flattened_children(&self) -> &[Tree] {
-        match *self {
-            Tree::Leaf(_) => &[],
-            Tree::Node { ref children, .. } => {
-                if children.len() != 1 || children[0].is_leaf() {
-                    return children;
-                }
-                children[0].flattened_children()
-            }
-        }
-    }
-
     /// Returns true if and only if this is a leaf node.
     fn is_leaf(&self) -> bool {
         matches!(*self, Tree::Leaf { .. })
-    }
-
-    /// Returns true if and only if this is an internal node whose children
-    /// are all leafs.
-    fn is_parent_of_leaf(&self) -> bool {
-        match *self {
-            Tree::Leaf(_) => false,
-            Tree::Node { ref children, .. } => {
-                children.iter().all(Tree::is_leaf)
-            }
-        }
     }
 
     /// Returns the component name of this tree node.
@@ -733,8 +695,8 @@ benchmark.
     tree.flattened_depth_first(|tree, depth| {
         let indent = "  ".repeat(depth);
         match *tree {
-            Tree::Leaf(ref defm) => {}
-            Tree::Node { ref name, ref children } => {
+            Tree::Leaf(_) => {}
+            Tree::Node { ref name, .. } => {
                 let nice_name = nice_name(name);
                 writeln!(wtr, "{}* [{}](#{})", indent, nice_name, nice_name)?;
             }
@@ -925,7 +887,7 @@ fn markdown_result_group<W: Write>(
         return Ok(());
     }
     if let Some(ref analysis) = analysis.get(&defms[0].def.name.group) {
-        writeln!(wtr, "{}", analysis.trim());
+        writeln!(wtr, "{}", analysis.trim())?;
         writeln!(wtr, "")?;
     }
 
@@ -935,7 +897,7 @@ fn markdown_result_group<W: Write>(
     }
     writeln!(wtr, "")?;
     write!(wtr, "| - |")?;
-    for defm in defms.iter() {
+    for _ in defms.iter() {
         write!(wtr, " - |")?;
     }
     writeln!(wtr, "")?;
@@ -1035,7 +997,7 @@ fn markdown_result_group<W: Write>(
                 wtr,
                 "| haystack-path | [`{path}`](benchmarks/haystacks/{path}) |",
                 path = path
-            );
+            )?;
         } else {
             const LIMIT: usize = 60;
             write!(wtr, "| haystack | ")?;
@@ -1043,7 +1005,7 @@ fn markdown_result_group<W: Write>(
             if haystack.len() > LIMIT {
                 write!(wtr, "`{} [.. snip ..]`", haystack[..LIMIT].as_bstr())?;
             } else {
-                write!(wtr, "`{}`", haystack.as_bstr());
+                write!(wtr, "`{}`", haystack.as_bstr())?;
             }
             writeln!(wtr, " |")?;
         }
