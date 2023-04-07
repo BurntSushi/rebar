@@ -51,6 +51,18 @@ any fancy features that are not known how to implement efficiently, such as
 arbitrary look-around. (Simple look-around assertions like `^`, `$` and `\b`
 are used though.) This means that the barometer misses a whole classes of
 regexes that are just not measured here at all.
+* The benchmarking setup works by repeatedly executing the same task over and
+over again, with nothing changing. This can result in an artificial measurement
+because things are usually changing in the real world. For example, in the
+real world, it's pretty unlikely that one is running the same regex against
+the same haystack repeatedly. Instead, it's likely that at least the haystack
+is changing in some way. _Some_ benchmark models account for this, namely the
+`grep` models, by running the regex on each line. The `count` model, however,
+just repeats the same regex search on the same haystack over and over again.
+Similarly, the `compile` model builds a regex from the same pattern over and
+over again. This methodology is probably fine in most cases, but it does seem
+to result in flawed measurements where an exceptionally well tuned JIT or
+caching mechanism is in place that cannot be easily cleared.
 
 [@BurntSushi]: https://github.com/BurntSushi
 [Rust regex crate]: https://github.com/rust-lang/regex
