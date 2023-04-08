@@ -1,19 +1,9 @@
 use std::io::Write;
 
-// helpers and other things
 mod args;
+mod cmd;
 mod format;
 mod util;
-
-// sub-commands
-mod build;
-mod clean;
-mod cmp;
-mod diff;
-mod haystack;
-mod klv;
-mod measure;
-mod report;
 
 const USAGE: &'static str = "\
 A regex barometer tool for running benchmarks and comparing results.
@@ -52,14 +42,14 @@ fn main() -> anyhow::Result<()> {
 fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let cmd = args::next_as_command(USAGE, p)?;
     match &*cmd {
-        "build" => build::run(p),
-        "clean" => clean::run(p),
-        "cmp" => cmp::run(p),
-        "diff" => diff::run(p),
-        "haystack" => haystack::run(p),
-        "klv" => klv::run(p),
-        "measure" => measure::run(p),
-        "report" => report::run(p),
+        "build" => cmd::build::run(p),
+        "clean" => cmd::clean::run(p),
+        "cmp" => cmd::cmp::run(p),
+        "diff" => cmd::diff::run(p),
+        "haystack" => cmd::haystack::run(p),
+        "klv" => cmd::klv::run(p),
+        "measure" => cmd::measure::run(p),
+        "report" => cmd::report::run(p),
         unk => anyhow::bail!("unrecognized command '{}'", unk),
     }
 }
