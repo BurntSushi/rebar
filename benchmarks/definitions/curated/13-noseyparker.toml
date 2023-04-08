@@ -10,14 +10,14 @@ The rules are, as you might have guessed, defined as regular expressions.
 I went through each of its rules and extracted a total of 96 regular
 expressions, as of [commit `be8c26e8`][be8c26e8]. These 96 regexes make up the
 `single` and `multi` benchmarks below, with `single` corresponding to joining
-all of patterns into one big alternations and `multi` corresponding to treating
+all of patterns into one big alternation and `multi` corresponding to treating
 each pattern as its own regex. In the latter case, only the `rust/regex/meta`
 and `hyperscan` engines are measured, since they are the only ones to support
 multi-regex matching.
 
 This is a particularly brutal benchmark. Most regex engines can't deal with it
 at all, and will either reject it at compilation time for being too big or
-simple take longer than we're willing to wait. (rebar imposes a reasonable
+simply take longer than we're willing to wait. (rebar imposes a reasonable
 timeout for all benchmarks, and if the timeout is exceeded, no measurements are
 collected.)
 
@@ -39,6 +39,10 @@ the cache size for such a big regex would let it execute searches faster.
 a backtracking engine. With that said, no other backtracking engine could deal
 with this regex at all, so `pcre2/jit` is doing quite well relative to other
 backtracking engines.
+
+Finally, we also include compile time benchmarks for each of the `single` and
+`multi` cases to give a general sense of how long this monster regex takes to
+build.
 
 [Nosey Parker]: https://github.com/praetorian-inc/noseyparker
 [be8c26e8]: https://github.com/praetorian-inc/noseyparker/tree/be8c26e8b2e8550f101ae62c3f374d0226808214
