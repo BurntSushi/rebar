@@ -155,7 +155,6 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'icu',
-  'javascript/v8',
   'python/re',
   'python/regex',
   're2',

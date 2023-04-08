@@ -147,20 +147,19 @@ performance profile of any specific regex engine or workload.
 
 | Engine | Version | Geometric mean of speed ratios | Benchmark count |
 | ------ | ------- | ------------------------------ | --------------- |
-| [javascript/v8](engines/javascript) | 19.7.0 | 1.00 | 1 |
 | [pcre2](engines/pcre2) | 10.42 2022-12-11 | 1.38 | 10 |
-| [icu](engines/icu) | 72.1.0 | 3.98 | 11 |
-| [regress](engines/regress) | 0.5.0 | 4.84 | 8 |
+| [icu](engines/icu) | 72.1.0 | 2.89 | 11 |
+| [regress](engines/regress) | 0.5.0 | 3.12 | 8 |
 | [pcre2/jit](engines/pcre2) | 10.42 2022-12-11 | 5.46 | 11 |
-| [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 13.99 | 14 |
-| [re2](engines/re2) | 2023-03-01 | 15.70 | 10 |
-| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 20.80 | 12 |
-| [go/regexp](engines/go) | 1.20.1 | 22.97 | 10 |
-| [rust/regex](engines/rust/regex) | 1.7.2 | 24.34 | 11 |
-| [dotnet/compiled](engines/dotnet) | 7.0.3 | 27.57 | 10 |
-| [python/re](engines/python) | 3.10.9 | 56.27 | 11 |
+| [rust/regex/meta](engines/rust/regex-automata) | 0.2.0 | 10.88 | 14 |
+| [re2](engines/re2) | 2023-03-01 | 11.04 | 10 |
+| [rust/regexold](engines/rust/regex-old) | 1.7.2 | 15.52 | 12 |
+| [go/regexp](engines/go) | 1.20.1 | 16.16 | 10 |
+| [rust/regex](engines/rust/regex) | 1.7.2 | 17.67 | 11 |
+| [dotnet/compiled](engines/dotnet) | 7.0.3 | 19.39 | 10 |
+| [python/re](engines/python) | 3.10.9 | 40.86 | 11 |
 | [dotnet/nobacktrack](engines/dotnet) | 7.0.3 | 128.36 | 6 |
-| [python/regex](engines/python) | 2023.3.23 | 178.83 | 11 |
+| [python/regex](engines/python) | 2023.3.23 | 129.87 | 11 |
 | [hyperscan](engines/hyperscan) | 5.4.1 2023-02-22 | 438.23 | 7 |
 
 ### Benchmark Groups
@@ -1706,9 +1705,9 @@ times in the `rust/regex` case at least.
 | dotnet/compiled | 1298.6 KB/s | - | 11.26ms | - |
 | go/regexp | 575.5 KB/s | - | 14.99ms | - |
 | hyperscan | - | **8.1 GB/s** | - | 20.12ms |
-| icu | 145.5 KB/s | - | 1.46ms | - |
+| icu | 145.5 KB/s | - | **1.46ms** | - |
 | java/hotspot | 109.4 KB/s | - | - | - |
-| javascript/v8 | 28.0 KB/s | - | **43.25us** | - |
+| javascript/v8 | 28.0 KB/s | - | - | - |
 | perl | 131.2 MB/s | - | - | - |
 | python/re | 174.7 KB/s | - | 34.56ms | - |
 | python/regex | 139.5 KB/s | - | 114.30ms | - |
