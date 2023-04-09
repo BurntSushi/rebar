@@ -93,7 +93,7 @@ regex = '''(?x)(?:
 ){100}'''
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
-count = 0
+count = 1244
 engines = [
   'rust/regex/meta',
   # 're2', # does not support 'x' flag

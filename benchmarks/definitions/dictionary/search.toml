@@ -16,7 +16,7 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 count = 45_315
 engines = [
   'rust/regex/meta',
-  'rust/regexold',
+  # 'rust/regexold', # timeout
 ]
 
 [[bench]]
@@ -41,7 +41,7 @@ count = 690
 engines = [
   're2',
   'rust/regex/meta',
-  'rust/regexold',
+  # 'rust/regexold', # timeout
 ]
 
 [[bench]]
