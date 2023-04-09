@@ -16,6 +16,22 @@ const USAGES: &[Usage] = &[
     Filter::USAGE_ENGINE,
     Filter::USAGE_BENCH,
     Filter::USAGE_MODEL,
+    Usage::new(
+        "--row <type>",
+        "One of: benchmark (default) or engine.",
+        r#"
+This flag sets what the rows are in the table printed. Its value can be either
+'benchmark' or 'engine', where 'benchmark' is the default.
+
+By default, the rows are the benchmark and the columns are the regex engine.
+But if there are too many engines with very few benchmarks, this format
+probably won't work well. In that case, it might make sense to make the rows
+the engines instead (which would make the columns the benchmarks).
+
+If you have both a large number of benchmarks and engines, then you'll have to
+do some kind of filtering to trim it down.
+"#,
+    ),
     Stat::USAGE,
     Threshold::USAGE,
     Units::USAGE,
@@ -49,6 +65,11 @@ Compare benchmarks between different regex engines.
 To compare benchmark results for the same regex engine across time, use the
 'rebar diff' command.
 
+If you find that the table emitted has too many columns to be easily read,
+try running with '--row engine' to flip the rows and columns. If that also has
+too many columns, you'll want to use one or more of the filter flags to trim
+down the results.
+
 USAGE:
     rebar cmp [OPTIONS] <csv-path> ...
 
@@ -73,70 +94,81 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let measurements = config.read_measurements()?;
     let measurements_by_name = MeasurementsByBenchmarkName::new(measurements);
     let engines = measurements_by_name.engine_names();
-
     let mut wtr = config.color.elastic_stdout();
 
-    // Write column names.
-    write!(wtr, "benchmark")?;
-    for engine in engines.iter() {
-        write!(wtr, "\t{}", engine)?;
-    }
-    writeln!(wtr, "")?;
+    match config.row {
+        RowKind::Benchmark => {
+            // Write column names.
+            write!(wtr, "benchmark")?;
+            for engine in engines.iter() {
+                write!(wtr, "\t{}", engine)?;
+            }
+            writeln!(wtr, "")?;
 
-    // Write underlines beneath each column name to give some separation.
-    write_divider(&mut wtr, '-', "benchmark".width())?;
-    for engine in engines.iter() {
-        write!(wtr, "\t")?;
-        write_divider(&mut wtr, '-', engine.width())?;
-    }
-    writeln!(wtr, "")?;
+            // Write underlines beneath each column name to give some
+            // separation.
+            write_divider(&mut wtr, '-', "benchmark".width())?;
+            for engine in engines.iter() {
+                write!(wtr, "\t")?;
+                write_divider(&mut wtr, '-', engine.width())?;
+            }
+            writeln!(wtr, "")?;
 
-    for group in measurements_by_name.groups.iter() {
-        let diff = group.biggest_difference(config.stat);
-        if !config.threshold.include(diff) {
-            continue;
-        }
-        write!(wtr, "{}", group.name)?;
-        // We write an entry for every engine we care about, even if the engine
-        // isn't in this group. This makes sure everything stays aligned. If
-        // an output has too many missing entries, the user can use filters to
-        // condense things.
-        let has_throughput = group.any_throughput();
-        for engine in engines.iter() {
-            write!(wtr, "\t")?;
-            match group.measurements_by_engine.get(engine) {
-                None => {
-                    write!(wtr, "-")?;
+            for group in measurements_by_name.groups.iter() {
+                let diff = group.biggest_difference(config.stat);
+                if !config.threshold.include(diff) {
+                    continue;
                 }
-                Some(m) => {
-                    if engine == group.best(config.stat) {
-                        let mut spec = termcolor::ColorSpec::new();
-                        spec.set_fg(Some(termcolor::Color::Green))
-                            .set_bold(true);
-                        wtr.set_color(&spec)?;
-                    }
-                    let ratio = group.ratio(engine, config.stat);
-                    match config.units {
-                        Units::Throughput if has_throughput => {
-                            if let Some(tput) = m.throughput(config.stat) {
-                                write!(wtr, "{} ({:.2}x)", tput, ratio)?;
-                            } else {
-                                write!(wtr, "NO-THROUGHPUT")?;
-                            }
-                        }
-                        _ => {
-                            let d = m.duration(config.stat);
-                            let humand = ShortHumanDuration::from(d);
-                            write!(wtr, "{} ({:.2}x)", humand, ratio)?;
-                        }
-                    }
-                    if engine == group.best(config.stat) {
-                        wtr.reset()?;
-                    }
+                write!(wtr, "{}", group.name)?;
+                // We write an entry for every engine we care about, even if
+                // the engine isn't in this group. This makes sure everything
+                // stays aligned. If an output has too many missing entries,
+                // the user can use filters to condense things.
+                for engine in engines.iter() {
+                    write!(wtr, "\t")?;
+                    write_datum(&config, &mut wtr, &group, &engine)?;
                 }
+                writeln!(wtr, "")?;
             }
         }
-        writeln!(wtr, "")?;
+        RowKind::Engine => {
+            // Write column names.
+            write!(wtr, "engine")?;
+            for group in measurements_by_name.groups.iter() {
+                let diff = group.biggest_difference(config.stat);
+                if !config.threshold.include(diff) {
+                    continue;
+                }
+                write!(wtr, "\t{}", group.name)?;
+            }
+            writeln!(wtr, "")?;
+
+            // Write underlines beneath each column name to give some
+            // separation.
+            write_divider(&mut wtr, '-', "engine".width())?;
+            for group in measurements_by_name.groups.iter() {
+                let diff = group.biggest_difference(config.stat);
+                if !config.threshold.include(diff) {
+                    continue;
+                }
+                write!(wtr, "\t")?;
+                write_divider(&mut wtr, '-', group.name.width())?;
+            }
+            writeln!(wtr, "")?;
+
+            for engine in engines.iter() {
+                write!(wtr, "{}", engine)?;
+                for group in measurements_by_name.groups.iter() {
+                    let diff = group.biggest_difference(config.stat);
+                    if !config.threshold.include(diff) {
+                        continue;
+                    }
+                    write!(wtr, "\t")?;
+                    write_datum(&config, &mut wtr, &group, &engine)?;
+                }
+                writeln!(wtr, "")?;
+            }
+        }
     }
     wtr.flush()?;
     Ok(())
@@ -162,6 +194,8 @@ struct Config {
     threshold: Threshold,
     /// The user's color choice. We default to 'Auto'.
     color: Color,
+    /// What the rows of the comparison table should be.
+    row: RowKind,
 }
 
 impl Config {
@@ -186,6 +220,9 @@ impl Config {
                 }
                 Arg::Short('m') | Arg::Long("model") => {
                     c.model_filter.add(args::parse(p, "-m/--model")?);
+                }
+                Arg::Long("row") => {
+                    c.row = args::parse(p, "--row")?;
                 }
                 Arg::Short('s') | Arg::Long("statistic") => {
                     c.stat = args::parse(p, "-s/--statistic")?;
@@ -396,4 +433,70 @@ impl MeasurementGroup {
             .values()
             .any(|m| m.aggregate.tputs.is_some())
     }
+}
+
+/// The entity to use for the rows in the comparison table printed.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum RowKind {
+    Benchmark,
+    Engine,
+}
+
+impl Default for RowKind {
+    fn default() -> RowKind {
+        RowKind::Benchmark
+    }
+}
+
+impl std::str::FromStr for RowKind {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> anyhow::Result<RowKind> {
+        Ok(match s {
+            "benchmark" => RowKind::Benchmark,
+            "engine" => RowKind::Engine,
+            unknown => anyhow::bail!("unrecognized row kind '{}'", unknown),
+        })
+    }
+}
+
+/// Writes a single aggregate statistic for the given engine from the given
+/// group of measurements.
+fn write_datum<W: termcolor::WriteColor>(
+    config: &Config,
+    mut wtr: W,
+    group: &MeasurementGroup,
+    engine: &str,
+) -> anyhow::Result<()> {
+    match group.measurements_by_engine.get(engine) {
+        None => {
+            write!(wtr, "-")?;
+        }
+        Some(m) => {
+            if engine == group.best(config.stat) {
+                let mut spec = termcolor::ColorSpec::new();
+                spec.set_fg(Some(termcolor::Color::Green)).set_bold(true);
+                wtr.set_color(&spec)?;
+            }
+            let ratio = group.ratio(engine, config.stat);
+            match config.units {
+                Units::Throughput if group.any_throughput() => {
+                    if let Some(tput) = m.throughput(config.stat) {
+                        write!(wtr, "{} ({:.2}x)", tput, ratio)?;
+                    } else {
+                        write!(wtr, "NO-THROUGHPUT")?;
+                    }
+                }
+                _ => {
+                    let d = m.duration(config.stat);
+                    let humand = ShortHumanDuration::from(d);
+                    write!(wtr, "{} ({:.2}x)", humand, ratio)?;
+                }
+            }
+            if engine == group.best(config.stat) {
+                wtr.reset()?;
+            }
+        }
+    }
+    Ok(())
 }
