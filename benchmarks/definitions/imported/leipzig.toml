@@ -502,7 +502,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
-  'icu',
+  # 'icu', # timeout
   'java/hotspot',
   'javascript/v8',
   'pcre2',
