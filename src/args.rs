@@ -172,14 +172,14 @@ pub struct Filter {
 impl Filter {
     pub const USAGE_ENGINE: Usage = Usage::new(
         "-e, --engine <engine> ...",
-        "Filter by regex engine name.",
+        "Filter by including a regex engine by a name regex pattern.",
         r#"
-Filter benchmarks by regex engine name using regex.
+Filter by including a regex engine by a name regex pattern.
 
-This is just like the -f/--filter flag (with the same whitelist/blacklist
-rules), except it applies to which regex engines to include. For example, many
-benchmarks list a number of regex engines that it should run with, but this
-filter permits specifying a smaller set of regex engines to include.
+This is just like the -f/--filter flag, except it applies to which regex
+engines to include. For example, many benchmarks list a number of regex engines
+that it should run with, but this filter permits specifying a smaller set of
+regex engines to include.
 
 This filter is applied to every benchmark. It is useful, for example, if you
 only want to include benchmarks across two regex engines instead of all regex
@@ -187,42 +187,85 @@ engines that were specified in any given benchmark.
 "#,
     );
 
+    pub const USAGE_ENGINE_NOT: Usage = Usage::new(
+        "-E, --engine-not <engine> ...",
+        "Filter by excluding a regex engine by a name regex pattern.",
+        r#"
+Filter by excluding a regex engine by a name regex pattern.
+
+This is just like the -f/--filter flag, except it applies to which regex
+engines to include. For example, many benchmarks list a number of regex engines
+that it should run with, but this filter permits specifying a smaller set of
+regex engines to exclude.
+
+This filter is applied to every benchmark. It is useful, for example, if you
+want to specifically exclude a few regex engines (for example, all finite
+automata engines).
+"#,
+    );
+
     pub const USAGE_BENCH: Usage = Usage::new(
         "-f, --filter <name> ...",
-        "Filter by benchmark name.",
+        "Filter by including a benchmark by a name regex pattern.",
         r#"
-Filter benchmarks by name using regex.
+Filter by including a benchmark by a name regex pattern.
 
-This flag may be given multiple times. The value can either be a whitelist
-regex or a blacklist regex. To make it a blacklist regex, start it with a '!'.
-If there is at least one whitelist regex, then a benchmark must match at least
-one of them in order to be included. If there are no whitelist regexes, then a
-benchmark is only included when it does not match any blacklist regexes. The
-last filter regex that matches (whether it be a whitelist or a blacklist) is
-what takes precedence. So for example, a whitelist regex that matches after a
-blacklist regex matches, that would result in that benchmark being included in
-the comparison.
-
-So for example, consider the benchmarks 'foo', 'bar', 'baz' and 'quux'. "-f
-foo" will include 'foo', "-f '!foo'" will include 'bar', 'baz' and 'quux', and
-"-f . -f '!ba' -f bar" will include 'foo', 'bar' and 'quux'.
+This flag may be given multiple times and works in concert with the
+-F/--filter-not flag. The -f flag introduces a whitelist regex pattern while
+-F introduces a blacklist regex pattern. Both combine to form a single filter
+with the following rules. First, if there is at least one whitelist pattern,
+then a benchmark must match at least one of them in order to be included.
+Second, the order of the patterns matters. The last pattern that matches a
+benchmark wins. For example, if '-f curated -F ruff' is given, then even though
+the first pattern matches 'curated/04-ruff', since '-F ruff' came after and
+is a blacklist pattern, 'curated/04-ruff' benchmarks will be excluded. Third,
+regardless of how many whitelist patterns there are, a benchmark is only
+included if the last pattern it matches is not a blacklist pattern.
 
 Filter regexes are matched on the full name of the benchmark, which takes the
-form '{group}/{name}'.
+form '{group}/{name}'. Regexes use unanchored search. So to match the full
+name, use, e.g., '^test/func/dollar-only-matches-end$'.
+"#,
+    );
+
+    pub const USAGE_BENCH_NOT: Usage = Usage::new(
+        "-F, --filter-not <name> ...",
+        "Filter by excluding a benchmark by a name regex pattern.",
+        r#"
+Filter by excluding a benchmark by a name regex pattern.
+
+This flag may be given multiple times and each time it contributes a blacklist
+regex pattern to the filter for benchmark names. The rules for how this filter
+works are described in more detail in the docs for the -f/--filter flag.
 "#,
     );
 
     pub const USAGE_MODEL: Usage = Usage::new(
         "-m, --model <model> ...",
-        "Filter by model name.",
+        "Filter by including a model by a name regex pattern.",
         r#"
-Filter benchmarks by the benchmark model.
+Filter by including a model by a name regex pattern.
 
-This is just like the -f/--filter flag (with the same whitelist/blacklist
-rules), except it applies to which benchmark models are used. For example, if
-you're only interested in benchmarks that involve capture groups, then '-m
-capture' will automatically narrow benchmark selection to those only with
-'capture' in their model name.
+This is just like the -f/--filter flag, except it applies to which benchmark
+models are used. For example, if you're only interested in benchmarks that
+involve capture groups, then '-m capture' will automatically narrow benchmark
+selection to those only with 'capture' in their model name.
+
+The -M/--model-not flag treats the pattern as a blacklist rule.
+"#,
+    );
+
+    pub const USAGE_MODEL_NOT: Usage = Usage::new(
+        "-M, --model-not <model> ...",
+        "Filter by excluding a model by a name regex pattern.",
+        r#"
+Filter by excluding a model by a name regex pattern.
+
+This is just like the -F/--filter-not flag, except it applies to which
+benchmark models are used. For example, if you don't want to see benchmarks for
+the 'compile' model, then '-M compile' will excluded them.
+
+The -m/--model flag treats the pattern as a whitelist rule.
 "#,
     );
 
@@ -232,13 +275,72 @@ capture' will automatically narrow benchmark selection to those only with
     /// filter.
     pub fn from_pattern(pat: &str) -> anyhow::Result<Filter> {
         let mut filter = Filter::default();
-        filter.add(pat.parse()?);
+        filter.whitelist(pat)?;
         Ok(filter)
     }
 
-    /// Add the given rule to this filter.
-    pub fn add(&mut self, rule: FilterRule) {
-        self.rules.push(rule);
+    /// Add a whitelist pattern to this filter by parsing the pattern from the
+    /// given arg parser.
+    ///
+    /// If the pattern could not be extracted from the arg parser or is not a
+    /// valid regex, then this returns an error. The flag name given is used
+    /// in the error message.
+    pub fn arg_whitelist(
+        &mut self,
+        p: &mut lexopt::Parser,
+        flag_name: &'static str,
+    ) -> anyhow::Result<()> {
+        let osval = p.value().context(flag_name)?;
+        let strval = match osval.to_str() {
+            Some(strval) => strval,
+            None => {
+                let err = lexopt::Error::NonUnicodeValue(osval.into());
+                return Err(anyhow::Error::from(err).context(flag_name));
+            }
+        };
+        self.whitelist(strval).context(flag_name)
+    }
+
+    /// Add a blacklist pattern to this filter by parsing the pattern from the
+    /// given arg parser.
+    ///
+    /// If the pattern could not be extracted from the arg parser or is not a
+    /// valid regex, then this returns an error. The flag name given is used
+    /// in the error message.
+    pub fn arg_blacklist(
+        &mut self,
+        p: &mut lexopt::Parser,
+        flag_name: &'static str,
+    ) -> anyhow::Result<()> {
+        let osval = p.value().context(flag_name)?;
+        let strval = match osval.to_str() {
+            Some(strval) => strval,
+            None => {
+                let err = lexopt::Error::NonUnicodeValue(osval.into());
+                return Err(anyhow::Error::from(err).context(flag_name));
+            }
+        };
+        self.blacklist(strval).context(flag_name)
+    }
+
+    /// Add a whitelist pattern to this filter.
+    ///
+    /// If the pattern is not a valid regex, then this returns an error.
+    pub fn whitelist(&mut self, pattern: &str) -> anyhow::Result<()> {
+        let re =
+            Regex::new(pattern).context("whitelist regex is not valid")?;
+        self.rules.push(FilterRule { re, blacklist: false });
+        Ok(())
+    }
+
+    /// Add a blacklist pattern to this filter.
+    ///
+    /// If the pattern is not a valid regex, then this returns an error.
+    pub fn blacklist(&mut self, pattern: &str) -> anyhow::Result<()> {
+        let re =
+            Regex::new(pattern).context("blacklist regex is not valid")?;
+        self.rules.push(FilterRule { re, blacklist: true });
+        Ok(())
     }
 
     /// Return true if and only if the given subject passes this filter.

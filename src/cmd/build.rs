@@ -8,8 +8,12 @@ use crate::{
     util,
 };
 
-const USAGES: &[Usage] =
-    &[Usage::BENCH_DIR, Color::USAGE, Filter::USAGE_ENGINE];
+const USAGES: &[Usage] = &[
+    Usage::BENCH_DIR,
+    Color::USAGE,
+    Filter::USAGE_ENGINE,
+    Filter::USAGE_ENGINE_NOT,
+];
 
 fn usage() -> String {
     format!(
@@ -176,7 +180,10 @@ impl Config {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.add(args::parse(p, "-e/--engine")?);
+                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                }
+                Arg::Short('E') | Arg::Long("engine-not") => {
+                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 _ => return Err(arg.unexpected().into()),
             }

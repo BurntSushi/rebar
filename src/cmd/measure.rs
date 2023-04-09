@@ -21,7 +21,9 @@ const MIN_TIMEOUT: Duration = Duration::from_secs(10);
 const USAGES: &[Usage] = &[
     Usage::BENCH_DIR,
     Filter::USAGE_ENGINE,
+    Filter::USAGE_ENGINE_NOT,
     Filter::USAGE_BENCH,
+    Filter::USAGE_BENCH_NOT,
     Usage::new(
         "-i, --ignore-missing-engines",
         "Silently suppress missing regex engines.",
@@ -55,6 +57,7 @@ work will be done without actually doing it.
     Usage::MAX_TIME,
     Usage::MAX_WARMUP_TIME,
     Filter::USAGE_MODEL,
+    Filter::USAGE_MODEL_NOT,
     Usage::new(
         "-t/--test",
         "Alias for --verify --verbose.",
@@ -294,10 +297,16 @@ impl Config {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.add(args::parse(p, "-e/--engine")?);
+                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                }
+                Arg::Short('E') | Arg::Long("engine-not") => {
+                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 Arg::Short('f') | Arg::Long("filter") => {
-                    c.bench_filter.add(args::parse(p, "-f/--filter")?);
+                    c.bench_filter.arg_whitelist(p, "-f/--filter")?;
+                }
+                Arg::Short('F') | Arg::Long("filter-not") => {
+                    c.bench_filter.arg_blacklist(p, "-F/--filter-not")?;
                 }
                 Arg::Short('i') | Arg::Long("ignore-missing-engines") => {
                     c.ignore_missing_engines = true;
@@ -325,7 +334,10 @@ impl Config {
                     c.bench_config.max_warmup_time = Duration::from(hdur);
                 }
                 Arg::Short('m') | Arg::Long("model") => {
-                    c.model_filter.add(args::parse(p, "-m/--model")?);
+                    c.model_filter.arg_whitelist(p, "-m/--model")?;
+                }
+                Arg::Short('M') | Arg::Long("model-not") => {
+                    c.model_filter.arg_blacklist(p, "-M/--model-not")?;
                 }
                 Arg::Short('t') | Arg::Long("test") => {
                     c.verbose = true;

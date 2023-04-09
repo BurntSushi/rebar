@@ -21,8 +21,9 @@ use crate::{
 const USAGES: &[Usage] = &[
     Usage::BENCH_DIR,
     Filter::USAGE_ENGINE,
+    Filter::USAGE_ENGINE_NOT,
     Filter::USAGE_BENCH,
-    Filter::USAGE_MODEL,
+    Filter::USAGE_BENCH_NOT,
     Usage::new(
         "--intersection",
         "Only consider benchmarks for which all engines participate.",
@@ -37,6 +38,8 @@ two regex engines. That is, only benchmarks containing measurements for both
 'rust/regex' and 'hyperscan' will be included.
 "#,
     ),
+    Filter::USAGE_MODEL,
+    Filter::USAGE_MODEL_NOT,
     Usage::new(
         "--ratio",
         "Show ratios next to timings.",
@@ -182,16 +185,25 @@ impl Config {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.add(args::parse(p, "-e/--engine")?);
+                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                }
+                Arg::Short('E') | Arg::Long("engine-not") => {
+                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 Arg::Short('f') | Arg::Long("filter") => {
-                    c.bench_filter.add(args::parse(p, "-f/--filter")?);
+                    c.bench_filter.arg_whitelist(p, "-f/--filter")?;
                 }
-                Arg::Short('m') | Arg::Long("model") => {
-                    c.model_filter.add(args::parse(p, "-m/--model")?);
+                Arg::Short('F') | Arg::Long("filter-not") => {
+                    c.bench_filter.arg_blacklist(p, "-F/--filter-not")?;
                 }
                 Arg::Long("intersection") => {
                     c.intersection = true;
+                }
+                Arg::Short('m') | Arg::Long("model") => {
+                    c.model_filter.arg_whitelist(p, "-m/--model")?;
+                }
+                Arg::Short('M') | Arg::Long("model-not") => {
+                    c.model_filter.arg_blacklist(p, "-M/--model-not")?;
                 }
                 Arg::Long("ratio") => {
                     c.ratio = true;

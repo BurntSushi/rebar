@@ -14,8 +14,11 @@ use crate::{
 const USAGES: &[Usage] = &[
     Color::USAGE,
     Filter::USAGE_ENGINE,
+    Filter::USAGE_ENGINE_NOT,
     Filter::USAGE_BENCH,
+    Filter::USAGE_BENCH_NOT,
     Filter::USAGE_MODEL,
+    Filter::USAGE_MODEL_NOT,
     Stat::USAGE,
     Threshold::USAGE,
     Units::USAGE,
@@ -183,13 +186,22 @@ impl Config {
                     c.color = args::parse(p, "-c/--color")?;
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.add(args::parse(p, "-e/--engine")?);
+                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                }
+                Arg::Short('E') | Arg::Long("engine-not") => {
+                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 Arg::Short('f') | Arg::Long("filter") => {
-                    c.bench_filter.add(args::parse(p, "-f/--filter")?);
+                    c.bench_filter.arg_whitelist(p, "-f/--filter")?;
+                }
+                Arg::Short('F') | Arg::Long("filter-not") => {
+                    c.bench_filter.arg_blacklist(p, "-F/--filter-not")?;
                 }
                 Arg::Short('m') | Arg::Long("model") => {
-                    c.model_filter.add(args::parse(p, "-m/--model")?);
+                    c.model_filter.arg_whitelist(p, "-m/--model")?;
+                }
+                Arg::Short('M') | Arg::Long("model-not") => {
+                    c.model_filter.arg_blacklist(p, "-M/--model-not")?;
                 }
                 Arg::Short('s') | Arg::Long("statistic") => {
                     c.stat = args::parse(p, "-s/--statistic")?;

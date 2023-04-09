@@ -59,10 +59,8 @@ impl Benchmarks {
     ) -> anyhow::Result<Definition> {
         // This is a little cumbersome, but we go to war with the army we have.
         let pattern = format!("^(?:{})$", regex_syntax::escape(&name));
-        let mut filter = Filter::default();
-        filter.add(pattern.parse().context("invalid benchmark name")?);
         let mut filters = Filters::new();
-        filters.name(filter);
+        filters.name(Filter::from_pattern(&pattern)?);
         let mut defs = Benchmarks::from_dir(dir, &filters)?;
         anyhow::ensure!(
             defs.defs.len() == 1,
