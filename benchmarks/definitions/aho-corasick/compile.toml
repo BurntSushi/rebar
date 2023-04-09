@@ -1,6 +1,8 @@
-# These benchmarks test the compilation time of aho-corasick. They in
-# particular show the start contrast between building an NFA versus a DFA. A
-# DFA tends to take an order of magnitude more time.
+analysis = '''
+These benchmarks test the compilation time of aho-corasick. They in particular
+show the start contrast between building an NFA versus a DFA. A DFA tends to
+take an order of magnitude more time.
+'''
 
 [[bench]]
 model = "compile"

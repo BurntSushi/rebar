@@ -1,11 +1,11 @@
-# These benchmarks are meant to demonstrate just how difficult Unicode can
-# be, and how easy it is for Unicode to make your regexes jump off of a perf
-# cliff. These benchmarks demonstrate why you should disable Unicode in the
-# regex crate unless you need it. (One wonders whether it should have been
-# disabled by default, but that ship has sailed and I don't think it's ever
-# coming back.)
+analysis = '''
+These benchmarks are meant to demonstrate just how difficult Unicode can be,
+and how easy it is for Unicode to make your regexes jump off of a perf cliff.
+These benchmarks demonstrate why you should disable Unicode in the regex crate
+unless you need it. (One wonders whether it should have been disabled by
+default, but that ship has sailed and I don't think it's ever coming back.)
+'''
 
-# A simple benchmark that matches each individual codepoint.
 [[bench]]
 model = "count"
 name = "any-one"
@@ -14,15 +14,17 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = 1_112_064
 engines = [
-  'rust/regex/meta',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2/jit',
   'python/regex',
-  'hyperscan',
+  're2',
+  'rust/regex/meta',
 ]
+analysis = '''
+A simple benchmark that matches each individual codepoint.
+'''
 
-# Same as 'any-one', but matches all the codepoints in one go.
 [[bench]]
 model = "count-spans"
 name = "any-all"
@@ -31,32 +33,20 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = 4_382_592
 engines = [
-  'rust/regex/meta',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
 ]
+analysis = '''
+Same as 'any-one', but matches all the codepoints in one go.
+'''
 
-# This benchmarks finding 100 contiguous letters in a sequence of all
-# codepoints. This basically takes a huge character class and then repeats it
-# 100 times over. The regex for this---at least at the automata level---is
-# absolutely huge. This wreaks all kind of havoc. It prevents a lazy DFA from
-# being used because it requires a cache that is beyond the default capacity.
-# It's way too big for a one-pass DFA and also the backtracker. So the PikeVM
-# is stuck with the unenviable task of dealing with it.
-#
-# The bounded repeat really slows the PikeVM way down. Because at each position
-# in the haystack, the PikeVM has to keep track of how many letters have
-# matched. And huge Unicode classes are very branchy, which just overall leads
-# to a lot of state shuffling.
-#
-# 'python/regex' does *really* well on this benchmark. It likely has a specific
-# optimization in place for bounded repeats.
 [[bench]]
 model = "count"
 name = "letters-one"
-regex = '\pL{100}'
+regex = '\p{L}{100}'
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
@@ -67,29 +57,30 @@ count = [
   { engine = '.*', count = 1244 },
 ]
 engines = [
-  'rust/regex/meta',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
 ]
 analysis = '''
-The `regress` engine is excluded because it doesn't support `\pL` syntax. It
-*does* support `\p{Letter}`, but none of `re2`, `go/regexp` or `pcre2/jit`
-support `\p{Letter}`.
+This benchmarks finding 100 contiguous letters in a sequence of all codepoints.
+This basically takes a huge character class and then repeats it 100 times over.
+The regex for this---at least at the automata level---is absolutely huge.
+This wreaks all kind of havoc. It prevents a lazy DFA from being used because
+it requires a cache that is beyond the default capacity. It's way too big
+for a one-pass DFA and also the backtracker. So the PikeVM is stuck with the
+unenviable task of dealing with it.
+
+The bounded repeat really slows the PikeVM way down. Because at each position
+in the haystack, the PikeVM has to keep track of how many letters have matched.
+And huge Unicode classes are very branchy, which just overall leads to a lot of
+state shuffling.
+
+`python/regex` does *really* well on this benchmark. It likely has a specific
+optimization in place for bounded repeats.
 '''
 
-# This benchmark looks for exactly the same thing as 'letters-one', except it
-# uses the constituent Unicode properties that make up '\p{Letter}'.
-#
-# The regex crate will actually see the alternation of classes at the syntax
-# level and join them into a single class.
-#
-# 'python/regex' is quite interesting here because it does about an order of
-# magnitude worse on this benchmark than in 'letters-one'. (Although still
-# quite a bit better than the regex crate.) It seems likely that it has some
-# kind of optimization for bounded repeats that kicks in, but the alternation
-# slows it down because it is, after, a backtracker.
 [[bench]]
 model = "count"
 name = "letters-alt"
@@ -99,7 +90,7 @@ regex = '''(?x)(?:
   |\p{Titlecase_Letter}
   |\p{Modifier_Letter}
   |\p{Other_Letter}
-){100}x'''
+){100}'''
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = 0
@@ -110,17 +101,20 @@ engines = [
   # 'pcre2/jit', # lacks necessary property support
   'python/regex',
 ]
+analysis = '''
+This benchmark looks for exactly the same thing as `letters-one`, except it
+uses the constituent Unicode properties that make up `\p{Letter}`.
 
-# This is yet another variant on the "letters" idea, but we only select a
-# subset here: uppercase and lowercase. This does substantially reduce the
-# match count, but that doesn't matter so much for perf. (Change '\pL{100}'
-# above to '\pL{100}x' and perf generally remains the same for the regex
-# crate.)
-#
-# But! This does result in the regex becoming substantially smaller. Small
-# enought for the lazy DFA's default cache size to handle it. This makes it
-# nice and fast. You can get a similar speed on 'letters-alt' if you increase
-# the lazy DFA's cache capacity.
+The regex crate will actually see the alternation of classes at the syntax
+level and join them into a single class.
+
+`python/regex` is quite interesting here because it does about an order of
+magnitude worse on this benchmark than in `letters-one`. (Although still
+quite a bit better than the regex crate.) It seems likely that it has some
+kind of optimization for bounded repeats that kicks in, but the alternation
+slows it down because it is, after, a backtracker.
+'''
+
 [[bench]]
 model = "count"
 name = "letters-lower-or-upper"
@@ -135,6 +129,17 @@ engines = [
   'pcre2/jit',
   'python/regex',
 ]
+analysis = '''
+This is yet another variant on the "letters" idea, but we only select a subset
+here: uppercase and lowercase. This does substantially reduce the match
+count, but that doesn't matter so much for perf. (Change `\pL{100}` above to
+`\pL{100}x` and perf generally remains the same for the regex crate.)
+
+But! This does result in the regex becoming substantially smaller. Small
+enough for the lazy DFA's default cache size to handle it. This makes it nice
+and fast. You can get a similar speed on `letters-alt` if you increase the lazy
+DFA's cache capacity.
+'''
 
 [[bench]]
 model = "count"
@@ -149,11 +154,11 @@ count = [
   { engine = '.*', count = 36 },
 ]
 engines = [
-  'rust/regex/meta',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
 ]

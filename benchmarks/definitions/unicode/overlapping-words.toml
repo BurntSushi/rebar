@@ -1,15 +1,17 @@
-# These benchmarks test a few different variants of "overlapping words." That
-# is, we look for sequences of word characters of some length, and if that
-# fails, we fall back to a smaller sequence and so on. We in particular use
-# this as a way of contrasting how much Unicode hurts something like this.
-# Namely the bounded repeats greatly inflate the size of the regex and make
-# matching quite a bit harder, especially for automata oriented engines.
-#
-# The difference between the 'ascii' and Unicode aware benchmarks can be quite
-# brutal for automata engines. It can go from a bearable 50 MB/s for ASCII to
-# an eye watering 1 MB/s for Unicode. The main problem is that \pL is just
-# absolutely huge, and there is a lot of overhead associated with plowing
-# through the NFA states for it when resolving capture groups.
+analysis = '''
+These benchmarks test a few different variants of "overlapping words." That is,
+we look for sequences of word characters of some length, and if that fails, we
+fall back to a smaller sequence and so on. We in particular use this as a way
+of contrasting how much Unicode hurts something like this. Namely the bounded
+repeats greatly inflate the size of the regex and make matching quite a bit
+harder, especially for automata oriented engines.
+
+The difference between the `ascii` and Unicode aware benchmarks can be quite
+brutal for automata engines. It can go from a bearable 50 MB/s for ASCII to
+an eye watering 1 MB/s for Unicode. The main problem is that `\pL` is just
+absolutely huge, and there is a lot of overhead associated with plowing through
+the NFA states for it when resolving capture groups.
+'''
 
 [[bench]]
 model = "grep-captures"
@@ -19,14 +21,14 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 case-insensitive = false
 count = 6_156
 engines = [
-  'rust/regex',
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -38,13 +40,13 @@ case-insensitive = false
 unicode = true
 count = 6_156
 engines = [
-  'rust/regex',
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -56,11 +58,11 @@ case-insensitive = false
 unicode = true
 count = 5_710
 engines = [
-  'rust/regex',
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

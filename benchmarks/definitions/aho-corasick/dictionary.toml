@@ -1,5 +1,7 @@
-# These benchmarks test the Aho-Corasick algorithm (both an NFA and a DFA) on
-# very large dictionaries.
+analysis = '''
+These benchmarks test the Aho-Corasick algorithm (both an NFA and a DFA) on
+very large dictionaries.
+'''
 
 [[bench]]
 model = "count"

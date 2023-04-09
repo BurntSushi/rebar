@@ -1,90 +1,120 @@
-# Source: http://lh3lh3.users.sourceforge.net/reb.shtml
-#
-# According to the brief methodology description, this is a line oriented
-# benchmark. That is, it proceeds by reading the input line-by-line and
-# printing lines that match. So it doesn't measure the time for finding all
-# matches, but rather, all matching lines. This is why we use the 'grep'
-# benchmark type here.
-#
-# Note that the haystack contains invalid UTF-8. Many regex engines can handle
-# this, but some cannot (such as 'regress').
-#
-# It's also consistent with the benchmark programs itself, e.g.,
-# https://sourceforge.net/p/klib/code/HEAD/tree/trunk/reb/re2/test.cc
+analysis = '''
+According to the brief methodology description, [lh3lh3-reb] is a line oriented
+benchmark. That is, it proceeds by reading the input line-by-line and printing
+lines that match. So it doesn't measure the time for finding all matches, but
+rather, all matching lines. This is why we use the 'grep' benchmark type here.
+
+Note that the haystack contains invalid UTF-8. Many regex engines can handle
+this, but many cannot.
+
+It's also consistent with the [benchmark programs
+themselves][lh3lh3-re2-runner].
+
+[lh3lh3-reb]: http://lh3lh3.users.sourceforge.net/reb.shtml
+[lh3lh3-re2-runner]: https://sourceforge.net/p/klib/code/HEAD/tree/trunk/reb/re2/test.cc
+'''
 
 [[bench]]
 model = "grep"
 name = "uri"
 regex = '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?'
-haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 case-insensitive = false
 count = 17_549
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  # 'regress', # doesn't support non-UTF-8 haystacks
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
 model = "grep"
 name = "email"
 regex = '([^ @]+)@([^ @]+)'
-haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 count = 15_057
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  # 'regress', # doesn't support non-UTF-8 haystacks
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
 model = "grep"
 name = "date"
 regex = '([0-9][0-9]?)/([0-9][0-9]?)/([0-9][0-9]([0-9][0-9])?)'
-haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 count = 668
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  # 'regress', # doesn't support non-UTF-8 haystacks
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
 model = "grep"
 name = "uri-or-email"
 regex = '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?|([^ @]+)@([^ @]+)'
-haystack = { path = "imported/lh3lh3-reb-howto.txt" }
+haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 count = 32_539
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  # 'regress', # doesn't support non-UTF-8 haystacks
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]

@@ -45,15 +45,15 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'rust/memchr/memmem',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -64,14 +64,14 @@ case-insensitive = true
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -82,15 +82,15 @@ unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'rust/memchr/memmem',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 This measures a non-ASCII literal on a non-ASCII haystack. Regex engines that
@@ -108,14 +108,14 @@ unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -125,13 +125,13 @@ regex = 'fn is_(\w+)|fn as_(\w+)'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 948
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 This is a mostly silly little benchmark that looks for a couple different

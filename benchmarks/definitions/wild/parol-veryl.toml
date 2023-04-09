@@ -1,10 +1,13 @@
-# This is another particularly gnarly regex that is used for lexing tokens.
-# It has a bunch of rules, and because of limitations in the regex API, it has
-# been squashed into one regex with a bunch of capture groups to determin which
-# token matches. But if we use a multi-pattern regex instead, things get quite
-# a bit better because it lets us skip the capture groups altogether.
-#
-# From: https://github.com/jsinger67/parol/issues/56
+analysis = '''
+This is another particularly gnarly regex that is used for lexing tokens. It
+comes from a [particular use of Parol project][parol-issue-56]. It has a bunch
+of rules, and because of limitations in the regex API, it has been squashed
+into one regex with a bunch of capture groups to determine which token matches.
+But if we use a multi-pattern regex instead, things get quite a bit better
+because it lets us skip the capture groups altogether.
+
+[parol-issue-56]: https://github.com/jsinger67/parol/issues/56
+'''
 
 [[bench]]
 model = "count-captures"
@@ -36,8 +39,8 @@ regex = { path = "wild/parol-veryl.txt", per-line = "pattern" }
 haystack = { path = "wild/parol-veryl.vl" }
 count = 150_600
 engines = [
-  'rust/regex/meta',
   'rust/regex/dense',
+  'rust/regex/meta',
 ]
 
 [[bench]]

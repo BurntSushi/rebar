@@ -1,9 +1,11 @@
-# These benchmarks attempt to search for occurrences of words in varying
-# dictionary sizes. Engines like PCRE2 can't handle any of these. Some
-# backtrackers, like python/re and regress, can at least execute some of
-# the smaller dictionaries but they are quite slow. The regex crate generally
-# does pretty well as it has a specific optimization for large literal
-# alternations: it just diverts to Aho-Corasick.
+analysis = '''
+These benchmarks attempt to search for occurrences of words in varying
+dictionary sizes. Engines like PCRE2 can't handle any of these. Some
+backtrackers, like python/re and regress, can at least execute some of the
+smaller dictionaries but they are quite slow. The regex crate generally does
+pretty well as it has a specific optimization for large literal alternations:
+it just diverts to Aho-Corasick.
+'''
 
 [[bench]]
 model = "count-spans"
@@ -37,9 +39,9 @@ unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 690
 engines = [
+  're2',
   'rust/regex/meta',
   'rust/regexold',
-  're2',
 ]
 
 [[bench]]
@@ -50,10 +52,10 @@ unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 15
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'python/re',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

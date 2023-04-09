@@ -1,22 +1,26 @@
-# These benchmarks were inspired by the regex being benchmarked in this
-# exchange: https://github.com/rust-lang/regex/discussions/903
-#
-# I probably wouldn't have included these as the regexes are a bit strange, but
-# PCRE2 and python/re seem to be able to report results for these in constant
-# time, which is quite interesting! If you look at the regex, it kind of makes
-# sense: the '.*' always matches everything up to the end, and since () and
-# () are both empty they also always match. So you can actually compute the
-# capturing group match locations without actually running the search.
-#
-# I do wonder if such a thing is worth it, but it does look like some regex
-# engines do indeed do it. I'd like to get a sense of how often these types of
-# regexes are actually used in practice. If they are often, then it might be
-# worth doing. But I suspect not because their results are not dependent on the
-# haystack (other than its length) at all!
-#
-# (I tried finding where this optimization was implemented inside of PCRE2 but
-# I had no luck. That code is just impenetrable. Note that the optimization
-# appears to exist in both the interpreter and JIT code.)
+analysis = '''
+This benchmark was inspired by the regex being benchmarked in this
+[exchange][rust-regex-dot-star-exchange].
+
+I probably wouldn't have included these as the regex is a bit strange, but
+`pcre2` and `python/re` seem to be able to report results for these in constant
+time, which is quite interesting! If you look at the regex, it kind of makes
+sense: the `.*` always matches everything up to the end, and since `()` and
+`()` are both empty they also always match. So you can actually compute the
+capturing group match locations without actually running the search.
+
+I do wonder if such a thing is worth it, but it does look like some regex
+engines do indeed do it. I'd like to get a sense of how often these types of
+regexes are actually used in practice. If they are often, then it might be
+worth doing. But I suspect not because their results are not dependent on the
+haystack (other than its length) at all!
+
+(I tried finding where this optimization was implemented inside of `pcre2`
+but I had no luck. That code is just impenetrable. Note that the optimization
+appears to exist in both the interpreter and JIT code.)
+
+[rust-regex-dot-star-exchange]: https://github.com/rust-lang/regex/discussions/903
+'''
 
 [[bench]]
 model = "count-captures"
@@ -25,10 +29,10 @@ regex = '(?s)^((.*)()()($))'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 6
 engines = [
-  'rust/regex/meta',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
+  're2',
+  'rust/regex/meta',
 ]

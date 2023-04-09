@@ -1,11 +1,12 @@
-# Sadly I can't remember where I found the regex that is the subject of these
-# benchmarks, but it basically finds bible references in English prose text.
-#
-# These benchmarks aren't strictly apples to apples because the regex uses
-# Unicode features and things like \s and \d, but the latter are not Unicode
-# aware in some regex engines despite enabling Unicode mode.
+analysis = '''
+Sadly I can't remember where I found the regex that is the subject of these
+benchmarks, but it basically finds bible references in English prose text.
 
-# Tests how long it takes to build the bible ref regex, which is kinda big.
+These benchmarks aren't strictly apples to apples because the regex uses
+Unicode features and things like `\s` and `\d`, but the latter are not Unicode
+aware in some regex engines despite enabling Unicode mode.
+'''
+
 [[bench]]
 model = "compile"
 name = "compile"
@@ -18,18 +19,20 @@ II Ki. 3:12-14, 25
 unicode = true
 count = 3
 engines = [
-  'rust/regex/meta',
-  'rust/regex/ast',
-  'rust/regex/hir',
-  'rust/regex/nfa',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/meta',
+  'rust/regex/nfa',
+  'rust/regexold',
 ]
+analysis = '''
+Tests how long it takes to build the bible ref regex, which is kinda big.
+'''
 
-# Runs the bible ref regex on a very long haystack.
 [[bench]]
 model = "count-captures"
 name = "long"
@@ -45,27 +48,10 @@ engines = [
   'pcre2/jit',
   'python/regex',
 ]
+analysis = '''
+Runs the bible ref regex on a very long haystack.
+'''
 
-# Does the same as 'long', but on a very short haystack. PCRE2 does better here
-# that in the long case, since the entirety of this benchmark is basically 1)
-# latency and 2) extracting capture groups. In contrast, the 'long' benchmark
-# tends to stay in the DFA in the regex crate until a match is found, and only
-# then are captures resolved.
-#
-# For the regex crate, this also reflects an interesting balance point on some
-# internal heuristics. For example, in this case, the DFA will be run to look
-# for a match and then the bounded backtracker will be run to resolve capture
-# groups. In this specific case, since there is a match, it would be faster
-# to just run the backtracker. The problem is... We don't know ahead of time
-# whether a match occurs, and it is much faster to run the DFA to reject a
-# haystack than the backtracker. We *could* perhaps avoid using the DFA when
-# the haystack is small enough, but the DFA is still likely faster for cases
-# where a match isn't found. Overall... it's hard to know the right strategy
-# here. In the end, running the DFA when it isn't needed leads to a small cost,
-# but *not* using the DFA when it would benefit things tends to lead to a much
-# bigger cost. Why? Because the DFA is often an order of magnitude faster. So
-# generally speaking, its cost only shows up in latency oriented benchmarks
-# like this.
 [[bench]]
 model = "count-captures"
 name = "short"
@@ -78,19 +64,36 @@ II Ki. 3:12-14, 25
 unicode = true
 count = 30
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
+analysis = '''
+Does the same as `long`, but on a very short haystack. PCRE2 does better here
+than in the long case, since the entirety of this benchmark is basically 1)
+latency and 2) extracting capture groups. In contrast, the `long` benchmark
+tends to stay in the DFA in the regex crate until a match is found, and only
+then are captures resolved.
 
-# This provides an interesting counter-balance to the 'short' benchmark.
-# Namely, here, our haystacks are all short but the regex crate does quite
-# a bit better than in the 'short' benchmark. Why? Because most lines don't
-# match and so we don't have to do the more expensive work of resolving capture
-# groups in most cases.
+For the regex crate, this also reflects an interesting balance point on some
+internal heuristics. For example, in this case, the DFA will be run to look
+for a match and then the bounded backtracker will be run to resolve capture
+groups. In this specific case, since there is a match, it would be faster
+to just run the backtracker. The problem is... We don't know ahead of time
+whether a match occurs, and it is much faster to run the DFA to reject a
+haystack than the backtracker. We *could* perhaps avoid using the DFA when
+the haystack is small enough, but the DFA is still likely faster for cases
+where a match isn't found. Overall... it's hard to know the right strategy
+here. In the end, running the DFA when it isn't needed leads to a small cost,
+but *not* using the DFA when it would benefit things tends to lead to a much
+bigger cost. Why? Because the DFA is often an order of magnitude faster. So
+generally speaking, its cost only shows up in latency oriented benchmarks
+like this.
+'''
+
 [[bench]]
 model = "grep-captures"
 name = "line"
@@ -106,3 +109,10 @@ engines = [
   'pcre2/jit',
   'python/regex',
 ]
+analysis = '''
+This provides an interesting counter-balance to the `short` benchmark. Namely,
+here, our haystacks are all short but the regex crate does quite a bit better
+than in the `short` benchmark. Why? Because most lines don't match and so we
+don't have to do the more expensive work of resolving capture groups in most
+cases.
+'''

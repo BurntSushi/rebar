@@ -1,27 +1,23 @@
-# These benchmarks specifically try to measure the performance of tasks that
-# require resolving capturing groups. Backtrackers tend to have the advantage
-# here, since the core algorithm they use also handles captures. But the
-# automata oriented engines like the regex crate usually rely on faster DFAs
-# as a work horse, but those DFAs generally can't resolve capture groups. So
-# dealing with capture groups usually requires additionally running a slower
-# engine.
-#
-# These benchmarks tend to have high match counts because otherwise we would
-# mostly just be measuring the throughput of DFAs in the automata oriented
-# engines. We already know they tend to do well, and their characteristics are
-# well represented in other benchmarks. So here we try to focus measurements
-# more on tasks that spend the majority of their time resolving capture groups.
-#
-# Sadly, this also entangles latency measurement with resolving capture groups.
-# Namely, if a regex engine has generally higher latency (and the regex crate
-# kind of does at time of writing), then it's going to get penalized on these
-# benchmarks.
+analysis = '''
+These benchmarks specifically try to measure the performance of tasks that
+require resolving capturing groups. Backtrackers tend to have the advantage
+here, since the core algorithm they use also handles captures. But automata
+oriented engines like the regex crate usually rely on faster DFAs as a work
+horse, but those DFAs generally can't resolve capture groups. So dealing with
+capture groups usually requires additionally running a slower engine.
 
+These benchmarks tend to have high match counts because otherwise we would
+mostly just be measuring the throughput of DFAs in the automata oriented
+engines. We already know they tend to do well, and their characteristics are
+well represented in other benchmarks. So here we try to focus measurements
+more on tasks that spend the majority of their time resolving capture groups.
 
-# This tests a case where there are lots of capture groups and also lots of
-# matches. PCRE2's JIT reign's supreme here, but pretty much all of the regex
-# engines benchmarked here slow down quite a bit. Down to the 1-20 MB/s area
-# on my machine.
+Sadly, this also entangles latency measurement with resolving capture groups.
+Namely, if a regex engine has generally higher latency (and the regex crate
+kind of does at time of writing), then it's going to get penalized on these
+benchmarks. But that's just the way the cookie crumbles.
+'''
+
 [[bench]]
 model = "count-captures"
 name = "contiguous-letters"
@@ -29,11 +25,17 @@ regex = '(?:(a+)|(b+)|(c+)|(d+)|(e+)|(f+)|(g+)|(h+)|(i+)|(j+)|(k+)|(l+)|(m+)|(n+
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 81_494
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
+analysis = '''
+This tests a case where there are lots of capture groups and also lots of
+matches. PCRE2's JIT reigns supreme here, but pretty much all of the regex
+engines benchmarked here slow down quite a bit. Down to the 1-20 MB/s area on
+my machine.
+'''

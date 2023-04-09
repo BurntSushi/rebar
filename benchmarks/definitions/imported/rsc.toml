@@ -1,17 +1,19 @@
-# These benchmarks primarily come from Russ Cox's RE2 and Go regexp
-# libraries[1]. They were originally included as "misc" benchmarks in the regex
-# crate[2] before being ported here.
-#
-# There are likely some small changes and a few benchmarks that I've added, but
-# they should be largely the same. Many of them (like 'easy1') are somewhat
-# "broken" in that they are anchored at the end as a way of ensuring the regex
-# engine scans through the entire haystack. But at some point, the regex crate
-# (and also RE2) got an optimization that does a reverse scan when the regex
-# is anchored at the end, which somewhat made the point of those benchmarks
-# somewhat moot. Instead of reconceptualizing them, we retain them as-is.
-#
-# [1]: https://github.com/golang/go/blob/5724daa6825db0a9097254060633439e6538d845/src/regexp/all_test.go#L666
-# [2]: https://github.com/rust-lang/regex/blob/a9b2e02352db92ce1f6e5b7ecd41b8bbffbe161a/bench/src/misc.rs
+analysis = '''
+These benchmarks primarily come from Russ Cox's [RE2 and Go regexp
+libraries][golang-regexp-bench]. They were originally included as ["misc"
+benchmarks in the regex crate][rust-regex-rsc-bench] before being ported here.
+
+There are likely some small changes and a few benchmarks that I've added, but
+they should be largely the same. Many of them (like 'easy1') are somewhat
+"broken" in that they are anchored at the end as a way of ensuring the regex
+engine scans through the entire haystack. But at some point, the regex crate
+(and also RE2) got an optimization that does a reverse scan when the regex is
+anchored at the end, which made the point of those benchmarks somewhat moot.
+Instead of reconceptualizing them, we retain them as-is.
+
+[golang-regexp-bench]: https://github.com/golang/go/blob/5724daa6825db0a9097254060633439e6538d845/src/regexp/all_test.go#L666
+[rust-regex-rsc-bench]: https://github.com/rust-lang/regex/blob/a9b2e02352db92ce1f6e5b7ecd41b8bbffbe161a/bench/src/misc.rs
+'''
 
 [[bench]]
 model = "count-spans"
@@ -22,15 +24,15 @@ regex = '(a+)*[b-z]'
 haystack = 'aaaaaaaaaaaaaaaaaaaaaaaaa'
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -40,15 +42,15 @@ regex = 'y'
 haystack = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -58,15 +60,15 @@ regex = '.y'
 haystack = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy'
 count = 2
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -76,15 +78,15 @@ regex = '[abcdw]'
 haystack = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -94,15 +96,15 @@ regex = '[ac]'
 haystack = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbc'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -113,13 +115,13 @@ haystack = '☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5
 unicode = true
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -129,15 +131,15 @@ regex = '^zbc(d|e)'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -147,15 +149,15 @@ regex = '^zbc(d|e)'
 haystack = { path = "imported/rsc/anchored-literal-long.txt" }
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -165,15 +167,15 @@ regex = '^.bc(d|e)'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 4
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -183,15 +185,15 @@ regex = '^.bc(d|e)'
 haystack = { path = "imported/rsc/anchored-literal-long.txt" }
 count = 4
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -201,15 +203,15 @@ regex = '^.bc(d|e)*$'
 haystack = 'abcddddddeeeededd'
 count = 17
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -219,15 +221,15 @@ regex = '.bc(d|e)*$'
 haystack = 'abcddddddeeeededd'
 count = 17
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -237,15 +239,15 @@ regex = '^abcdefghijklmnopqrstuvwxyz.*$'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 26
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -255,15 +257,15 @@ regex = '^.bcdefghijklmnopqrstuvwxyz.*$'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 26
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -273,15 +275,15 @@ regex = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaab'
 haystack = { path = "imported/rsc/long-needle1.txt" }
 count = 31
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -291,15 +293,15 @@ regex = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbba'
 haystack = { path = "imported/rsc/long-needle2.txt" }
 count = 31
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -309,15 +311,15 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -327,15 +329,15 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -345,15 +347,15 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -363,15 +365,15 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -381,15 +383,15 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -399,15 +401,15 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -417,15 +419,15 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -435,15 +437,15 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -453,15 +455,15 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -471,15 +473,15 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -489,15 +491,15 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -507,15 +509,15 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -525,15 +527,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 58
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -543,15 +545,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -561,15 +563,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -579,15 +581,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 51
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -597,15 +599,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 58
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -615,15 +617,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -633,15 +635,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -651,15 +653,15 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 51
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -669,15 +671,15 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "Sherlock Holmes" }
 count = 47
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -687,15 +689,15 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "Sherlock Holmes" }
 count = 16
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -705,15 +707,15 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "Sherlock Holmes" }
 count = 16
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -723,15 +725,15 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "Sherlock Holmes" }
 count = 40
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -741,15 +743,15 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 51
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -759,15 +761,15 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 20
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -777,15 +779,15 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 20
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -795,13 +797,13 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 44
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

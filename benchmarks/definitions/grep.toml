@@ -1,8 +1,8 @@
-# These are grep-oriented benchmarks that test how fast a regex engine can
-# process each line in a haystack.
+analysis = '''
+These are grep-oriented benchmarks that test how fast a regex engine can
+process each line in a haystack.
+'''
 
-# This is a baseline benchmark that matches every line. It also serves to
-# confirm that line iteration is done correctly.
 [[bench]]
 model = "grep"
 name = "every-line"
@@ -10,20 +10,23 @@ regex = ''
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 239_963
 engines = [
-  'rust/regex/meta',
-  # We include this as a reference point to demonstrate the overhead of the
-  # regex engine versus just calling one of the regex crate's internal regex
-  # engines directly.
-  'rust/regex/hybrid',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  # We include this as a reference point to demonstrate the overhead of the
+  # regex engine versus just calling one of the regex crate's internal regex
+  # engines directly.
+  'rust/regex/hybrid',
+  'rust/regex/meta',
 ]
+analysis = '''
+This is a baseline benchmark that matches every line. It also serves to
+confirm that line iteration is done correctly.
+'''
 
-# Looks for long words, but only using an ASCII definition of a word character.
 [[bench]]
 model = "grep"
 name = "long-words-ascii"
@@ -31,25 +34,19 @@ regex = '\b\w{25,}\b'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 5073
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2/jit',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
+analysis = '''
+Looks for long words, but only using an ASCII definition of a word character.
+'''
 
-# Looks for long words, but with "word character" being defined by Unicode.
-#
-# Even though the regex crate's lazy DFA can't handle Unicode word boundaries,
-# it does work quite well here anyway. Namely, if a haystack is purely ASCII,
-# then a Unicode word boundary is equivalent to an ASCII word boundary. So the
-# lazy DFA will heuristically support Unicode word boundaries for regexes like
-# this, but as soon as it sees a non-ASCII byte, it bails and the meta engine
-# defers to another (usually slower) engine. In this benchmark, the haystack
-# is mostly ASCII, so most searches just use the lazy DFA.
 [[bench]]
 model = "grep"
 name = "long-words-unicode"
@@ -58,8 +55,19 @@ haystack = { path = "rust-src-tools-3b0d4813.txt" }
 unicode = true
 count = 5075
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
   'pcre2/jit',
   'python/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
+analysis = '''
+Looks for long words, but with "word character" being defined by Unicode.
+
+Even though the regex crate's lazy DFA can't handle Unicode word boundaries,
+it does work quite well here anyway. Namely, if a haystack is purely ASCII,
+then a Unicode word boundary is equivalent to an ASCII word boundary. So the
+lazy DFA will heuristically support Unicode word boundaries for regexes like
+this, but as soon as it sees a non-ASCII byte, it bails and the meta engine
+defers to another (usually slower) engine. In this benchmark, the haystack
+is mostly ASCII, so most searches just use the lazy DFA.
+'''

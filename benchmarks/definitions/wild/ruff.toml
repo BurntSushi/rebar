@@ -1,21 +1,24 @@
-# These regexes were taken from the Ruff project[1]. Ruff is a Python linter in
-# Rust that claims to be quite fast. I took a quick skim at one point and was
-# interested to see that it makes heavy use of regexes.[2]
-#
-# While it's not clear how sensitive the performance of Ruff is to the speed of
-# the individual regexes, it seemed like a nice place to pluck out some real
-# world regexes to benchmark. I didn't take all of them, but I picked through a
-# few that looked "interesting." For example, I skipped most anchored regexes
-# and most regexes that had some obvious literal prefixes.
-#
-# Interestingly, many regex engines don't run well on the haystack because it
-# contains invalid UTF-8 *and* Ruff keeps Unicode mode enabled on its regexes.
-# Many regex engines require valid UTF-8 when Unicode mode is enabled. (I'm
-# looking at you, Python and Hyperscan.) And some regex engines (regress)
-# require valid UTF-8 regardless of whether Unicode mode is enabled or not.
-#
-# [1]: https://github.com/charliermarsh/ruff
-# [2]: https://github.com/charliermarsh/ruff/issues/2901
+analysis = '''
+These regexes were taken from the [Ruff project][ruff-project]. Ruff is
+a Python linter in Rust that claims to be quite fast. I took a quick
+skim at one point and was interested to see that it [makes heavy use of
+regexes][ruff-issue-2901].
+
+While it's not clear how sensitive the performance of Ruff is to the speed of
+the individual regexes, it seemed like a nice place to pluck out some real
+world regexes to benchmark. I didn't take all of them, but I picked through a
+few that looked "interesting." For example, I skipped most anchored regexes
+and most regexes that had some obvious literal prefixes.
+
+Interestingly, many regex engines don't run well on the haystack because it
+contains invalid UTF-8 *and* Ruff keeps Unicode mode enabled on its regexes.
+Many regex engines require valid UTF-8 when Unicode mode is enabled. (I'm
+looking at you, Python and Hyperscan.) And some regex engines (regress)
+require valid UTF-8 regardless of whether Unicode mode is enabled or not.
+
+[ruff-project]: https://github.com/charliermarsh/ruff
+[ruff-issue-2901]: https://github.com/charliermarsh/ruff/issues/2901
+'''
 
 [[bench]]
 model = 'grep-captures'
@@ -25,10 +28,10 @@ unicode = true
 haystack = { path = 'wild/cpython-226484e4.py' }
 count = 1_312_482
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
   'pcre2/jit',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 
@@ -40,11 +43,11 @@ unicode = true
 haystack = { path = 'wild/cpython-226484e4.py' }
 count = 84
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
   'pcre2/jit',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -55,11 +58,11 @@ unicode = true
 haystack = { path = 'wild/cpython-226484e4.py' }
 count = 16
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
   'pcre2/jit',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -70,11 +73,11 @@ unicode = true
 haystack = { path = 'wild/cpython-226484e4.py' }
 count = 2972
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
   'pcre2/jit',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -85,11 +88,11 @@ unicode = true
 haystack = { path = 'wild/cpython-226484e4.py' }
 count = 1_224_378
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
   'pcre2/jit',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 
@@ -101,9 +104,9 @@ unicode = true
 haystack = { path = 'wild/cpython-226484e4.py' }
 count = 282
 engines = [
-  'rust/regex/meta',
-  'rust/regex',
-  'rust/regexold',
-  're2',
   'pcre2/jit',
+  're2',
+  'rust/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

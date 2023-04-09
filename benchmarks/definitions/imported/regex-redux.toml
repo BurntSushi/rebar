@@ -1,15 +1,17 @@
-# Source: https://benchmarksgame-team.pages.debian.net/benchmarksgame/performance/regexredux.html
-#
-# This is a port of the Benchmark Game's regex-redux benchmark. It is not
-# precisely equivalent because it bans things like parallelism and ensures
-# all regex engines use as similar configuration as possible. (For example,
-# disabling Unicode mode in any regex engine that enables it by default, since
-# this benchmark is purely ASCII.)
-#
-# See the MODELS.md document in the repo root for a more in depth description
-# of the regex-redux model. Namely, this particular benchmark is different from
-# the rest in that it is more complicated than "search a regex in some haystack
-# repeatedly."
+analysis = '''
+This is a port of the [Benchmark Game's regex-redux
+benchmark][benchgame-regexredux]. It is not precisely equivalent because it
+bans things like parallelism and ensures all regex engines use as similar
+configuration as possible. (For example, disabling Unicode mode in any regex
+engine that enables it by default, since this benchmark is purely ASCII.)
+
+See the [MODELS](MODELS.md) document in the repo root for a more in depth
+description of the regex-redux model. Namely, this particular benchmark is
+different from the rest in that it is more complicated than "search a regex in
+some haystack repeatedly."
+
+[benchgame-regexredux]: https://benchmarksgame-team.pages.debian.net/benchmarksgame/performance/regexredux.html
+'''
 
 [[bench]]
 model = "regex-redux"

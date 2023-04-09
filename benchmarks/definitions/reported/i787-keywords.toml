@@ -46,18 +46,18 @@ regex = { path = "reported/i787-keywords.txt", per-line = "alternate", prepend =
 haystack = "f64"
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex/ast',
-  'rust/regex/hir',
-  'rust/regex/nfa',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/meta',
+  'rust/regex/nfa',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -67,15 +67,15 @@ regex = { path = "reported/i787-keywords.txt", per-line = "alternate", prepend =
 haystack = { path = "bstr-ext-slice-65993b58.txt" }
 count = 5_674
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -86,10 +86,10 @@ unicode = true
 haystack = { path = "bstr-ext-slice-65993b58.txt" }
 count = 5_674
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
   'pcre2/jit',
   'python/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -99,15 +99,15 @@ regex = '\b(Self|a(?:bstract|s)|b(?:ecome|o(?:ol|x)|reak)|c(?:har|on(?:st|tinue)
 haystack = { path = "bstr-ext-slice-65993b58.txt" }
 count = 5_674
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 This is the "optimized" variant of the regex as posted in the GitHub issue
@@ -126,10 +126,10 @@ unicode = true
 haystack = { path = "bstr-ext-slice-65993b58.txt" }
 count = 5_674
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
   'pcre2/jit',
   'python/regex',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 analysis = '''
 Same as `opt-ascii`, but with Unicode mode enabled.

@@ -43,15 +43,15 @@ regex = '^\s*fn\s+(is_([^\(]+))\(([^)]+)\) -> bool \{$'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 916
 engines = [
-  'rust/regex/meta',
-  'rust/regex/onepass',
-  'rust/regex/backtrack',
-  'rust/regex/pikevm',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
+  're2',
+  'regress',
+  'rust/regex/backtrack',
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/pikevm',
 ]
 analysis = '''
 This benchmark just tries to extract some properties of a subset of functions
@@ -66,15 +66,15 @@ regex = '^ *(\w+) +(\w+) +(\w+)'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 35_128
 engines = [
-  'rust/regex/meta',
-  'rust/regex/onepass',
-  'rust/regex/backtrack',
-  'rust/regex/pikevm',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
+  're2',
+  'regress',
+  'rust/regex/backtrack',
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/pikevm',
 ]
 analysis = '''
 This benchmark looks for the first three "words" in each line, and captures
@@ -90,12 +90,12 @@ unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 19_224
 engines = [
-  'rust/regex/meta',
-  'rust/regex/onepass',
-  'rust/regex/backtrack',
-  'rust/regex/pikevm',
   'pcre2/jit',
   'python/regex',
+  'rust/regex/backtrack',
+  'rust/regex/meta',
+  'rust/regex/onepass',
+  'rust/regex/pikevm',
 ]
 analysis = '''
 This is the same as `first-three-words-english`, but enables Unicode and runs
@@ -110,14 +110,13 @@ regex = '^(\S{8})(\S)\b'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 579
 engines = [
-  'rust/regex/meta',
-  'rust/regex/onepass',
-  'rust/regex/backtrack',
-  'rust/regex/pikevm',
-  # 'regress', # different count, probably different Unicode version?
   'pcre2/jit',
   'python/regex',
+  'rust/regex/backtrack',
+  'rust/regex/meta',
   'rust/regexold',
+  'rust/regex/onepass',
+  'rust/regex/pikevm',
 ]
 analysis = '''
 This benchmark uses an ASCII word boundary to find all 9 letter words that
@@ -134,13 +133,13 @@ unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 873
 engines = [
-  'rust/regex/meta',
-  'rust/regex/onepass',
-  'rust/regex/backtrack',
-  'rust/regex/pikevm',
   'pcre2/jit',
   'python/regex',
+  'rust/regex/backtrack',
+  'rust/regex/meta',
   'rust/regexold',
+  'rust/regex/onepass',
+  'rust/regex/pikevm',
 ]
 analysis = '''
 This is the same as the English counterpart, but enables Unicode mode and thus

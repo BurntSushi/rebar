@@ -1,10 +1,14 @@
-# This benchmark's regex came from this discussion:
-# https://old.reddit.com/r/rust/comments/xr0ztr/lemmeknow_the_fastest_way_to_identify_anything/iqdsa3c/
-#
-# The actual regex was originally retrieved from here:
-# https://github.com/swanandx/regex_vs_onig/blob/d4e21afeb2053f5148095c97054f53299b02e29b/src/lib.rs
-#
-# It's an absolutely ginormous regex for recognizing what appears to be URLs.
+analysis = '''
+This benchmark's regex came from a [reddit discussion].
+
+The actual regex was originally retrieved from a [comparison between the Rust
+regex crate and Oniguruma][rust-regex-vs-onig].
+
+It's an absolutely ginormous regex for recognizing what appears to be URLs.
+
+[reddit-rust-url]: https://old.reddit.com/r/rust/comments/xr0ztr/lemmeknow_the_fastest_way_to_identify_anything/iqdsa3c/
+[rust-regex-vs-onig]: https://github.com/swanandx/regex_vs_onig/blob/d4e21afeb2053f5148095c97054f53299b02e29b/src/lib.rs
+'''
 
 [[bench]]
 model = "compile"
@@ -17,38 +21,16 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
-  'rust/regex/meta',
-  # 'regress', # invalid char escape?
-  're2',
   'go/regexp',
-  'pcre2/jit',
+  'hyperscan',
   'pcre2',
+  'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'rust/regex/meta',
 ]
 
-# Benchmarking the search is quite interesting for the regex crate. It starts
-# out fine using the lazy DFA. The cache slowly gets filled up and cleared, but
-# otherwise moves along at a decent clip. But as the benchmark repeats itself,
-# since the same cache is reused, the clear count goes up until it hits an
-# heuristic limit. At that point, the lazy DFA fails and the search falls back
-# to the slower PikeVM and performance tanks.
-#
-# RE2 does okay here, presumably because it keeps using the lazy DFA. RE2 does
-# have more sophisticated logic for determining whether it should keep using
-# the cache. Namely, in addition to the total number of times the cache is
-# cleared, it also considers the number of bytes processed per new state added.
-# If that's good enough, then absolute cache clear count on its own isn't
-# necessarily a problem.
-#
-# The old regex crate also used to have a check like this, and sadly, I lost it
-# in the migration to the regex-automata crate. I really should bring it back,
-# but have avoided doing so because it probably requires some inconvenient API
-# work in the hybrid NFA/DFA API. But I suppose that's just reality.
-#
-# UPDATE: The lazy DFA now supports this heuristic and it approximately matches
-# RE2's perf on my system now.
 [[bench]]
 model = "count-spans"
 name = "search"
@@ -65,3 +47,26 @@ engines = [
   'python/re',
   'python/regex',
 ]
+analysis = '''
+Benchmarking the search is quite interesting for the regex crate. It starts
+out fine using the lazy DFA. The cache slowly gets filled up and cleared, but
+otherwise moves along at a decent clip. But as the benchmark repeats itself,
+since the same cache is reused, the clear count goes up until it hits an
+heuristic limit. At that point, the lazy DFA fails and the search falls back to
+the slower PikeVM and performance tanks.
+
+RE2 does okay here, presumably because it keeps using the lazy DFA. RE2 does
+have more sophisticated logic for determining whether it should keep using the
+cache. Namely, in addition to the total number of times the cache is cleared,
+it also considers the number of bytes processed per new state added. If that's
+good enough, then absolute cache clear count on its own isn't necessarily a
+problem.
+
+The old regex crate also used to have a check like this, and sadly, I lost it
+in the migration to the `regex-automata` crate. I really should bring it back,
+but have avoided doing so because it probably requires some inconvenient API
+work in the hybrid NFA/DFA API. But I suppose that's just reality.
+
+UPDATE: The lazy DFA now supports this heuristic and it approximately matches
+RE2's perf on my system now.
+'''

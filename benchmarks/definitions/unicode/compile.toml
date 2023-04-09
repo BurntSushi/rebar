@@ -1,10 +1,11 @@
-# These benchmarks demonstrate the impact that Unicode has on the time it takes
-# to compile regexes. Generally speaking, Unicode impacts the compile times of
-# automata engines the most, since (most, but not all) automata engines compile
-# regexes down to machines whose transitions are defined over bytes. This takes
-# quite a bit of work to do when faced with large Unicode character classes.
+analysis = '''
+These benchmarks demonstrate the impact that Unicode has on the time it takes
+to compile regexes. Generally speaking, Unicode impacts the compile times of
+automata engines the most, since (most, but not all) automata engines compile
+regexes down to machines whose transitions are defined over bytes. This takes
+quite a bit of work to do when faced with large Unicode character classes.
+'''
 
-# Measures how long it takes to compile one particularly large Unicode class.
 [[bench]]
 model = "compile"
 name = "one-letter"
@@ -13,31 +14,20 @@ haystack = "ͱͳͷΐάέήίΰαβγδεζηθικλμνξοπρςστυφχψω
 unicode = true
 count = 53
 engines = [
-  'rust/regex/meta',
-  'rust/regex/dense',
-  'rust/regex/nfa',
-  'rust/regexold',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2/jit',
   'python/regex',
-  'hyperscan',
+  're2',
+  'rust/regex/dense',
+  'rust/regex/meta',
+  'rust/regex/nfa',
+  'rust/regexold',
 ]
+analysis = '''
+Measures how long it takes to compile one particularly large Unicode class.
+'''
 
-# Like 'one-letter', but repeats that class 50 times. Backtrackers in
-# particular do well here and generally aren't any slower than the 'one-letter'
-# case, where as byte-oriented automata engines do quite a bit worse. This is
-# because they compile classes like \pL down into machines with transitions
-# defined over bytes and *not* codepoints. So there is a lot of work that is
-# done here.
-#
-# I don't think any of the automata engines "cache" the work done to compile
-# \pL once and then reuse it for subsequent \pLs.
-#
-# Note that 'go/regexp' does quite well here despite using automata internally.
-# This is because it defines its transitions over codepoints, and so never
-# compiles things like \pL down to bytes at all. ('go/regexp' also lacks a DFA,
-# which lessens the need for byte oriented transitions.)
 [[bench]]
 model = "compile"
 name = "fifty-letters"
@@ -46,19 +36,32 @@ haystack = "ͱͳͷΐάέήίΰαβγδεζηθικλμνξοπρςστυφχψω
 unicode = true
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex/dense',
-  'rust/regex/nfa',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
-  # 'hyperscan', # pattern too large?
+  're2',
+  'rust/regex/dense',
+  'rust/regex/meta',
+  'rust/regex/nfa',
+  'rust/regexold',
 ]
+analysis = '''
+Like `one-letter`, but repeats that class 50 times. Backtrackers in
+particular do well here and generally aren't any slower than the `one-letter`
+case, where as byte-oriented automata engines do quite a bit worse. This is
+because they compile classes like `\pL` down into machines with transitions
+defined over bytes and *not* codepoints. So there is a lot of work that is
+done here.
 
-# This just provides a baseline comparison point with \pL{50} to demonstate
-# that Unicode is indeed the culprit here.
+I don't think any of the automata engines "cache" the work done to compile
+`\pL` once and then reuse it for subsequent `\pL`s.
+
+Note that `go/regexp` does quite well here despite using automata internally.
+This is likely because it defines its transitions over codepoints, and so never
+compiles things like `\pL` down to bytes at all. (`go/regexp` also lacks a DFA,
+which lessens the need for byte oriented transitions.)
+'''
+
 [[bench]]
 model = "compile"
 name = "fifty-letters-ascii"
@@ -80,10 +83,11 @@ engines = [
   'python/regex',
   'hyperscan',
 ]
+analysis = '''
+This just provides a baseline comparison point with `\pL{50}` to demonstate
+that Unicode is indeed the culprit here.
+'''
 
-# This compiles a simple regex that matches non-empty lines that are valid
-# UTF-8. The haystack we use contains 4 lines, but one of them contains invalid
-# UTF-8.
 [[bench]]
 model = "compile"
 name = "match-every-line"
@@ -97,22 +101,18 @@ count = [
   { engine = '.*', count = 3 },
 ]
 engines = [
+  'go/regexp',
+  'pcre2/jit',
+  're2',
   'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  # Python engines cannot enable Unicode mode and search invalid UTF-8. This is
-  # because Unicode mode requires Unicode strings, and Unicode strings cannot
-  # contain invalid UTF-8. (Because Unicode strings are, at least logically,
-  # sequences of codepoints.)
-  # 'python/regex',
 ]
+analysis = '''
+This compiles a simple regex that matches non-empty lines that are valid UTF-8.
+The haystack we use contains 4 lines, but one of them contains invalid UTF-8.
+'''
 
-# This is like 'match-every-line', but disables Unicode mode and permits '.'
-# to match any byte (except for \n). So this includes the line that contains
-# invalid UTF-8 in the count.
 [[bench]]
 model = "compile"
 name = "match-every-line-ascii"
@@ -129,9 +129,12 @@ engines = [
   'python/regex',
   'hyperscan',
 ]
+analysis = '''
+This is like `match-every-line`, but disables Unicode mode and permits `.`
+to match any byte (except for `\n`). So this includes the line that contains
+invalid UTF-8 in the count.
+'''
 
-# This tests that '[^a]' in Unicode mode matches an entire codepoint and not
-# the individual bytes.
 [[bench]]
 model = "compile"
 name = "negated-class-matches-codepoint"
@@ -140,15 +143,19 @@ unicode = true
 haystack = '☃'
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/regex/nfa',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regex/nfa',
+  'rust/regexold',
 ]
+analysis = '''
+This tests that `[^a]` in Unicode mode matches an entire codepoint and not
+the individual bytes.
+'''

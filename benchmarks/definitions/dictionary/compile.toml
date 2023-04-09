@@ -1,12 +1,14 @@
-# These benchmarks test how long it takes to build a regex for a large
-# dictionary of words as a single alternation. Overall, the compile times here
-# are pretty brutal and are in the milliseconds on my machine.
-#
-# If you really do know that you just have an alternation of literals you
-# really probably should use the 'aho-corasick' Rust crate directly. But such
-# things might be unknown unknowns or you might not even know you're running
-# a huge alternation of literals, in which case, the regex crate will do its
-# best.
+analysis = '''
+These benchmarks test how long it takes to build a regex for a large
+dictionary of words as a single alternation. Overall, the compile times here
+are pretty brutal and are in the milliseconds on my machine.
+
+If you really do know that you just have an alternation of literals you
+really probably should use the `aho-corasick` Rust crate directly. But such
+things might be unknown unknowns or you might not even know you're running
+a huge alternation of literals, in which case, the regex crate will do its
+best.
+'''
 
 [[bench]]
 model = "compile"
@@ -16,9 +18,9 @@ haystack = "zygotes"
 unicode = true
 count = 1
 engines = [
-  'rust/regex/meta',
   'rust/regex/ast',
   'rust/regex/hir',
+  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -31,13 +33,13 @@ haystack = "Zubeneschamali's"
 unicode = true
 count = 1
 engines = [
-  'rust/regex/meta',
+  'go/regexp',
+  're2',
   'rust/regex/ast',
   'rust/regex/hir',
+  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
-  're2',
-  'go/regexp',
 ]
 
 [[bench]]
@@ -48,12 +50,12 @@ haystack = "Zubeneschamali's"
 unicode = true
 count = 1
 engines = [
-  'rust/regex/meta',
+  'go/regexp',
+  're2',
+  'regress',
   'rust/regex/ast',
   'rust/regex/hir',
+  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
 ]

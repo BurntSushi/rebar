@@ -1,3 +1,7 @@
+analysis = '''
+Some benchmarks for parsing Caddy log files.
+'''
+
 [[bench]]
 model = "count-captures"
 name = "caddy"

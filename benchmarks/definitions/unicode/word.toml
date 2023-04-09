@@ -1,18 +1,20 @@
-# These benchmarks try to demonstrate some differences between ASCII-only words
-# and word boundaries, and Unicode-aware words and word boundaries.
-#
-# The 'boundary-any-*' benchmarks are somewhat dominated by latency. That is,
-# the faster your regex engine can get out of the way of the core matching
-# logic, the better. The 'boundary-long-*' benchmarks are more dominated by
-# throughput because it matches far less frequently. As one example, 'regress'
-# has pretty similar performance on both, but the regex crate does a lot better
-# on the throughput oriented benchmark.
-#
-# But also, the regex crate in particular can fall off of a perf cliff when
-# using Unicode word boundaries. The specific reason is that the DFAs in the
-# regex crate can't deal with Unicode word boundaries on non-ASCII text, so the
-# regex crate is forced to use a slower matching engine. (In this case, that's
-# most likely the PikeVM. Owch.)
+analysis = '''
+These benchmarks try to demonstrate some differences between ASCII-only words
+and word boundaries, and Unicode-aware words and word boundaries.
+
+The `boundary-any-*` benchmarks are somewhat dominated by latency. That is, the
+faster your regex engine can get out of the way of the core matching logic,
+the better. The `boundary-long-*` benchmarks are more dominated by throughput
+because it matches far less frequently. As one example, `regress` has pretty
+similar performance on both, but the regex crate does a lot better on the
+throughput oriented benchmark.
+
+But also, the regex crate in particular can fall off of a perf cliff when using
+Unicode word boundaries. The specific reason is that the DFAs in the regex
+crate can't deal with Unicode word boundaries on non-ASCII text, so the regex
+crate is forced to use a slower matching engine. (In this case, that's most
+likely the PikeVM. Owch.)
+'''
 
 [[bench]]
 model = "count-spans"
@@ -21,15 +23,15 @@ regex = '\b\w+\b'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 450_561
 engines = [
-  'rust/regex/meta',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -40,10 +42,10 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
 count = 529_194
 engines = [
-  'rust/regex/meta',
   # 'pcre2', # times out(!)
   'pcre2/jit',
   'python/regex',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -53,15 +55,15 @@ regex = '\b\w{12,}\b'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 3466
 engines = [
-  'rust/regex/meta',
-  'regress',
-  're2',
   'go/regexp',
+  'hyperscan',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
-  'hyperscan',
+  're2',
+  'regress',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -72,13 +74,11 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
 count = 21_332
 engines = [
-  'rust/regex/meta',
   'pcre2/jit',
   'python/regex',
+  'rust/regex/meta',
 ]
 
-# Looks for occurrences of 'Holmes' and the words surrounding them while
-# ensuring they fall on word boundaries. Here, we only use ASCII constructs.
 [[bench]]
 model = "count-spans"
 name = "around-holmes-english"
@@ -86,28 +86,22 @@ regex = '\b\w+\s+Holmes\s+\w+\b'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 27
 engines = [
-  # Uses the 'reverse inner' optimization which looks for 'Holmes' and then
-  # does a reverse search for '\b\w+\s+' to find the start position.
-  'rust/regex/meta',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  # Uses the 'reverse inner' optimization which looks for 'Holmes' and then
+  # does a reverse search for '\b\w+\s+' to find the start position.
+  'rust/regex/meta',
 ]
+analysis = '''
+Looks for occurrences of `Holmes` and the words surrounding them while
+ensuring they fall on word boundaries. Here, we only use ASCII constructs.
+'''
 
-# Like 'around-holmes-english', but make it Unicode aware and run it on a
-# non-ASCII haystack. This one is kind of brutal for the regex crate. It picks
-# up on the 'Холмс' literal and triggers the "reverse inner" optimization. But
-# once it finds a literal match and does a reverse scan from that point to find
-# the start position, it trips over a non-ASCII byte and bails out because of
-# the Unicode word boundary. Then it falls back to... The PikeVM.
-#
-# This makes a good case for reverse PikeVM/backtrack/OnePass searchers... If
-# we had even one of those, we could use it for the reverse search because all
-# three support Unicode word boundaries.
 [[bench]]
 model = "count-spans"
 name = "around-holmes-russian"
@@ -120,3 +114,15 @@ engines = [
   'pcre2/jit',
   'python/regex',
 ]
+analysis = '''
+Like `around-holmes-english`, but make it Unicode aware and run it on a
+non-ASCII haystack. This one is kind of brutal for the regex crate. It picks
+up on the `Холмс` literal and triggers the "reverse inner" optimization. But
+once it finds a literal match and does a reverse scan from that point to find
+the start position, it trips over a non-ASCII byte and bails out because of
+the Unicode word boundary. Then it falls back to... the PikeVM.
+
+This makes a good case for reverse PikeVM/backtrack/OnePass searchers... If
+we had even one of those, we could use it for the reverse search because all
+three support Unicode word boundaries.
+'''

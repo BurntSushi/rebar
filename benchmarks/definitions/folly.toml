@@ -1,29 +1,21 @@
-# These benchmark demonstrates the folly of literal optimizations. Basically,
-# literal optimizations are a classic case of selling out some cases in
-# exchange for making some other (typically more common) cases exceptionally
-# fast. But when you hit the cases where the literal optimizations break down,
-# perf can be slower than if you didn't attempt the literal optimizations at
-# all. Typically, the way to trash perf is to increase the false positive rate
-# of detecting candidates via literal matches. This in turn causes a ping-pong
-# effect: a candidate is found via a fast substring (or multi-substring)
-# search, but it fails to lead to an overall match, so then you go back to the
-# substring search and repeat this ping-ponging between the regex engine and
-# the literal search. The overhead of this can add up to quite a bit with a
-# very high false positive rate.
-#
-# The main purpose of these benchmarks is to demonstrate these cases, shine
-# some light on them and hopefully work toward making them "not too bad."
+analysis = '''
+These benchmarks demonstrate the folly of literal optimizations. Basically,
+literal optimizations are a classic case of selling out some cases in
+exchange for making some other (typically more common) cases exceptionally
+fast. But when you hit the cases where the literal optimizations break down,
+perf can be slower than if you didn't attempt the literal optimizations at
+all. Typically, the way to trash perf is to increase the false positive rate
+of detecting candidates via literal matches. This in turn causes a ping-pong
+effect: a candidate is found via a fast substring (or multi-substring)
+search, but it fails to lead to an overall match, so then you go back to the
+substring search and repeat this ping-ponging between the regex engine and
+the literal search. The overhead of this can add up to quite a bit with a
+very high false positive rate.
 
-# This one causes the Rust regex engine to look for matches of `awyer|inn`,
-# then do a reverse search for '[A-Z]' which fails. Then it restarts the search
-# for 'awyer|inn' again only to find another candidate match immediately that
-# doesn't lead to an overall match. And so on.
-#
-# Note that [A-Z] was chosen specifically here. If you use [A-Za-z], then the
-# backwards search will overlap with a previous candidate match, which in turn
-# causes it to detect potential quadratic behavior almost immediately. At that
-# point, it gives up the "reverse inner" strategy and falls back to a normal
-# DFA forward scan, which has respectable speed.
+The main purpose of these benchmarks is to demonstrate these cases, shine
+some light on them and hopefully work toward making them "not too bad."
+'''
+
 [[bench]]
 model = "count"
 name = "awyer-inn-busted"
@@ -31,23 +23,25 @@ regex = '([A-Z]awyer|[A-Z]inn)[0-9\s]'
 haystack = { contents = "awyerinn", repeat = 10_000, append = "Sawyer\n" }
 count = 1
 engines = [
-  'rust/regex/meta',
-  'pcre2/jit',
-  're2',
   'go/regexp',
   'hyperscan',
+  'pcre2/jit',
+  're2',
+  'rust/regex/meta',
 ]
+analysis = '''
+This one causes the Rust regex engine to look for matches of `awyer|inn`,
+then do a reverse search for '[A-Z]' which fails. Then it restarts the search
+for 'awyer|inn' again only to find another candidate match immediately that
+doesn't lead to an overall match. And so on.
 
-# This benchmark is a good example of how even the most basic literal
-# optimizations can vary across regex engines. Here, the 're2' and 'go/regexp'
-# engines do quite well in part because their literal optimizations aren't
-# terribly sophisticated. I *believe* in this case they work by feeding the
-# first byte of the pattern to memchr to find candidate matches and then using
-# the regex engine to confirm or reject. Since 'Z' occurs quite rarely in the
-# haystack, most of the search stays in the very hot memchr loop.
-#
-# Contrast this to the regex crate which uses a SIMD substring search instead
-# of memchr. It still performs admirably, but at around half the speed.
+Note that [A-Z] was chosen specifically here. If you use [A-Za-z], then the
+backwards search will overlap with a previous candidate match, which in turn
+causes it to detect potential quadratic behavior almost immediately. At that
+point, it gives up the "reverse inner" strategy and falls back to a normal
+DFA forward scan, which has respectable speed.
+'''
+
 [[bench]]
 model = "count"
 name = "literal-never-match-rare"
@@ -55,29 +49,29 @@ regex = 'ZQZQZQZQZQ'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 0
 engines = [
-  'rust/regex/meta',
+  'go/regexp',
+  'hyperscan',
+  'pcre2/jit',
+  're2',
   # This is what the regex crate uses internally, but we include it here
   # directly as a reference point. The regex crate being different from this
   # should raise eyebrows.
   'rust/memchr/memmem',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'hyperscan',
+  'rust/regex/meta',
 ]
+analysis = '''
+This benchmark is a good example of how even the most basic literal
+optimizations can vary across regex engines. Here, the 're2' and 'go/regexp'
+engines do quite well in part because their literal optimizations aren't
+terribly sophisticated. I *believe* in this case they work by feeding the
+first byte of the pattern to memchr to find candidate matches and then using
+the regex engine to confirm or reject. Since 'Z' occurs quite rarely in the
+haystack, most of the search stays in the very hot memchr loop.
 
-# You might read the description for 'literal-never-match-rare' above and
-# think, "okay so some regex engines aren't sophisticated but at least they
-# get predictable and consistent performance." Not so! In this benchmark, we
-# also search for a literal that never matches, but the bytes that make up
-# the literal are overall much more frequently occurring than in the above
-# benchmark.
-#
-# In this case, re2 and go/regexp still do just fine (hovering at just above
-# 3 GB/s, versus 80 GB/s for 'literal-never-match-rare'), but the regex crate
-# maintains identical performance as above at around 49 GB/s. This is because
-# its SIMD substring search, while making use of frequency heuristics, is more
-# robust in the face of frequently occurring bytes.
+Contrast this to the regex crate which uses a SIMD substring search instead
+of memchr. It still performs admirably, but at around half the speed.
+'''
+
 [[bench]]
 model = "count"
 name = "literal-never-match-frequent"
@@ -85,45 +79,31 @@ regex = 'aeaeaeaeae'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 0
 engines = [
-  'rust/regex/meta',
+  'go/regexp',
+  'hyperscan',
+  'pcre2/jit',
+  're2',
   # This is what the regex crate uses internally, but we include it here
   # directly as a reference point. The regex crate being different from this
   # should raise eyebrows.
   'rust/memchr/memmem',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'hyperscan',
+  'rust/regex/meta',
 ]
+analysis = '''
+You might read the description for 'literal-never-match-rare' above and
+think, "okay so some regex engines aren't sophisticated but at least they
+get predictable and consistent performance." Not so! In this benchmark, we
+also search for a literal that never matches, but the bytes that make up
+the literal are overall much more frequently occurring than in the above
+benchmark.
 
-# This benchmark is an attempt to make the regex crate's uses of memmem slow
-# down. We have to carefully construct the needle to contain some rare bytes
-# that we know the SIMD algorithm will hone in on. In this case, that's Y and
-# Z. The inner SIMD loop will look for places where not only those two bytes
-# match, but match at a distance that is equal to their distance in the needle.
-# Thus, we may sure our haystack has a lot of those two bytes occurring at that
-# distance. BUT, we also make sure to change one OTHER byte from the needle to
-# ensure that the overall match fails.
-#
-# In effect, this causes the SIMD algorithm to constantly ping-pong in and
-# out of its inner loop where it finds a candidate and causes it to do its
-# confirmation step. (Which, for a needle this small, is just memcmp.) The
-# confirmation then fails and the whole process repeats itself.
-#
-# If you're having trouble groking this, you might consider perusing the memchr
-# crate's memmem submodule, which has lots of comments for how it works. The
-# algorithm is also described at a high level by Wojciech Muła[1], although
-# that description doesn't account for the frequency based heuristics that
-# memchr::memmem uses, and are in particular relevant to this benchmark.
-#
-# This does cause the memmem search to slow down by about a factor of 4. Other
-# regex engines also seem to slow down. Do note that this depends on where we
-# put the mismatch! For example, if we repeated 'aooYbarZquux' in our haystack,
-# then RE2's search will be extremely fast because it will give 'f' (the first
-# byte in the needle) to memchr, and since 'f' doesn't occur at all until the
-# match at the end of the haystack, its false positive rate is zero.
-#
-# [1]: http://0x80.pl/articles/simd-strfind.html
+In this case, `re2` and `go/regexp` still do just fine (hovering at just above
+3 GB/s, versus 80 GB/s for 'literal-never-match-rare'), but the regex crate
+maintains identical performance as above at around 49 GB/s. This is because its
+SIMD substring search, while making use of frequency heuristics, is more robust
+in the face of frequently occurring bytes.
+'''
+
 [[bench]]
 model = "count"
 name = "literal-never-match-tricksy"
@@ -131,10 +111,41 @@ regex = 'fooYbarZquux'
 haystack = { contents = 'fooYbarZquuf', repeat = 10_000, append = 'fooYbarZquux' }
 count = 1
 engines = [
-  'rust/regex/meta',
-  'rust/memchr/memmem',
-  're2',
   'go/regexp',
-  'pcre2/jit',
   'hyperscan',
+  'pcre2/jit',
+  're2',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
 ]
+analysis = '''
+This benchmark is an attempt to make the regex crate's uses of memmem slow
+down. We have to carefully construct the needle to contain some rare bytes that
+we know the SIMD algorithm will hone in on. In this case, that's Y and Z. The
+inner SIMD loop will look for places where not only those two bytes match, but
+match at a distance that is equal to their distance in the needle. Thus, we
+may sure our haystack has a lot of those two bytes occurring at that distance.
+*But*, we also make sure to change one *other* byte from the needle to ensure
+that the overall match fails.
+
+In effect, this causes the SIMD algorithm to constantly ping-pong in and
+out of its inner loop where it finds a candidate and causes it to do its
+confirmation step. (Which, for a needle this small, is just memcmp.) The
+confirmation then fails and the whole process repeats itself.
+
+If you're having trouble groking this, you might consider perusing the
+memchr crate's memmem submodule, which has lots of comments for how it
+works. The algorithm is also [described at a high level by Wojciech
+Muła][0x80-simd-strfind], although that description doesn't account for the
+frequency based heuristics that `memchr::memmem` uses, and are in particular
+relevant to this benchmark.
+
+This does cause the memmem search to slow down by about a factor of 4. Other
+regex engines also seem to slow down. Do note that this depends on where we
+put the mismatch! For example, if we repeated 'aooYbarZquux' in our haystack,
+then RE2's search will be extremely fast because it will give 'f' (the first
+byte in the needle) to memchr, and since 'f' doesn't occur at all until the
+match at the end of the haystack, its false positive rate is zero.
+
+[0x80-simd-strfind]: http://0x80.pl/articles/simd-strfind.html
+'''

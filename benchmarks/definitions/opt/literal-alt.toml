@@ -51,10 +51,10 @@ unicode = true
 haystack = { path = "opensubtitles/en-tiny.txt", append = "Zoroastrianisms" }
 count = 1
 engines = [
-  # Perf is generally quite bad because it spends all of its time shuffling
-  # states around for one big alternation.
-  'rust/regex/pikevm',
   # Currently uses an Aho-Corasick NFA and does well, but it builds an
   # enormous prefilter and could use some love.
   'rust/regex/meta',
+  # Perf is generally quite bad because it spends all of its time shuffling
+  # states around for one big alternation.
+  'rust/regex/pikevm',
 ]

@@ -1,12 +1,14 @@
-# These benchmarks were imported from the old regex crate's benchmark suite[1].
-# There were loosely inspired by the leipzig benchmark, but I added to it
-# quite a bit over time to test various optimizations I had added to the regex
-# crate. I've ported them over to this harness as a way of doing a direct
-# comparison between this benchmarking tool and the older suite. The benchmarks
-# themselves are also generally useful, but do have a lot of overlap with other
-# benchmarks.
-#
-# [1]: https://github.com/rust-lang/regex/blob/a9b2e02352db92ce1f6e5b7ecd41b8bbffbe161a/bench/src/sherlock.rs
+analysis = '''
+These benchmarks were imported from the [old regex crate's benchmark
+suite][regex-old-suite]. They were loosely inspired by the leipzig benchmark,
+but I added to it quite a bit over time to test various optimizations I had
+added to the regex crate. I've ported them over to this harness as a way of
+doing a direct comparison between this benchmarking tool and the older suite.
+The benchmarks themselves are also generally useful, but do have a lot of
+overlap with other benchmarks.
+
+[regex-old-suite]: https://github.com/rust-lang/regex/blob/a9b2e02352db92ce1f6e5b7ecd41b8bbffbe161a/bench/src/sherlock.rs
+'''
 
 [[bench]]
 model = "count-spans"
@@ -15,16 +17,16 @@ regex = 'Sherlock'
 haystack = { path = "sherlock.txt" }
 count = 776
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'rust/memchr/memmem',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -34,16 +36,16 @@ regex = 'Holmes'
 haystack = { path = "sherlock.txt" }
 count = 2766
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  'rust/memchr/memmem',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -53,16 +55,16 @@ regex = 'Sherlock Holmes'
 haystack = { path = "sherlock.txt" }
 count = 1365
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'rust/memchr/memmem',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -73,15 +75,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 816
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -92,15 +94,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 2802
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -111,15 +113,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 1440
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -130,15 +132,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = false
 count = 1461
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -148,15 +150,15 @@ regex = 'Sherlock|Street'
 haystack = { path = "sherlock.txt" }
 count = 1142
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -166,15 +168,15 @@ regex = 'Sherlock|Holmes'
 haystack = { path = "sherlock.txt" }
 count = 3542
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -184,15 +186,15 @@ regex = 'Sherlock|Holmes|Watson|Irene|Adler|John|Baker'
 haystack = { path = "sherlock.txt" }
 count = 4507
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -203,15 +205,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 4593
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -221,15 +223,15 @@ regex = 'Sher[a-z]+|Hol[a-z]+'
 haystack = { path = "sherlock.txt" }
 count = 3686
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -240,15 +242,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 4254
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -258,15 +260,15 @@ regex = 'Sherlock|Holmes|Watson'
 haystack = { path = "sherlock.txt" }
 count = 4028
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -277,15 +279,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 4104
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -295,15 +297,15 @@ regex = 'zqj'
 haystack = { path = "sherlock.txt" }
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -313,15 +315,15 @@ regex = 'aqj'
 haystack = { path = "sherlock.txt" }
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -331,15 +333,15 @@ regex = 'aei'
 haystack = { path = "sherlock.txt" }
 count = 0
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -349,16 +351,16 @@ regex = 'the'
 haystack = { path = "sherlock.txt" }
 count = 21654
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'rust/memchr/memmem',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -368,16 +370,16 @@ regex = 'The'
 haystack = { path = "sherlock.txt" }
 count = 2223
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'rust/memchr/memmem',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/memchr/memmem',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -388,15 +390,15 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 23961
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 # See everything-greedy-nl.
@@ -412,14 +414,14 @@ count = [
   { engine = '.*', count = 581_881 },
 ]
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 # This benchmark demonstrates the impact of not having a fast path when a DFA
@@ -444,14 +446,14 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 594_933
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -462,13 +464,13 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 447_175
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   # 'pcre2', # timeout, why?
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -479,13 +481,13 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 14_180
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -496,13 +498,13 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 432_995
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   # 'pcre2', # timeout, why?
   'pcre2/jit',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -512,15 +514,15 @@ regex = '\w+'
 haystack = { path = "sherlock.txt" }
 count = 447_639
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -530,15 +532,15 @@ regex = '\w+\s+Holmes'
 haystack = { path = "sherlock.txt" }
 count = 4073
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -548,15 +550,15 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "sherlock.txt" }
 count = 2593
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -566,15 +568,15 @@ regex = 'Holmes.{0,25}Watson|Watson.{0,25}Holmes'
 haystack = { path = "sherlock.txt" }
 count = 150
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -584,11 +586,11 @@ regex = 'Holmes(?:\s*.+\s*){0,10}Watson|Watson(?:\s*.+\s*){0,10}Holmes'
 haystack = { path = "sherlock.txt" }
 count = 14_309
 engines = [
+  'go/regexp',
+  're2',
+  # 'regress', # timeout
   'rust/regex/meta',
   'rust/regexold',
-  # 'regress', # timeout
-  're2',
-  'go/regexp',
 ]
 
 [[bench]]
@@ -598,14 +600,14 @@ regex = '''["'][^"']{0,30}[?!.]["']'''
 haystack = { path = "sherlock.txt" }
 count = 14_437
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -615,14 +617,14 @@ regex = '(?m)^Sherlock Holmes|Sherlock Holmes$'
 haystack = { path = "sherlock.txt" }
 count = 510
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -632,14 +634,14 @@ regex = '\b\w+n\b'
 haystack = { path = "sherlock.txt" }
 count = 35_297
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -649,15 +651,15 @@ regex = '[a-q][^u-z]{13}x'
 haystack = { path = "sherlock.txt" }
 count = 2130
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -667,15 +669,15 @@ regex = '[a-zA-Z]+ing'
 haystack = { path = "sherlock.txt" }
 count = 20_547
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -685,13 +687,13 @@ regex = '\s[a-zA-Z]{0,12}ing\s'
 haystack = { path = "sherlock.txt" }
 count = 19_658
 engines = [
-  'rust/regex/meta',
-  'rust/regexold',
-  'regress',
-  're2',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'regress',
+  'rust/regex/meta',
+  'rust/regexold',
 ]

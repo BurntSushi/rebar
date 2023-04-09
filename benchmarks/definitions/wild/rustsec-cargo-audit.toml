@@ -24,15 +24,15 @@ regex = 'cargo/registry/src/[^/]+/([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-
 haystack = { path = "wild/rg-13.0.0-x86_64-unknown-linux-musl.bin" }
 count = 471
 engines = [
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  're2',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
@@ -42,15 +42,15 @@ regex = 'cargo\\registry\\src\\[^\\]+\\([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[
 haystack = { path = "wild/rg-13.0.0-x86_64-pc-windows-msvc.bin" }
 count = 462
 engines = [
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  're2',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
@@ -60,15 +60,15 @@ regex = 'cargo[\\/]registry[\\/]src[\\/][^\\/]+[\\/]([0-9A-Za-z_-]+)-([0-9]+\.[0
 haystack = { path = "wild/rg-13.0.0-x86_64-unknown-linux-musl.bin" }
 count = 471
 engines = [
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  're2',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
@@ -78,13 +78,13 @@ regex = 'cargo/registry/src/[^/]+/([0-9A-Za-z_-]+)-([0-9]+\.[0-9]+\.[0-9]+[0-9A-
 haystack = { path = "wild/rg-13.0.0-x86_64-unknown-linux-musl.bin" }
 count = 471
 engines = [
+  'go/regexp',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  're2',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]

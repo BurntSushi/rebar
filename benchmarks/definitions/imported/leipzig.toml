@@ -1,356 +1,495 @@
-# This benchmark seems to have originated from John Maddock as part of
-# measuring the performance of boost's regex engine[1]. It was then adapted[2]
-# by Zoltan Herczeg to benchmark sljit[3], the JIT backend for PCRE and PCRE2.
-# The benchmark was then further adapted by the Rust Leipzig User Group[4]. The
-# last iteration is the one we use here.
-#
-# As alluded to in the benchmark methodology, and as demonstrated in the runner
-# program[5], the benchmark is of the "find all matches" variety. That is, it
-# is not line oriented. It loads the entire haystack into memory and then finds
-# all matches.
-#
-# As appears to be a pattern in regex benchmarks, this one also does not
-# compare apples-to-apples. It goes out of its way, for example, to disable
-# Unicode mode for RE2[6], but does not do the same for the regex crate. PCRE2
-# also has Unicode mode disabled (which is the default). Anyway, we disable
-# Unicode for almost all benchmarks, since this is a predominantly ASCII. There
-# are a couple benchmarks that make use of Unicode features, and for those, we
-# enable Unicode for all regex engines.
-#
-# [1]: https://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html
-# [2]: https://zherczeg.github.io/sljit/regex_perf.html
-# [3]: https://github.com/zherczeg/sljit/
-# [4]: https://github.com/rust-leipzig/regex-performance
-# [5]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/main.c
-# [6]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/re2.cpp#L13
-# [7]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/rust/src/lib.rs#L17-L20
+analysis = '''
+This benchmark seems to have originated from John Maddock as part of measuring
+the performance of [boost's regex engine][maddock-bench]. It was then [adapted
+by Zoltan Herczeg][herczeg-bench] to benchmark [sljit], the JIT backend for
+PCRE and PCRE2. The benchmark was then further adapted by the [Rust Leipzig
+User Group][leipzig-bench]. The last iteration is the one we use here.
+
+As alluded to in the benchmark methodology, and as demonstrated in the [Leipzig
+runner program][leipzig-runner], the benchmark is of the "find all matches"
+variety. That is, it is not line oriented. It loads the entire haystack into
+memory and then finds all matches.
+
+As appears to be a pattern in regex benchmarks, this one also does not compare
+apples-to-apples. It goes out of its way, for example, to [disable Unicode
+mode for RE2][re2-disable-unicode], but [does not do the same for the regex
+crate][rustregex-enable-unicode]. PCRE2 also has Unicode mode disabled (which
+is the default). Anyway, we disable Unicode for almost all benchmarks, since
+this is a predominantly ASCII benchmark. There are a couple benchmarks that
+make use of Unicode features, and for those, we enable Unicode for all regex
+engines.
+
+[maddock-bench]: https://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html
+[herczeg-bench]: https://zherczeg.github.io/sljit/regex_perf.html
+[sljit]: https://github.com/zherczeg/sljit/
+[leipzig-bench]: https://github.com/rust-leipzig/regex-performance
+[leipzig-runner]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/main.c
+[re2-disable-unicode]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/re2.cpp#L13
+[rustregex-enable-unicode]: https://github.com/rust-leipzig/regex-performance/blob/52cb0538eca86ad549f6895dbfa9a2f71bc82244/src/rust/src/lib.rs#L17-L20
+'''
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "twain"
 regex = 'Twain'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 4055
+count = 811
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "twain-insensitive"
 regex = 'Twain'
 case-insensitive = true
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 4825
+count = 965
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "shing"
 regex = '[a-z]shing'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 9240
+count = 1540
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "huck-saw"
 regex = 'Huck[a-zA-Z]+|Saw[a-zA-Z]+'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 1819
+count = [
+  { engine = 'hyperscan', count = 977 },
+  { engine = '.*', count = 262 },
+]
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "word-ending-nn"
 regex = '\b\w+nn\b'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 1105
+count = 262
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "certain-long-strings-ending-x"
 regex = '[a-q][^u-z]{13}x'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 61_410
+count = 4094
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "tom-sawyer-huckle-finn"
 regex = 'Tom|Sawyer|Huckleberry|Finn'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 8878
+count = 2598
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "tom-sawyer-huckle-fin-insensitive"
 regex = 'Tom|Sawyer|Huckleberry|Finn'
 case-insensitive = true
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 13_668
+count = 4152
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "tom-sawyer-huckle-fin-prefix-short"
 regex = '.{0,2}(Tom|Sawyer|Huckleberry|Finn)'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 13_024
+count = 2598
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "tom-sawyer-huckle-fin-prefix-long"
 regex = '.{2,4}(Tom|Sawyer|Huckleberry|Finn)'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 14_298
+count = [
+  { engine = 'hyperscan', count = 2128 },
+  { engine = '.*', count = 1976 },
+]
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "tom-river"
 regex = 'Tom.{10,25}river|river.{10,25}Tom'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 37
+count = 2
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "ing"
 regex = '[a-zA-Z]+ing'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 571_241
+count = [
+  { engine = 'hyperscan', count = 78_872 },
+  { engine = '.*', count = 78_424 },
+]
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "ing-whitespace"
 regex = '\s[a-zA-Z]{0,12}ing\s'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 521_534
+count = [
+  { engine = 'hyperscan', count = 55_640 },
+  { engine = '.*', count = 55_248 },
+]
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "awyer-inn"
 regex = '([A-Za-z]awyer|[A-Za-z]inn)\s'
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 1397
+count = 209
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "quotes-bounded"
 regex = '''["'][^"']{0,30}[?!\.]["']'''
 haystack = { path = "imported/leipzig-3200.txt" }
-count = 160_586
+count = [
+  { engine = 'hyperscan', count = 8_898 },
+  { engine = '.*', count = 8_886 },
+]
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "non-ascii-alternate"
 regex = '∞|✓'
 haystack = { path = "imported/leipzig-3200.txt" }
 unicode = true
-count = 6
+count = 2
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]
 
 [[bench]]
-model = "count-spans"
+model = "count"
 name = "math-symbols"
 regex = '\p{Sm}'
 haystack = { path = "imported/leipzig-3200.txt" }
 unicode = true
-count = 71
+count = 69
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  # 'regress', # does not support \p{Sm}
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  # 'python/re', # does not support \p{Sm}
-  'python/regex',
 ]
+analysis = '''
+* `python/re` doesn't support `\p{Sm}`.
+'''
 
 [[bench]]
 model = "count-spans"
@@ -359,14 +498,21 @@ regex = '(.*?,){13}z'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 0
 engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
   'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
-  'regress',
-  're2',
-  'go/regexp',
-  'pcre2/jit',
-  'pcre2',
-  'python/re',
-  'python/regex',
 ]

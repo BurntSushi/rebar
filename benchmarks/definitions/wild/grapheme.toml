@@ -1,8 +1,11 @@
-# At time of writing, the Rust bstr crate uses a regex for finding graphemes[1]
-# and builds a full DFA from it. Someone might also conceivably use this with
-# the regex crate, so we benchmark its compilation and search time.
-#
-# [1]: https://github.com/BurntSushi/bstr/blob/65993b58be1547bfc0de9ad8c1c8f3d3fcb0a32f/scripts/regex/grapheme.sh
+analysis = '''
+At time of writing, the Rust [`bstr` crate uses a regex for finding
+graphemes][bstr-regex-grapheme] and builds a full DFA from it. Someone might
+also conceivably use this with the regex crate, so we benchmark its compilation
+and search time.
+
+[bstr-regex-grapheme]: https://github.com/BurntSushi/bstr/blob/65993b58be1547bfc0de9ad8c1c8f3d3fcb0a32f/scripts/regex/grapheme.sh
+'''
 
 [[bench]]
 model = "compile"
@@ -40,10 +43,6 @@ engines = [
   'python/regex',
 ]
 
-# This looks for graphemes in a file that contains a sequence of all
-# codepoints. This is somewhat pathological, but it pushes the regex engines
-# inside the regex crate to their limit, especially the lazy DFA, because it
-# forces the transition table to get substantially filled out.
 [[bench]]
 model = "count"
 name = "codepoints"
@@ -59,3 +58,9 @@ engines = [
   'rust/regexold',
   'python/regex',
 ]
+analysis = '''
+This looks for graphemes in a file that contains a sequence of all codepoints.
+This is somewhat pathological, but it pushes the regex engines inside the regex
+crate to their limit, especially the lazy DFA, because it forces the transition
+table to get substantially filled out.
+'''

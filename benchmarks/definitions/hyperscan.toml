@@ -1,10 +1,11 @@
-# These benchamrks are somewhat explicitly crafted for Hyperscan because
-# it diverges from most other regex engines in that it reports every match
-# location. We also in particular focus on the impact of asking Hyperscan for
-# the start of each match (SOM). Namely, the 'count' model only requires the
-# engine to count all matches which doesn't require finding the SOM of any
-# match at all, but the 'count-spans' model does require finding the SOM of a
-# match.
+analysis = '''
+These benchamrks are somewhat explicitly crafted for Hyperscan because it
+diverges from most other regex engines in that it reports every match location.
+We also in particular focus on the impact of asking Hyperscan for the start of
+each match (SOM). Namely, the `count` model only requires the engine to count
+all matches which doesn't require finding the SOM of any match at all, but the
+`count-spans` model does require finding the SOM of a match.
+'''
 
 [[bench]]
 model = "count"
@@ -13,8 +14,8 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -24,8 +25,8 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 15
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -36,8 +37,8 @@ case-insensitive = true
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -48,8 +49,8 @@ case-insensitive = true
 haystack = { path = "opensubtitles/en-huge.txt" }
 count = 15
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -60,8 +61,8 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
 count = 1
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -72,8 +73,8 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
 count = 23
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -85,8 +86,8 @@ unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 1
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -98,12 +99,10 @@ unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 23
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
-# The 'literal-suffix' benchmarks test how Hyperscan does with a literal at
-# the end of a regex.
 [[bench]]
 model = "count"
 name = "literal-suffix-nosom"
@@ -111,8 +110,8 @@ regex = '\w+\s+Holmes'
 haystack = { path = "sherlock.txt" }
 count = 319
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -122,8 +121,8 @@ regex = '\w+\s+Holmes'
 haystack = { path = "sherlock.txt" }
 count = 4073
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 # The 'literal-inner' benchmarks test how Hyperscan does with a literal that is
@@ -137,8 +136,8 @@ regex = '\b\w+\s+Holmes\s+\w+\b'
 haystack = { path = "sherlock.txt" }
 count = 137
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -148,8 +147,8 @@ regex = '\b\w+\s+Holmes\s+\w+\b'
 haystack = { path = "sherlock.txt" }
 count = 2593
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 # The 'fixed-length-words' benchmarks are specifically designed to omit any
@@ -161,8 +160,8 @@ regex = '\w{5}\s\w{6}\s\w{7}'
 haystack = { path = "sherlock.txt" }
 count = 120
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -172,8 +171,8 @@ regex = '\w{5}\s\w{6}\s\w{7}'
 haystack = { path = "sherlock.txt" }
 count = 2400
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
 
 # This one enables Unicode mode, which slows Hyperscan down quite a bit.
@@ -188,6 +187,6 @@ unicode = true
 haystack = { path = "sherlock.txt" }
 count = 120
 engines = [
-  'rust/regex/meta',
   'hyperscan',
+  'rust/regex/meta',
 ]
