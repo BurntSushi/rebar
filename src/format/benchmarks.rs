@@ -11,7 +11,10 @@ use {
     once_cell::sync::Lazy,
 };
 
-use crate::{args::Filter, util};
+use crate::{
+    args::{Filter, Filters},
+    util,
+};
 
 #[derive(Clone, Debug)]
 pub struct Benchmarks {
@@ -59,8 +62,10 @@ impl Benchmarks {
     ) -> anyhow::Result<Definition> {
         // This is a little cumbersome, but we go to war with the army we have.
         let pattern = format!("^(?:{})$", regex_syntax::escape(&name));
-        let mut filters = Filters::new();
-        filters.name(Filter::from_pattern(&pattern)?);
+        let filters = Filters {
+            name: Filter::from_pattern(&pattern)?,
+            ..Filters::default()
+        };
         let mut defs = Benchmarks::from_dir(dir, &filters)?;
         anyhow::ensure!(
             defs.defs.len() == 1,
@@ -96,40 +101,6 @@ impl Benchmarks {
             defs,
             analysis: wire.all_analysis,
         })
-    }
-}
-
-#[derive(Clone, Debug, Default)]
-pub struct Filters {
-    name: Filter,
-    model: Filter,
-    engine: Filter,
-    ignore_missing_engines: bool,
-}
-
-impl Filters {
-    pub fn new() -> Filters {
-        Filters::default()
-    }
-
-    pub fn name(&mut self, filter: Filter) -> &mut Filters {
-        self.name = filter;
-        self
-    }
-
-    pub fn model(&mut self, filter: Filter) -> &mut Filters {
-        self.model = filter;
-        self
-    }
-
-    pub fn engine(&mut self, filter: Filter) -> &mut Filters {
-        self.engine = filter;
-        self
-    }
-
-    pub fn ignore_missing_engines(&mut self, yes: bool) -> &mut Filters {
-        self.ignore_missing_engines = yes;
-        self
     }
 }
 
@@ -536,7 +507,7 @@ impl WireDefinitions {
     /// top-level 'haystacks' and 'regexes' directories are skipped.
     fn load_dir(&mut self, dir: &Path) -> anyhow::Result<()> {
         let dir = dir.join("definitions");
-        for result in walkdir::WalkDir::new(&dir) {
+        for result in walkdir::WalkDir::new(&dir).sort_by_file_name() {
             let dent = result?;
             if !dent.file_type().is_file() {
                 continue;

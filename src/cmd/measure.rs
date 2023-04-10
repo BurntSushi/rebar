@@ -8,9 +8,9 @@ use std::{
 use {anyhow::Context, bstr::ByteSlice};
 
 use crate::{
-    args::{self, Filter, Usage},
+    args::{self, Filter, Filters, Usage},
     format::{
-        benchmarks::{Benchmarks, Definition, Engine, Filters},
+        benchmarks::{Benchmarks, Definition, Engine},
         measurement::{Aggregate, AggregateTimes, Measurement},
     },
     util::{self, ShortHumanDuration},
@@ -169,10 +169,11 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
             // While we did run the engine filter above when we initially
             // collected our benchmarks, we run it again because the filter
             // above only excludes benchmark definitions that have no matching
-            // engines at all. But we might still run a subset. So why do we
-            // run it above? Well, this way, we avoid loading haystacks into
-            // memory that will never be used.
-            if !config.engine_filter.include(&b.engine.name) {
+            // engines at all. But we might still run a subset of the engines
+            // in a particular benchmark definition. So why do we run it above?
+            // Well, this way, we avoid loading haystacks into memory that will
+            // never be used.
+            if !config.filters.engine.include(&b.engine.name) {
                 continue;
             }
             exec_benchmarks.push(b);
@@ -258,19 +259,10 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
 struct Config {
     /// The directory to find benchmark definitions and haystacks.
     dir: PathBuf,
-    /// The filter to apply to benchmark "full names." That is, the name in
-    /// the format of {benchmark_type}/{group}/{name}.
-    bench_filter: Filter,
-    /// The filter to apply to regex engine name.
-    engine_filter: Filter,
-    /// A filter to be applied to benchmark model name.
-    model_filter: Filter,
+    /// The benchmark name, model and regex engine filters.
+    filters: Filters,
     /// Various parameters to control how ever benchmark is executed.
     bench_config: ExecBenchmarkConfig,
-    /// When enabled, just filter out engines for which version information
-    /// is not known. (Usually this means the regex engine is unavailable for
-    /// one reason or another.)
-    ignore_missing_engines: bool,
     /// Whether to just list the benchmarks that will be executed and
     /// then quit. This also tests that all of the benchmark data can be
     /// deserialized.
@@ -297,19 +289,19 @@ impl Config {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                    c.filters.engine.arg_whitelist(p, "-e/--engine")?;
                 }
                 Arg::Short('E') | Arg::Long("engine-not") => {
-                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
+                    c.filters.engine.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 Arg::Short('f') | Arg::Long("filter") => {
-                    c.bench_filter.arg_whitelist(p, "-f/--filter")?;
+                    c.filters.name.arg_whitelist(p, "-f/--filter")?;
                 }
                 Arg::Short('F') | Arg::Long("filter-not") => {
-                    c.bench_filter.arg_blacklist(p, "-F/--filter-not")?;
+                    c.filters.name.arg_blacklist(p, "-F/--filter-not")?;
                 }
                 Arg::Short('i') | Arg::Long("ignore-missing-engines") => {
-                    c.ignore_missing_engines = true;
+                    c.filters.ignore_missing_engines = true;
                 }
                 Arg::Long("list") => {
                     c.list = true;
@@ -334,10 +326,10 @@ impl Config {
                     c.bench_config.max_warmup_time = Duration::from(hdur);
                 }
                 Arg::Short('m') | Arg::Long("model") => {
-                    c.model_filter.arg_whitelist(p, "-m/--model")?;
+                    c.filters.model.arg_whitelist(p, "-m/--model")?;
                 }
                 Arg::Short('M') | Arg::Long("model-not") => {
-                    c.model_filter.arg_blacklist(p, "-M/--model-not")?;
+                    c.filters.model.arg_blacklist(p, "-M/--model-not")?;
                 }
                 Arg::Short('t') | Arg::Long("test") => {
                     c.verbose = true;
@@ -363,13 +355,7 @@ impl Config {
     /// Read and parse benchmark definitions from TOML files in the --dir
     /// directory.
     fn read_benchmarks(&self) -> anyhow::Result<Benchmarks> {
-        let mut filters = Filters::new();
-        filters
-            .name(self.bench_filter.clone())
-            .engine(self.engine_filter.clone())
-            .model(self.model_filter.clone())
-            .ignore_missing_engines(self.ignore_missing_engines);
-        Benchmarks::from_dir(&self.dir, &filters)
+        Benchmarks::from_dir(&self.dir, &self.filters)
     }
 }
 

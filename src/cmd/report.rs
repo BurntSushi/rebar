@@ -10,11 +10,12 @@ use {
 };
 
 use crate::{
-    args::{self, Filter, Stat, Units, Usage},
+    args::{self, Filter, Filters, Stat, Units, Usage},
     format::{
-        benchmarks::{Benchmarks, Definition, Engines, Filters},
+        benchmarks::{Benchmarks, Definition, Engines},
         measurement::Measurement,
     },
+    grouped::{ByBenchmarkName, ByBenchmarkNameGroup, EngineSummary},
     util::ShortHumanDuration,
 };
 
@@ -120,20 +121,13 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let config = Config::parse(p)?;
     let measurements = config.read_measurements()?;
     let benchmarks = config.read_benchmarks(&measurements)?;
-    let engines_defined = benchmarks.engines.clone();
+    let engines = benchmarks.engines.clone();
     let analysis = benchmarks.analysis.clone();
-    let flattened = Flattened::new(benchmarks, measurements)?;
-    let engines_measured = flattened.engines(&config)?;
-    let tree = Tree::new(flattened);
+    let grouped =
+        ByBenchmarkName::new(&measurements)?.associate(benchmarks.defs)?;
+    let tree = Tree::new(grouped.clone());
     let mut out = vec![];
-    markdown(
-        &config,
-        &engines_defined,
-        &engines_measured,
-        &analysis,
-        &tree,
-        &mut out,
-    )?;
+    markdown(&config, &engines, grouped, &analysis, &tree, &mut out)?;
     if let Some(ref path) = config.splice {
         splice(path, &out)?;
     } else {
@@ -151,12 +145,8 @@ struct Config {
     dir: PathBuf,
     /// A Markdown file to splice the report into.
     splice: Option<PathBuf>,
-    /// A filter to be applied to benchmark "full names."
-    bench_filter: Filter,
-    /// A filter to be applied to regex engine names.
-    engine_filter: Filter,
-    /// A filter to be applied to benchmark model name.
-    model_filter: Filter,
+    /// The benchmark name, model and regex engine filters.
+    filters: Filters,
     /// Whether to only consider benchmarks containing all regex engines.
     intersection: bool,
     /// The statistic we want to compare.
@@ -176,6 +166,7 @@ impl Config {
 
         let mut c = Config::default();
         c.dir = PathBuf::from("benchmarks");
+        c.filters.ignore_missing_engines = true;
         while let Some(arg) = p.next()? {
             match arg {
                 Arg::Value(v) => c.csv_paths.push(PathBuf::from(v)),
@@ -185,25 +176,25 @@ impl Config {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                    c.filters.engine.arg_whitelist(p, "-e/--engine")?;
                 }
                 Arg::Short('E') | Arg::Long("engine-not") => {
-                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
+                    c.filters.engine.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 Arg::Short('f') | Arg::Long("filter") => {
-                    c.bench_filter.arg_whitelist(p, "-f/--filter")?;
+                    c.filters.name.arg_whitelist(p, "-f/--filter")?;
                 }
                 Arg::Short('F') | Arg::Long("filter-not") => {
-                    c.bench_filter.arg_blacklist(p, "-F/--filter-not")?;
+                    c.filters.name.arg_blacklist(p, "-F/--filter-not")?;
                 }
                 Arg::Long("intersection") => {
                     c.intersection = true;
                 }
                 Arg::Short('m') | Arg::Long("model") => {
-                    c.model_filter.arg_whitelist(p, "-m/--model")?;
+                    c.filters.model.arg_whitelist(p, "-m/--model")?;
                 }
                 Arg::Short('M') | Arg::Long("model-not") => {
-                    c.model_filter.arg_blacklist(p, "-M/--model-not")?;
+                    c.filters.model.arg_blacklist(p, "-M/--model-not")?;
                 }
                 Arg::Long("ratio") => {
                     c.ratio = true;
@@ -258,11 +249,13 @@ impl Config {
         let bench_filter = Filter::from_pattern(&pat)
             .context("failed to build filter for benchmark names")?;
 
-        let mut filters = Filters::new();
-        filters
-            .name(bench_filter)
-            .engine(engine_filter)
-            .ignore_missing_engines(true);
+        let filters = Filters {
+            name: bench_filter,
+            engine: engine_filter,
+            model: Filter::default(),
+            ignore_missing_engines: true,
+        };
+
         let mut benchmarks = Benchmarks::from_dir(&self.dir, &filters)?;
         // Sort benchmarks by their group name so that they appear in a
         // consistent order. We retain the order of benchmarks within a
@@ -279,8 +272,6 @@ impl Config {
     /// benchmark name and regex engine pair), then an error is returned.
     fn read_measurements(&self) -> anyhow::Result<Vec<Measurement>> {
         let mut measurements = vec![];
-        // A set of (benchmark full name, regex engine name) pairs.
-        // let mut seen: BTreeSet<(String, String)> = BTreeSet::new();
         // A map from benchmark full name to the set of regex engines
         // for which we have measurements.
         let mut name_to_engines: BTreeMap<String, BTreeSet<String>> =
@@ -297,13 +288,7 @@ impl Config {
                     );
                     continue;
                 }
-                if !self.bench_filter.include(&m.name) {
-                    continue;
-                }
-                if !self.engine_filter.include(&m.engine) {
-                    continue;
-                }
-                if !self.model_filter.include(&m.model) {
+                if !self.filters.include(&m) {
                     continue;
                 }
                 if !name_to_engines.contains_key(&m.name) {
@@ -335,247 +320,30 @@ impl Config {
     }
 }
 
-#[derive(Clone, Debug)]
-struct Flattened {
-    results: Vec<DefMeasurement>,
-}
-
-impl Flattened {
-    fn new(
-        benchmarks: Benchmarks,
-        measurements: Vec<Measurement>,
-    ) -> anyhow::Result<Flattened> {
-        // Collect all of our definitions into a set keyed on (benchmark
-        // name, engine name), and then ensure that every measurement has a
-        // corresponding benchmark definition. This might not be true if the
-        // measurements are stale and the definitions, e.g., got renamed or
-        // removed.
-        let mut set: BTreeSet<(String, String)> = BTreeSet::new();
-        for def in benchmarks.defs.iter() {
-            for engine in def.engines.iter() {
-                set.insert((
-                    def.name.as_str().to_string(),
-                    engine.name.clone(),
-                ));
-            }
-        }
-        // While we check that every measurement has a corresponding
-        // definition, we also group them by name and then by engine. This lets
-        // us then associate each measurement with a definition.
-        let mut map = BTreeMap::new();
-        for m in measurements.iter() {
-            if !set.contains(&(m.name.clone(), m.engine.clone())) {
-                log::warn!(
-                    "could not find '{}' and engine '{}' in set of benchmark \
-                     definitions, so rebar will drop \
-                     the measurement and continue",
-                    m.name,
-                    m.engine,
-                );
-                continue;
-            }
-            let result = map
-                .entry(m.name.clone())
-                .or_insert(BTreeMap::default())
-                .insert(m.engine.clone(), m.clone());
-            anyhow::ensure!(
-                result.is_none(),
-                "found measurement for benchmark '{}' with duplicative \
-                 engine name '{}'",
-                m.name,
-                m.engine,
-            );
-        }
-        // Finally associated each definition with a measurement to create
-        // a sequence of flattened results.
-        let mut flattened = Flattened { results: vec![] };
-        for def in benchmarks.defs {
-            // OK because we used a filter to select our benchmark definitions
-            // that was derived from our measurements. So we shouldn't have
-            // definitions that don't have a corresponding measurement.
-            let measurements_by_engine = map.get(def.name.as_str()).unwrap();
-            let mut defm =
-                DefMeasurement { def, measurements: BTreeMap::new() };
-            for engine in defm.def.engines.iter() {
-                // It's possible for this to fail, because we might be missing
-                // a measurement for a specific engine on one particular
-                // benchmark, but not in others. We would have warned about
-                // this previously.
-                let m = match measurements_by_engine.get(&engine.name) {
-                    Some(m) => m,
-                    None => continue,
-                };
-                let result =
-                    defm.measurements.insert(engine.name.clone(), m.clone());
-                // This should never happen because the benchmark definition
-                // format won't allow it and will return an error at load time.
-                assert!(
-                    result.is_none(),
-                    "found benchmark '{}' with duplicate engine '{}'",
-                    defm.def.name,
-                    engine.name,
-                );
-            }
-            flattened.results.push(defm);
-        }
-        Ok(flattened)
-    }
-
-    /// Returns all of the engines (name, version and geometric mean of speed
-    /// ratios) from the *measurements*.
-    ///
-    /// Technically the same information is available via the benchmark
-    /// definitions, but that reflects the *current* version at the time of
-    /// report generation and not the version at the time the measurements
-    /// were collected. It's likely that reports are generated right after
-    /// collecting measurements, but in case it isn't, the version information
-    /// in the report could wind up being quite misleading if we don't take
-    /// it directly from measurements.
-    fn engines(&self, c: &Config) -> anyhow::Result<Vec<Engine>> {
-        #[derive(Debug)]
-        struct EngineDist {
-            name: String,
-            version: String,
-            ratios_compile: Vec<f64>,
-            ratios_search: Vec<f64>,
-        }
-
-        // Measurement data is just a flattened set of rows, so there is no
-        // guarantee that the version remains the same for every regex engine.
-        // So we explicitly check that invariant here.
-        let mut map: BTreeMap<String, EngineDist> = BTreeMap::new();
-        for defm in self.results.iter() {
-            for m in defm.measurements.values() {
-                let e = map.entry(m.engine.clone()).or_insert_with(|| {
-                    EngineDist {
-                        name: m.engine.clone(),
-                        version: m.version.clone(),
-                        ratios_compile: vec![],
-                        ratios_search: vec![],
-                    }
-                });
-                anyhow::ensure!(
-                    e.version == m.version,
-                    "found two different versions in measurements \
-                     for engine '{}': '{}' and '{}'",
-                    m.engine,
-                    e.version,
-                    m.version,
-                );
-                if m.model == "compile" {
-                    e.ratios_compile.push(defm.ratio(&m.engine, c.stat));
-                } else {
-                    e.ratios_search.push(defm.ratio(&m.engine, c.stat));
-                }
-            }
-        }
-        let engines: Vec<Engine> = map
-            .into_iter()
-            .map(|(_, edist)| {
-                let count_compile = edist.ratios_compile.len();
-                let mut geomean_compile = 1.0;
-                for &ratio in edist.ratios_compile.iter() {
-                    geomean_compile *= ratio.powf(1.0 / count_compile as f64);
-                }
-
-                let mut geomean_search = 1.0;
-                let count_search = edist.ratios_search.len();
-                for &ratio in edist.ratios_search.iter() {
-                    geomean_search *= ratio.powf(1.0 / count_search as f64);
-                }
-
-                Engine {
-                    name: edist.name,
-                    version: edist.version,
-                    geomean_compile,
-                    geomean_search,
-                    count_compile,
-                    count_search,
-                }
-            })
-            .collect();
-        Ok(engines)
-    }
-}
-
-/// An engine name and its version, along with some aggregate statistics
-/// across all measurements, taken from the results and *not* the benchmark
-/// definitions. That is, the versions represent the regex versions recorded at
-/// the time of measurement and not the time of report generation.
-#[derive(Clone, Debug)]
-struct Engine {
-    name: String,
-    version: String,
-    geomean_compile: f64,
-    geomean_search: f64,
-    count_compile: usize,
-    count_search: usize,
-}
-
-#[derive(Clone, Debug)]
-struct DefMeasurement {
-    /// The definition of the benchmark that measurements were captured for.
-    def: Definition,
-    /// A map from engine name to the corresponding measurement for this
-    /// benchmark.
-    measurements: BTreeMap<String, Measurement>,
-}
-
-impl DefMeasurement {
-    /// Return the ratio between the 'this' engine and the best benchmark in
-    /// the group. The 'this' is the best, then the ratio returned is 1.0.
-    /// Thus, the ratio is how many times slower this engine is from the best
-    /// for this particular benchmark.
-    fn ratio(&self, this: &str, stat: Stat) -> f64 {
-        if self.measurements.len() < 2 {
-            // I believe this is a redundant base case.
-            return 1.0;
-        }
-        let this = self.measurements[this].duration(stat).as_secs_f64();
-        let best =
-            self.measurements[self.best(stat)].duration(stat).as_secs_f64();
-        this / best
-    }
-
-    /// Return the engine name of the best measurement in this group. The name
-    /// returned is guaranteed to exist in this group.
-    fn best(&self, stat: Stat) -> &str {
-        let mut it = self.measurements.iter();
-        let mut best_engine = it.next().unwrap().0;
-        for (engine, candidate) in self.measurements.iter() {
-            let best = &self.measurements[best_engine];
-            if candidate.duration(stat) < best.duration(stat) {
-                best_engine = engine;
-            }
-        }
-        best_engine
-    }
-}
-
 /// A tree representation of results.
 #[derive(Clone, Debug)]
 enum Tree {
     Node { name: String, children: Vec<Tree> },
-    Leaf(DefMeasurement),
+    Leaf(ByBenchmarkNameGroup<Definition>),
 }
 
 impl Tree {
     /// Create a new tree of results from a flattened set of results.
-    fn new(flattened: Flattened) -> Tree {
+    fn new(by_name: ByBenchmarkName<Definition>) -> Tree {
         let mut root = Tree::Node { name: String::new(), children: vec![] };
-        for defm in flattened.results {
-            root.add(defm);
+        for group in by_name.groups {
+            root.add(group);
         }
         root
     }
 
     /// Add the given definition measurement to this tree.
-    fn add(&mut self, defm: DefMeasurement) {
+    fn add(&mut self, group: ByBenchmarkNameGroup<Definition>) {
         let mut node = self;
-        for part in defm.def.name.group.split("/") {
+        for part in group.data.name.group.split("/") {
             node = node.find_or_insert(part);
         }
-        node.children().push(Tree::Leaf(defm));
+        node.children().push(Tree::Leaf(group));
     }
 
     /// Looks for a direct child node with the given name and returns it. If
@@ -660,15 +428,15 @@ impl Tree {
     fn name(&self) -> &str {
         match *self {
             Tree::Node { ref name, .. } => name,
-            Tree::Leaf(ref defm) => &defm.def.name.local,
+            Tree::Leaf(ref group) => &group.data.name.local,
         }
     }
 }
 
 fn markdown<W: Write>(
     config: &Config,
-    engines_defined: &Engines,
-    engines_measured: &[Engine],
+    engines: &Engines,
+    grouped: ByBenchmarkName<Definition>,
     analysis: &BTreeMap<String, String>,
     tree: &Tree,
     mut wtr: W,
@@ -681,7 +449,7 @@ fn markdown<W: Write>(
     }
     writeln!(wtr, " -->")?;
 
-    markdown_summary(config, engines_defined, engines_measured, &mut wtr)?;
+    markdown_summary(config, engines, grouped, &mut wtr)?;
     markdown_bench_list(tree, &mut wtr)?;
     markdown_results(config, analysis, tree, &mut wtr)?;
     Ok(())
@@ -721,8 +489,8 @@ benchmark.
 
 fn markdown_summary<W: Write>(
     config: &Config,
-    engines_defined: &Engines,
-    engines_measured: &[Engine],
+    engines: &Engines,
+    grouped: ByBenchmarkName<Definition>,
     mut wtr: W,
 ) -> anyhow::Result<()> {
     let explanation = format!(
@@ -777,58 +545,43 @@ performance profile of any specific regex engine or workload.
     writeln!(wtr, "{}", explanation.trim())?;
     writeln!(wtr, "")?;
 
+    let (grouped_compile, grouped_search) =
+        grouped.partition(|g| g.data.model == "compile");
     writeln!(wtr, "#### Summary of search-time benchmarks")?;
     writeln!(wtr, "")?;
-    writeln!(wtr, "| Engine | Version | Geometric mean of speed ratios | Benchmark count |")?;
-    writeln!(wtr, "| ------ | ------- | ------------------------------ | --------------- |")?;
-    let mut measured = engines_measured.to_vec();
-    measured.sort_by(|e1, e2| e1.geomean_search.total_cmp(&e2.geomean_search));
-    for emeasured in measured.iter() {
-        if let Some(ref re) = config.summary_exclude {
-            if re.is_match(&emeasured.name) {
-                continue;
-            }
-        }
-        if emeasured.count_search == 0 {
-            continue;
-        }
-        write!(wtr, "| ")?;
-        // We want to link to the directory containing the runner program
-        // for each engine, but this relies on 'cwd' being set in the engine
-        // definition. It might not be. It's not required. But in practice, all
-        // do it.
-        let linkdir = engines_defined
-            .by_name
-            .get(&emeasured.name)
-            .and_then(|e| e.run.cwd.as_ref());
-        match linkdir {
-            None => write!(wtr, "{}", emeasured.name)?,
-            Some(dir) => write!(wtr, "[{}]({})", emeasured.name, dir)?,
-        }
-        writeln!(
-            wtr,
-            " | {} | {:.2} | {} |",
-            emeasured.version,
-            emeasured.geomean_search,
-            emeasured.count_search,
-        )?;
-    }
-    writeln!(wtr, "")?;
-
+    markdown_summary_table(
+        config,
+        engines,
+        &grouped_search.ranking(config.stat)?,
+        &mut wtr,
+    )?;
     writeln!(wtr, "#### Summary of compile-time benchmarks")?;
     writeln!(wtr, "")?;
+    markdown_summary_table(
+        config,
+        engines,
+        &grouped_compile.ranking(config.stat)?,
+        &mut wtr,
+    )?;
+
+    Ok(())
+}
+
+fn markdown_summary_table<W: Write>(
+    config: &Config,
+    engines: &Engines,
+    summaries: &[EngineSummary],
+    mut wtr: W,
+) -> anyhow::Result<()> {
     writeln!(wtr, "| Engine | Version | Geometric mean of speed ratios | Benchmark count |")?;
     writeln!(wtr, "| ------ | ------- | ------------------------------ | --------------- |")?;
-    let mut measured = engines_measured.to_vec();
-    measured
-        .sort_by(|e1, e2| e1.geomean_compile.total_cmp(&e2.geomean_compile));
-    for emeasured in measured.iter() {
+    for summary in summaries.iter() {
         if let Some(ref re) = config.summary_exclude {
-            if re.is_match(&emeasured.name) {
+            if re.is_match(&summary.name) {
                 continue;
             }
         }
-        if emeasured.count_compile == 0 {
+        if summary.count == 0 {
             continue;
         }
         write!(wtr, "| ")?;
@@ -836,24 +589,21 @@ performance profile of any specific regex engine or workload.
         // for each engine, but this relies on 'cwd' being set in the engine
         // definition. It might not be. It's not required. But in practice, all
         // do it.
-        let linkdir = engines_defined
+        let linkdir = engines
             .by_name
-            .get(&emeasured.name)
+            .get(&summary.name)
             .and_then(|e| e.run.cwd.as_ref());
         match linkdir {
-            None => write!(wtr, "{}", emeasured.name)?,
-            Some(dir) => write!(wtr, "[{}]({})", emeasured.name, dir)?,
+            None => write!(wtr, "{}", summary.name)?,
+            Some(dir) => write!(wtr, "[{}]({})", summary.name, dir)?,
         }
         writeln!(
             wtr,
             " | {} | {:.2} | {} |",
-            emeasured.version,
-            emeasured.geomean_compile,
-            emeasured.count_compile,
+            summary.version, summary.geomean, summary.count,
         )?;
     }
     writeln!(wtr, "")?;
-
     Ok(())
 }
 
@@ -891,39 +641,39 @@ fn markdown_results<W: Write>(
 fn markdown_result_group<W: Write>(
     config: &Config,
     analysis: &BTreeMap<String, String>,
-    defms: &[&DefMeasurement],
+    groups: &[&ByBenchmarkNameGroup<Definition>],
     wtr: &mut W,
 ) -> anyhow::Result<()> {
-    if defms.is_empty() {
+    if groups.is_empty() {
         writeln!(wtr, "NO MEASUREMENTS TO REPORT")?;
         return Ok(());
     }
-    if let Some(ref analysis) = analysis.get(&defms[0].def.name.group) {
+    if let Some(ref analysis) = analysis.get(&groups[0].data.name.group) {
         writeln!(wtr, "{}", analysis.trim())?;
         writeln!(wtr, "")?;
     }
 
     write!(wtr, "| Engine |")?;
-    for defm in defms.iter() {
-        write!(wtr, " {} |", defm.def.name.local)?;
+    for group in groups.iter() {
+        write!(wtr, " {} |", group.data.name.local)?;
     }
     writeln!(wtr, "")?;
     write!(wtr, "| - |")?;
-    for _ in defms.iter() {
+    for _ in groups.iter() {
         write!(wtr, " - |")?;
     }
     writeln!(wtr, "")?;
 
     let mut engines = BTreeSet::new();
-    for defm in defms.iter() {
-        for e in defm.measurements.keys() {
+    for group in groups.iter() {
+        for e in group.by_engine.keys() {
             engines.insert(e.clone());
         }
     }
     for e in engines.iter() {
         write!(wtr, "| {} |", e)?;
-        for defm in defms.iter() {
-            let m = match defm.measurements.get(e) {
+        for group in groups.iter() {
+            let m = match group.by_engine.get(e) {
                 None => {
                     write!(wtr, " - |")?;
                     continue;
@@ -931,8 +681,8 @@ fn markdown_result_group<W: Write>(
                 Some(m) => m,
             };
             write!(wtr, " ")?;
-            let ratio = defm.ratio(e, config.stat);
-            let is_best = e == defm.best(config.stat);
+            let ratio = group.ratio(e, config.stat).unwrap();
+            let is_best = e == group.best(config.stat);
             if is_best {
                 write!(wtr, "**")?;
             }
@@ -962,34 +712,36 @@ fn markdown_result_group<W: Write>(
     writeln!(wtr, "<details>")?;
     writeln!(wtr, "<summary>Show individual benchmark parameters.</summary>")?;
     writeln!(wtr, "")?;
-    for defm in defms.iter() {
-        writeln!(wtr, "**{}**", defm.def.name.local)?;
+    for group in groups.iter() {
+        let def = &group.data;
+
+        writeln!(wtr, "**{}**", def.name.local)?;
         writeln!(wtr, "")?;
 
         writeln!(wtr, "| Parameter | Value |")?;
         writeln!(wtr, "| --------- | ----- |")?;
-        writeln!(wtr, "| full name | `{}` |", defm.def.name)?;
+        writeln!(wtr, "| full name | `{}` |", def.name)?;
         writeln!(
             wtr,
             "| model | [`{model}`](MODELS.md#{model}) |",
-            model = defm.def.model
+            model = def.model
         )?;
-        if let Some(ref path) = defm.def.regex_path {
+        if let Some(ref path) = def.regex_path {
             writeln!(
                 wtr,
                 "| regex-path | [`{path}`](benchmarks/regexes/{path}) |",
                 path = path,
             )?;
-        } else if defm.def.regexes.is_empty() {
+        } else if def.regexes.is_empty() {
             writeln!(wtr, "| regex | NONE |")?;
-        } else if defm.def.regexes.len() == 1 {
+        } else if def.regexes.len() == 1 {
             writeln!(
                 wtr,
                 "| regex | `````{}````` |",
-                markdown_table_escape(&defm.def.regexes[0])
+                markdown_table_escape(&def.regexes[0])
             )?;
         } else {
-            for (i, re) in defm.def.regexes.iter().enumerate() {
+            for (i, re) in def.regexes.iter().enumerate() {
                 writeln!(
                     wtr,
                     "| regex({}) | `````{}````` |",
@@ -1001,10 +753,10 @@ fn markdown_result_group<W: Write>(
         writeln!(
             wtr,
             "| case-insensitive | `{}` |",
-            defm.def.options.case_insensitive
+            def.options.case_insensitive
         )?;
-        writeln!(wtr, "| unicode | `{}` |", defm.def.options.unicode)?;
-        if let Some(ref path) = defm.def.haystack_path {
+        writeln!(wtr, "| unicode | `{}` |", def.options.unicode)?;
+        if let Some(ref path) = def.haystack_path {
             writeln!(
                 wtr,
                 "| haystack-path | [`{path}`](benchmarks/haystacks/{path}) |",
@@ -1013,7 +765,7 @@ fn markdown_result_group<W: Write>(
         } else {
             const LIMIT: usize = 60;
             write!(wtr, "| haystack | ")?;
-            let haystack = &defm.def.haystack;
+            let haystack = &def.haystack;
             if haystack.len() > LIMIT {
                 write!(wtr, "`{} [.. snip ..]`", haystack[..LIMIT].as_bstr())?;
             } else {
@@ -1021,18 +773,12 @@ fn markdown_result_group<W: Write>(
             }
             writeln!(wtr, " |")?;
         }
-        for ec in defm.def.count.iter() {
-            writeln!(
-                wtr,
-                "| count(`{}`) | {} |",
-                ec.engine,
-                // engine.replace("*", r"\*"),
-                ec.count,
-            )?;
+        for ec in def.count.iter() {
+            writeln!(wtr, "| count(`{}`) | {} |", ec.engine, ec.count,)?;
         }
 
         writeln!(wtr, "")?;
-        if let Some(ref analysis) = defm.def.analysis {
+        if let Some(ref analysis) = def.analysis {
             writeln!(wtr, "{}", analysis.trim())?;
         }
         writeln!(wtr, "")?;

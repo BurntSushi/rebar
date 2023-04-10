@@ -9,6 +9,8 @@ use {
     regex::Regex,
 };
 
+use crate::format::measurement::Measurement;
+
 /// Parses the argument from the given parser as a command name, and returns
 /// it. If the next arg isn't a simple valuem then this returns an error.
 ///
@@ -151,6 +153,36 @@ impl std::str::FromStr for Color {
             }
         };
         Ok(color)
+    }
+}
+
+/// A group of filters that usually applies in most contexts. That is, it
+/// contains filters for benchmark name, benchmark model and regex engine.
+#[derive(Clone, Debug, Default)]
+pub struct Filters {
+    pub name: Filter,
+    pub model: Filter,
+    pub engine: Filter,
+    /// When enabled, just filter out engines for which version information
+    /// is not known. (Usually this means the regex engine is unavailable for
+    /// one reason or another.)
+    pub ignore_missing_engines: bool,
+}
+
+impl Filters {
+    /// A convenience routine for checking whether the given measurement should
+    /// be included with respect to the this filter.
+    pub fn include(&self, m: &Measurement) -> bool {
+        if !self.name.include(&m.name) {
+            return false;
+        }
+        if !self.engine.include(&m.engine) {
+            return false;
+        }
+        if !self.model.include(&m.model) {
+            return false;
+        }
+        true
     }
 }
 

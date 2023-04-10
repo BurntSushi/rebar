@@ -6,7 +6,7 @@ use std::{
 use unicode_width::UnicodeWidthStr;
 
 use crate::{
-    args::{self, Color, Filter, Stat, Threshold, Units, Usage},
+    args::{self, Color, Filter, Filters, Stat, Threshold, Units, Usage},
     format::measurement::Measurement,
     util::{write_divider, ShortHumanDuration},
 };
@@ -154,12 +154,8 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
 struct Config {
     /// File paths to CSV files.
     csv_paths: Vec<PathBuf>,
-    /// A filter to be applied to benchmark "full names."
-    bench_filter: Filter,
-    /// A filter to be applied to regex engine names.
-    engine_filter: Filter,
-    /// A filter to be applied to benchmark model name.
-    model_filter: Filter,
+    /// The benchmark name, model and regex engine filters.
+    filters: Filters,
     /// The statistic we want to compare.
     stat: Stat,
     /// The statistical units we want to use in our comparisons.
@@ -186,22 +182,22 @@ impl Config {
                     c.color = args::parse(p, "-c/--color")?;
                 }
                 Arg::Short('e') | Arg::Long("engine") => {
-                    c.engine_filter.arg_whitelist(p, "-e/--engine")?;
+                    c.filters.engine.arg_whitelist(p, "-e/--engine")?;
                 }
                 Arg::Short('E') | Arg::Long("engine-not") => {
-                    c.engine_filter.arg_blacklist(p, "-E/--engine-not")?;
+                    c.filters.engine.arg_blacklist(p, "-E/--engine-not")?;
                 }
                 Arg::Short('f') | Arg::Long("filter") => {
-                    c.bench_filter.arg_whitelist(p, "-f/--filter")?;
+                    c.filters.name.arg_whitelist(p, "-f/--filter")?;
                 }
                 Arg::Short('F') | Arg::Long("filter-not") => {
-                    c.bench_filter.arg_blacklist(p, "-F/--filter-not")?;
+                    c.filters.name.arg_blacklist(p, "-F/--filter-not")?;
                 }
                 Arg::Short('m') | Arg::Long("model") => {
-                    c.model_filter.arg_whitelist(p, "-m/--model")?;
+                    c.filters.model.arg_whitelist(p, "-m/--model")?;
                 }
                 Arg::Short('M') | Arg::Long("model-not") => {
-                    c.model_filter.arg_blacklist(p, "-M/--model-not")?;
+                    c.filters.model.arg_blacklist(p, "-M/--model-not")?;
                 }
                 Arg::Short('s') | Arg::Long("statistic") => {
                     c.stat = args::parse(p, "-s/--statistic")?;
@@ -244,13 +240,7 @@ impl Config {
                     );
                     continue;
                 }
-                if !self.bench_filter.include(&m.name) {
-                    continue;
-                }
-                if !self.engine_filter.include(&m.engine) {
-                    continue;
-                }
-                if !self.model_filter.include(&m.model) {
+                if !self.filters.include(&m) {
                     continue;
                 }
                 let pair = (m.name.clone(), m.engine.clone());

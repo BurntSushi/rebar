@@ -3,6 +3,7 @@ use std::io::Write;
 mod args;
 mod cmd;
 mod format;
+mod grouped;
 mod util;
 
 const USAGE: &'static str = "\
