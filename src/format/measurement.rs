@@ -111,8 +111,9 @@ two regex engines. That is, only benchmarks containing measurements for both
 pub struct Measurement {
     pub name: String,
     pub model: String,
+    pub rebar_version: String,
     pub engine: String,
-    pub version: String,
+    pub engine_version: String,
     pub err: Option<String>,
     pub iters: u64,
     pub total: Duration,
@@ -224,8 +225,9 @@ impl Aggregate {
 struct WireMeasurement {
     name: String,
     model: String,
+    rebar_version: String,
     engine: String,
-    version: String,
+    engine_version: String,
     err: Option<String>,
     haystack_len: Option<u64>,
     iters: u64,
@@ -266,8 +268,9 @@ impl From<WireMeasurement> for Measurement {
         Measurement {
             name: w.name,
             model: w.model,
+            rebar_version: w.rebar_version,
             engine: w.engine,
-            version: w.version,
+            engine_version: w.engine_version,
             err: w.err,
             iters: w.iters,
             total: w.total,
@@ -281,8 +284,9 @@ impl From<Measurement> for WireMeasurement {
         WireMeasurement {
             name: m.name,
             model: m.model,
+            rebar_version: m.rebar_version,
             engine: m.engine,
-            version: m.version,
+            engine_version: m.engine_version,
             haystack_len: m.aggregate.tputs.map(|x| x.len),
             err: m.err,
             iters: m.iters,

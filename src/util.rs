@@ -7,6 +7,27 @@ use {
     regex::Regex,
 };
 
+/// The rebar Cargo package version. This environment variable is guaranteed
+/// to be made available by Cargo.
+pub const REBAR_VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
+/// The commit revision hash that rebar was built from. This environment
+/// variable is set by a custom build script, and is only available when `git`
+/// is available.
+pub const REBAR_REVISION: Option<&'static str> = option_env!("REBAR_REVISION");
+
+/// Returns a complete version string for `rebar`.
+///
+/// If `git` was available while building `rebar`, then this includes the
+/// revision hash.
+pub fn version() -> String {
+    let mut s = REBAR_VERSION.to_string();
+    if let Some(rev) = REBAR_REVISION {
+        s.push_str(&format!(" (rev{})", rev));
+    }
+    s
+}
+
 /// A simple little wrapper type around std::time::Duration that permits
 /// serializing and deserializing using a basic human friendly short duration.
 ///

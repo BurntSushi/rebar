@@ -69,14 +69,14 @@ impl ByBenchmarkName<()> {
             }
             match versions.entry(m.engine.clone()) {
                 Entry::Vacant(e) => {
-                    e.insert(m.version.clone());
+                    e.insert(m.engine_version.clone());
                 }
                 Entry::Occupied(e) => {
                     anyhow::ensure!(
-                        e.get() == &m.version,
+                        e.get() == &m.engine_version,
                         "found mismatching versions '{}' and '{}' for \
                          engine '{}'",
-                        m.version,
+                        m.engine_version,
                         e.get(),
                         m.engine,
                     );
@@ -230,7 +230,7 @@ impl<T> ByBenchmarkName<T> {
                 let e = map.entry(m.engine.clone()).or_insert_with(|| {
                     SummaryWithData {
                         name: m.engine.clone(),
-                        version: m.version.clone(),
+                        version: m.engine_version.clone(),
                         ratios: vec![],
                     }
                 });

@@ -193,8 +193,8 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         wtr.flush()?;
         return Ok(());
     }
-    // Or if we just want to check that every benchmark runs correct, do that.
-    // We spit out an error we find.
+    // Or if we just want to check that every benchmark runs correctly, do
+    // that. We spit out any error we find.
     if config.verify {
         let mut errored = false;
         let mut wtr = csv::Writer::from_writer(std::io::stdout());
@@ -212,8 +212,8 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
             } else if config.verbose {
                 wtr.write_record(&[
                     b.def.name.to_string(),
-                    b.engine.name.clone(),
                     b.def.model.to_string(),
+                    b.engine.name.clone(),
                     b.engine.version.clone(),
                     "OK".to_string(),
                 ])?;
@@ -706,8 +706,9 @@ impl ExecBenchmark {
         Measurement {
             name: self.def.name.to_string(),
             model: self.def.model.to_string(),
+            rebar_version: util::version(),
             engine: self.engine.name.clone(),
-            version: self.engine.version.clone(),
+            engine_version: self.engine.version.clone(),
             err: Some(err),
             ..Measurement::default()
         }
@@ -800,8 +801,9 @@ impl Results {
         Measurement {
             name: self.benchmark.def.name.to_string(),
             model: self.benchmark.def.model.to_string(),
+            rebar_version: util::version(),
             engine: self.benchmark.engine.name.clone(),
-            version: self.benchmark.engine.version.clone(),
+            engine_version: self.benchmark.engine.version.clone(),
             err: None,
             // We don't expect iterations to exceed 2**64.
             iters: u64::try_from(samples.len()).unwrap(),

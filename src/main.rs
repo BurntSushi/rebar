@@ -22,6 +22,7 @@ COMMANDS:
     measure   Capture timings to CSV by running benchmarks.
     rank      Print a ranking of regex engines from benchmark results.
     report    Print a Markdown formatted report of benchmark results.
+    version   Print the version of rebar and exit.
 
 ";
 
@@ -53,6 +54,7 @@ fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         "measure" => cmd::measure::run(p),
         "rank" => cmd::rank::run(p),
         "report" => cmd::report::run(p),
+        "version" => cmd::version::run(p),
         unk => anyhow::bail!("unrecognized command '{}'", unk),
     }
 }

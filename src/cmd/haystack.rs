@@ -67,6 +67,9 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
                 }
                 bench_name = Some(name.string()?);
             }
+            Arg::Short('h') | Arg::Long("help") => {
+                anyhow::bail!("{}", usage())
+            }
             Arg::Short('d') | Arg::Long("dir") => {
                 dir = PathBuf::from(p.value().context("-d/--dir")?);
             }

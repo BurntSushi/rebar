@@ -7,3 +7,4 @@ pub mod klv;
 pub mod measure;
 pub mod rank;
 pub mod report;
+pub mod version;

@@ -11,6 +11,7 @@ repository = "https://github.com/BurntSushi/rebar"
 keywords = ["regex", "benchmark", "measurement", "regular", "expression"]
 license = "Unlicense"
 categories = ["text-processing"]
+build = "build.rs"
 edition = "2021"
 
 [workspace]
