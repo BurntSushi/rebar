@@ -20,6 +20,7 @@ COMMANDS:
     haystack  Print the haystack contents of a benchmark to stdout.
     klv       Print the KLV format of a benchmark.
     measure   Capture timings to CSV by running benchmarks.
+    rank      Print a ranking of regex engines from benchmark results.
     report    Print a Markdown formatted report of benchmark results.
 
 ";
@@ -50,6 +51,7 @@ fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         "haystack" => cmd::haystack::run(p),
         "klv" => cmd::klv::run(p),
         "measure" => cmd::measure::run(p),
+        "rank" => cmd::rank::run(p),
         "report" => cmd::report::run(p),
         unk => anyhow::bail!("unrecognized command '{}'", unk),
     }

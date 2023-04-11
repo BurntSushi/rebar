@@ -72,16 +72,14 @@ two regex engines. That is, only benchmarks containing measurements for both
                 if !self.filters.include(&m) {
                     continue;
                 }
-                if !name_to_engines.contains_key(&m.name) {
-                    name_to_engines.insert(m.name.clone(), BTreeSet::new());
-                }
                 let is_new = name_to_engines
                     .entry(m.name.clone())
                     .or_insert_with(|| BTreeSet::new())
                     .insert(m.engine.clone());
                 anyhow::ensure!(
                     is_new,
-                    "duplicate measurement with name {} and regex engine {}",
+                    "duplicate measurement with name '{}' \
+                     and regex engine '{}'",
                     m.name,
                     m.engine,
                 );

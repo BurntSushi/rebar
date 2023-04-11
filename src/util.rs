@@ -292,7 +292,7 @@ pub fn current_exe() -> anyhow::Result<String> {
 }
 
 /// Write the given divider character `width` times to the given writer.
-pub fn write_divider<W: termcolor::WriteColor>(
+pub fn write_divider<W: std::io::Write>(
     mut wtr: W,
     divider: char,
     width: usize,

@@ -5,4 +5,5 @@ pub mod diff;
 pub mod haystack;
 pub mod klv;
 pub mod measure;
+pub mod rank;
 pub mod report;
