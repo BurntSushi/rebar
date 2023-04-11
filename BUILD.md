@@ -17,8 +17,8 @@ tutorial linked above for a guided exploration.)
 `rebar` is the harness tool used to gather measurements and compare results.
 The harness tool itself doesn't have any explicit knowledge about regex engines
 or even benchmarks. It just knows how to read a directory full of TOML files,
-and those TOML files define the benchmarks and tell `rebar` to run a particular
-regex engine.
+and those TOML files define the benchmarks and tell `rebar` how to run a
+particular regex engine.
 
 Unless you're [building your own benchmark suite](BYOB.md), it's likely that
 `rebar` will not be useful as a tool on its own. Instead, you'll want the
@@ -36,13 +36,13 @@ might give you a version of Rust that is too old to build `rebar`. If so, you
 might consider [installing Rust via `rustup`](https://rustup.rs).
 
 Once you have Rust installed, you should have a command called `cargo`, which
-we used to build `rebar`:
+we use to build `rebar`:
 
 ```
 $ cargo install --path .
 ```
 
-On my system, this compiles the `rebar` binary and drops it at
+On my system, this compiles the `rebar` binary and puts it at
 `$HOME/.local/cargo/bin/rebar`, which is already in my `PATH`. If you can't
 find it, the binary will also be at `./target/release/rebar`. You can test that
 `rebar` is available by querying its version (the output you see may be a
@@ -62,12 +62,12 @@ the following command:
 $ rebar build
 ```
 
-It is almost certain that some regex engines will fail to build on the first
-run through, and this is usually because of a missing dependency. Below, we'll
-attempt to explain how `rebar` builds runner programs so that you can diagnose
-the issue and install the missing dependency. Do note though that `rebar` is
-perfectly happy to run without building all of the regex engines. So you don't
-have to get `rebar build` working completely.
+It is almost certain that some regex engines will fail to build initially,
+and this is usually because of a missing dependency. Below, we'll attempt to
+explain how `rebar` builds runner programs so that you can diagnose the issue
+and install the missing dependency. Do note though that `rebar` is perfectly
+happy to run without building all of the regex engines. So you don't have to
+get `rebar build` working completely.
 
 ### How `rebar` knows about each regex engine
 
@@ -175,6 +175,7 @@ $ sudo pacman -S dotnet-host
 
 Now let's try building again:
 
+```
 $ rebar build -e '^dotnet$'
 dotnet: dependency command did not print expected output: could not find match for "(?m)^7\\." in output of "dotnet" "--list-sdks"
 note: a dependency that is required to build 'dotnet' could not be found, either because it isn't installed or because it didn't behave as expected
