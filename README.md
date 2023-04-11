@@ -7,6 +7,8 @@ curated set of tasks.
 
 * [METHODOLOGY](METHODOLOGY.md) describes the motivation, design, benchmark
 selection and evaluation protocol used by rebar.
+* [BUILD](BUILD.md) describes how to build `rebar` and the regex engines it
+measures.
 * [CONTRIBUTING](CONTRIBUTING.md) describes how to add new benchmarks and how
 to add a new regex engine to benchmark.
 * [MODELS](MODELS.md) describes the different types of workloads measured.
