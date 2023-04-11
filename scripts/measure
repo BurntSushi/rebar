@@ -75,7 +75,21 @@ for name_with_slashes in $engines; do
     if [ -n "$curated" ]; then
       rebar measure -f '^curated/' -e "$pat" | tee "$path"
     else
-      rebar measure -F '^test/' -e "$pat" | tee "$path"
+      # rebar measure -F '^test/' -e "$pat" | tee "$path"
+      rebar measure -f 'curated.*veryl.*multi' -e "$pat" | tee "$path"
     fi
   fi
 done
+
+engines="$(
+  ./scripts/all-meaningful-engines \
+    | tr '\n' ' ' \
+    | sed 's/ $//g' \
+    | sed 's/ /|/g'
+)"
+rebar report \
+  --statistic median \
+  --units throughput \
+  "$dir"/*.csv \
+  -e "^(?:$engines)$" \
+  > "$dir"/README.md
