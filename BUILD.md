@@ -290,6 +290,7 @@ Time Elapsed 00:00:01.04
 There we go. Now we can undo our manufactured error and rebuild it:
 
 ```
+$ cd ../..
 $ rebar build -e '^dotnet$'
 dotnet: running: cd "engines/dotnet" && "dotnet" "build" "-c" "Release"
 dotnet: build complete for version 7.0.3
