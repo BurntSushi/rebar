@@ -70,12 +70,12 @@ for name_with_slashes in $engines; do
   path="$dir/$name.csv"
   echo "=== $path ==="
   if [ -n "$verify" ]; then
-    rebar measure -f '!^test/' -e "$pat" "$verify" "$verbose"
+    rebar measure -F '^test/' -e "$pat" "$verify" "$verbose"
   else
     if [ -n "$curated" ]; then
       rebar measure -f '^curated/' -e "$pat" | tee "$path"
     else
-      rebar measure -f '!^test/' -e "$pat" | tee "$path"
+      rebar measure -F '^test/' -e "$pat" | tee "$path"
     fi
   fi
 done
