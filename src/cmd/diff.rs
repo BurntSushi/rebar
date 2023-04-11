@@ -234,9 +234,11 @@ impl Config {
             for result in rdr.deserialize() {
                 let m: Measurement = result?;
                 if let Some(ref err) = m.err {
-                    eprintln!(
+                    log::warn!(
                         "{}:{}: skipping because of error: {}",
-                        m.name, m.engine, err
+                        m.name,
+                        m.engine,
+                        err
                     );
                     continue;
                 }

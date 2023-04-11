@@ -1,9 +1,105 @@
-use std::time::Duration;
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::PathBuf,
+    time::Duration,
+};
+
+use anyhow::Context;
 
 use crate::{
-    args::Stat,
+    args::{Filters, Stat, Usage},
     util::{ShortHumanDuration, Throughput},
 };
+
+/// A simple loader for reading and deserializing measurements, with filter
+/// logic, from zero or more CSV files.
+///
+/// The lifetime `'a` is the shortest lifetime of the slice of file paths and
+/// the filters.
+#[derive(Clone, Debug)]
+pub struct MeasurementReader<'a> {
+    /// The CSV file paths to read from.
+    pub paths: &'a [PathBuf],
+    /// The filters to apply to each measurement. Any measurement that doesn't
+    /// pass this filter is dropped.
+    pub filters: &'a Filters,
+    /// Whether to only retain measurements for which there are measurements
+    /// for every regex engine.
+    pub intersection: bool,
+}
+
+impl<'p> MeasurementReader<'p> {
+    pub const USAGE_INTERSECTION: Usage = Usage::new(
+        "--intersection",
+        "Only consider benchmarks for which all engines participate.",
+        r#"
+When this flag is set, benchmarks that do not include all regex engines will
+be excluded from the report. The set of all regex engines is determined by
+unioning the sets of all measurements given to this command.
+
+This is applied after the various filters. So for example, one could pass a
+filter like `-e '^(rust/regex|hyperscan)$'` to limit a comparison to only those
+two regex engines. That is, only benchmarks containing measurements for both
+'rust/regex' and 'hyperscan' will be included.
+"#,
+    );
+
+    /// Attempts to load measurements from the given loader configuration. If
+    /// there was a problem reading the files or if there are any duplicate
+    /// measurements.
+    pub fn read(self) -> anyhow::Result<Vec<Measurement>> {
+        let mut measurements = vec![];
+        // A map from benchmark full name to the set of regex engines
+        // for which we have measurements. We use this to detect duplicate
+        // measurements, and it's also how we implement the 'intersection'
+        // filtering.
+        let mut name_to_engines: BTreeMap<String, BTreeSet<String>> =
+            BTreeMap::new();
+        for path in self.paths.iter() {
+            let mut rdr = csv::Reader::from_path(path)
+                .with_context(|| path.display().to_string())?;
+            for result in rdr.deserialize() {
+                let m: Measurement = result?;
+                if let Some(ref err) = m.err {
+                    log::warn!(
+                        "{}:{}: skipping because of error: {}",
+                        m.name,
+                        m.engine,
+                        err
+                    );
+                    continue;
+                }
+                if !self.filters.include(&m) {
+                    continue;
+                }
+                if !name_to_engines.contains_key(&m.name) {
+                    name_to_engines.insert(m.name.clone(), BTreeSet::new());
+                }
+                let is_new = name_to_engines
+                    .entry(m.name.clone())
+                    .or_insert_with(|| BTreeSet::new())
+                    .insert(m.engine.clone());
+                anyhow::ensure!(
+                    is_new,
+                    "duplicate measurement with name {} and regex engine {}",
+                    m.name,
+                    m.engine,
+                );
+                measurements.push(m);
+            }
+        }
+        if self.intersection {
+            let engines_len = name_to_engines
+                .values()
+                .map(|set| set.len())
+                .max()
+                .unwrap_or(0);
+            measurements
+                .retain(|m| name_to_engines[&m.name].len() == engines_len);
+        }
+        Ok(measurements)
+    }
+}
 
 /// The in-memory representation of a single set of results for one benchmark
 /// execution. It does not include all samples taken (those are thrown away and

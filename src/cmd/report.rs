@@ -13,7 +13,7 @@ use crate::{
     args::{self, Filter, Filters, Stat, Units, Usage},
     format::{
         benchmarks::{Benchmarks, Definition, Engines},
-        measurement::Measurement,
+        measurement::{Measurement, MeasurementReader},
     },
     grouped::{ByBenchmarkName, ByBenchmarkNameGroup, EngineSummary},
     util::ShortHumanDuration,
@@ -25,20 +25,7 @@ const USAGES: &[Usage] = &[
     Filter::USAGE_ENGINE_NOT,
     Filter::USAGE_BENCH,
     Filter::USAGE_BENCH_NOT,
-    Usage::new(
-        "--intersection",
-        "Only consider benchmarks for which all engines participate.",
-        r#"
-When this flag is set, benchmarks that do not include all regex engines will
-be excluded from the report. The set of all regex engines is determined by
-unioning the sets of all measurements given to this command.
-
-This is applied after the various filters. So for example, one could pass a
-filter like `-e '^(rust/regex|hyperscan)$'` to limit a comparison to only those
-two regex engines. That is, only benchmarks containing measurements for both
-'rust/regex' and 'hyperscan' will be included.
-"#,
-    ),
+    MeasurementReader::USAGE_INTERSECTION,
     Filter::USAGE_MODEL,
     Filter::USAGE_MODEL_NOT,
     Usage::new(
@@ -119,7 +106,12 @@ OPTIONS:
 
 pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let config = Config::parse(p)?;
-    let measurements = config.read_measurements()?;
+    let measurements = MeasurementReader {
+        paths: &config.csv_paths,
+        filters: &config.filters,
+        intersection: config.intersection,
+    }
+    .read()?;
     let benchmarks = config.read_benchmarks(&measurements)?;
     let engines = benchmarks.engines.clone();
     let analysis = benchmarks.analysis.clone();
@@ -249,14 +241,15 @@ impl Config {
         let bench_filter = Filter::from_pattern(&pat)
             .context("failed to build filter for benchmark names")?;
 
-        let filters = Filters {
-            name: bench_filter,
-            engine: engine_filter,
-            model: Filter::default(),
-            ignore_missing_engines: true,
-        };
-
-        let mut benchmarks = Benchmarks::from_dir(&self.dir, &filters)?;
+        let mut benchmarks = Benchmarks::from_dir(
+            &self.dir,
+            &Filters {
+                name: bench_filter,
+                engine: engine_filter,
+                model: Filter::default(),
+                ignore_missing_engines: true,
+            },
+        )?;
         // Sort benchmarks by their group name so that they appear in a
         // consistent order. We retain the order of benchmarks within a
         // group, since that order always corresponds to the order they were
@@ -264,59 +257,6 @@ impl Config {
         // do a stable sort here.)
         benchmarks.defs.sort_by(|d1, d2| d1.name.group.cmp(&d2.name.group));
         Ok(benchmarks)
-    }
-
-    /// Reads all aggregate benchmark measurements from all CSV file paths
-    /// given, and returns them as one flattened vector. The filters provided
-    /// to the CLI are applied. If any duplicates are seen (for a given
-    /// benchmark name and regex engine pair), then an error is returned.
-    fn read_measurements(&self) -> anyhow::Result<Vec<Measurement>> {
-        let mut measurements = vec![];
-        // A map from benchmark full name to the set of regex engines
-        // for which we have measurements.
-        let mut name_to_engines: BTreeMap<String, BTreeSet<String>> =
-            BTreeMap::new();
-        for csv_path in self.csv_paths.iter() {
-            let mut rdr = csv::Reader::from_path(csv_path)
-                .with_context(|| csv_path.display().to_string())?;
-            for result in rdr.deserialize() {
-                let m: Measurement = result?;
-                if let Some(ref err) = m.err {
-                    eprintln!(
-                        "{}:{}: skipping because of error: {}",
-                        m.name, m.engine, err
-                    );
-                    continue;
-                }
-                if !self.filters.include(&m) {
-                    continue;
-                }
-                if !name_to_engines.contains_key(&m.name) {
-                    name_to_engines.insert(m.name.clone(), BTreeSet::new());
-                }
-                let is_new = name_to_engines
-                    .entry(m.name.clone())
-                    .or_insert_with(|| BTreeSet::new())
-                    .insert(m.engine.clone());
-                anyhow::ensure!(
-                    is_new,
-                    "duplicate measurement with name {} and regex engine {}",
-                    m.name,
-                    m.engine,
-                );
-                measurements.push(m);
-            }
-        }
-        if self.intersection {
-            let engines_len = name_to_engines
-                .values()
-                .map(|set| set.len())
-                .max()
-                .unwrap_or(0);
-            measurements
-                .retain(|m| name_to_engines[&m.name].len() == engines_len);
-        }
-        Ok(measurements)
     }
 }
 

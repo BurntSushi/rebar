@@ -1,10 +1,10 @@
-use std::{collections::BTreeSet, path::PathBuf};
+use std::path::PathBuf;
 
-use {anyhow::Context, unicode_width::UnicodeWidthStr};
+use unicode_width::UnicodeWidthStr;
 
 use crate::{
     args::{self, Color, Filter, Filters, Stat, Threshold, Units, Usage},
-    format::measurement::Measurement,
+    format::measurement::MeasurementReader,
     grouped,
     util::{write_divider, ShortHumanDuration},
 };
@@ -15,6 +15,7 @@ const USAGES: &[Usage] = &[
     Filter::USAGE_ENGINE_NOT,
     Filter::USAGE_BENCH,
     Filter::USAGE_BENCH_NOT,
+    MeasurementReader::USAGE_INTERSECTION,
     Filter::USAGE_MODEL,
     Filter::USAGE_MODEL_NOT,
     Usage::new(
@@ -92,7 +93,12 @@ OPTIONS:
 
 pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let config = Config::parse(p)?;
-    let measurements = config.read_measurements()?;
+    let measurements = MeasurementReader {
+        paths: &config.csv_paths,
+        filters: &config.filters,
+        intersection: config.intersection,
+    }
+    .read()?;
     let measurements_by_name = grouped::ByBenchmarkName::new(&measurements)?;
     let engines = measurements_by_name.engine_names();
     let mut wtr = config.color.elastic_stdout();
@@ -182,6 +188,8 @@ struct Config {
     csv_paths: Vec<PathBuf>,
     /// The benchmark name, model and regex engine filters.
     filters: Filters,
+    /// Whether to only consider benchmarks containing all regex engines.
+    intersection: bool,
     /// The statistic we want to compare.
     stat: Stat,
     /// The statistical units we want to use in our comparisons.
@@ -221,6 +229,9 @@ impl Config {
                 Arg::Short('F') | Arg::Long("filter-not") => {
                     c.filters.name.arg_blacklist(p, "-F/--filter-not")?;
                 }
+                Arg::Long("intersection") => {
+                    c.intersection = true;
+                }
                 Arg::Short('m') | Arg::Long("model") => {
                     c.filters.model.arg_whitelist(p, "-m/--model")?;
                 }
@@ -244,43 +255,6 @@ impl Config {
         }
         anyhow::ensure!(!c.csv_paths.is_empty(), "no CSV file paths given");
         Ok(c)
-    }
-
-    /// Reads all aggregate benchmark measurements from all CSV file paths
-    /// given, and returns them as one flattened vector. The filters provided
-    /// are applied. If any duplicates are seen (for a given benchmark name and
-    /// regex engine pair), then an error is returned.
-    fn read_measurements(&self) -> anyhow::Result<Vec<Measurement>> {
-        let mut measurements = vec![];
-        // A set of (benchmark full name, regex engine name) pairs.
-        let mut seen: BTreeSet<(String, String)> = BTreeSet::new();
-        for csv_path in self.csv_paths.iter() {
-            let mut rdr = csv::Reader::from_path(csv_path)
-                .with_context(|| csv_path.display().to_string())?;
-            for result in rdr.deserialize() {
-                let m: Measurement = result?;
-                if let Some(ref err) = m.err {
-                    eprintln!(
-                        "{}:{}: skipping because of error: {}",
-                        m.name, m.engine, err
-                    );
-                    continue;
-                }
-                if !self.filters.include(&m) {
-                    continue;
-                }
-                let pair = (m.name.clone(), m.engine.clone());
-                anyhow::ensure!(
-                    !seen.contains(&pair),
-                    "duplicate benchmark with name {} and regex engine {}",
-                    m.name,
-                    m.engine,
-                );
-                seen.insert(pair);
-                measurements.push(m);
-            }
-        }
-        Ok(measurements)
     }
 }
 
