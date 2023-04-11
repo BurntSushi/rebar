@@ -23,7 +23,7 @@ pub const REBAR_REVISION: Option<&'static str> = option_env!("REBAR_REVISION");
 pub fn version() -> String {
     let mut s = REBAR_VERSION.to_string();
     if let Some(rev) = REBAR_REVISION {
-        s.push_str(&format!(" (rev{})", rev));
+        s.push_str(&format!(" (rev {})", rev));
     }
     s
 }
