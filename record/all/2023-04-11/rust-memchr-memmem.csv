@@ -1,0 +1,11 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+folly/literal-never-match-rare,count,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,7384531,21266,4.56s,139.68us,0.00ns,141.04us,2.68us,139.38us,160.12us
+folly/literal-never-match-frequent,count,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,7384531,18243,4.57s,164.12us,0.00ns,164.41us,0.95us,163.66us,196.32us
+folly/literal-never-match-tricksy,count,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,120012,304276,4.68s,9.78us,0.00ns,9.83us,191.00ns,9.72us,15.03us
+imported/sherlock/name-sherlock,count-spans,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,594933,215133,4.62s,13.88us,0.00ns,13.91us,155.00ns,13.53us,29.69us
+imported/sherlock/name-holmes,count-spans,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,594933,180957,4.62s,16.66us,0.00ns,16.55us,503.00ns,15.43us,24.09us
+imported/sherlock/name-sherlock-holmes,count-spans,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,594933,208967,4.62s,14.26us,0.00ns,14.32us,342.00ns,13.67us,23.46us
+imported/sherlock/the-lower,count-spans,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,594933,20146,4.51s,146.22us,0.00ns,148.88us,6.12us,140.47us,178.39us
+imported/sherlock/the-upper,count-spans,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,594933,174014,4.62s,17.29us,0.00ns,17.21us,625.00ns,16.40us,28.55us
+opt/prefilter/literal-english,count,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,613357,183168,4.62s,16.33us,0.00ns,16.35us,140.00ns,16.18us,28.50us
+opt/prefilter/literal-russian,count,0.0.1 (rev 1735337eec),rust/memchr/memmem,2.5.0,,613423,216692,4.62s,13.78us,0.00ns,13.81us,135.00ns,13.63us,19.25us

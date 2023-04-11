@@ -1,0 +1,12 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+opt/backtrack/words-english,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,613357,148,4.51s,20.27ms,580.00ns,20.29ms,127.03us,19.90ms,20.64ms
+opt/backtrack/words-russian,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,613423,137,4.56s,22.03ms,0.00ns,22.03ms,116.43us,21.71ms,22.36ms
+opt/literal-alt/one-pattern,count,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,123,806582,4.94s,3.68us,0.00ns,3.69us,90.00ns,3.39us,11.02us
+opt/literal-alt/pattern-per-word,count,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,123,5,6.52s,739.81ms,0.00ns,740.59ms,2.06ms,739.08ms,744.66ms
+opt/onepass/fn-predicate,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,7384531,69,4.56s,43.83ms,0.00ns,43.85ms,175.17us,43.54ms,44.35ms
+opt/onepass/first-three-words-english,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,613357,512,4.51s,5.86ms,119.00ns,5.86ms,53.08us,5.71ms,6.04ms
+opt/onepass/first-three-words-russian,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,613423,577,4.51s,5.20ms,0.00ns,5.20ms,46.56us,5.07ms,5.43ms
+opt/onepass/word-boundary-english,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,613357,1443,4.51s,2.08ms,0.00ns,2.08ms,20.16us,2.03ms,2.19ms
+opt/onepass/word-boundary-russian,grep-captures,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,613423,1525,4.51s,1.97ms,0.00ns,1.97ms,21.44us,1.89ms,2.06ms
+slow/quadratic,count,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,999,2,7.72s,2.54s,4.14ms,2.54s,4.14ms,2.54s,2.55s
+wild/grapheme/codepoints,count,0.0.1 (rev 1735337eec),rust/regex/pikevm,0.2.0,,4382592,5,5.77s,713.94ms,0.00ns,713.40ms,3.58ms,707.28ms,717.95ms

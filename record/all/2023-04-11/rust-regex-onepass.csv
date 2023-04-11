@@ -1,0 +1,6 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+opt/onepass/fn-predicate,grep-captures,0.0.1 (rev 1735337eec),rust/regex/onepass,0.2.0,,7384531,436,4.56s,6.88ms,17.00ns,6.88ms,28.36us,6.82ms,7.04ms
+opt/onepass/first-three-words-english,grep-captures,0.0.1 (rev 1735337eec),rust/regex/onepass,0.2.0,,613357,2787,4.51s,1.08ms,0.00ns,1.08ms,8.35us,1.06ms,1.14ms
+opt/onepass/first-three-words-russian,grep-captures,0.0.1 (rev 1735337eec),rust/regex/onepass,0.2.0,,613423,3603,4.51s,832.10us,0.00ns,832.71us,5.89us,819.31us,881.10us
+opt/onepass/word-boundary-english,grep-captures,0.0.1 (rev 1735337eec),rust/regex/onepass,0.2.0,,613357,5011,4.51s,597.77us,0.00ns,598.74us,5.96us,584.75us,619.25us
+opt/onepass/word-boundary-russian,grep-captures,0.0.1 (rev 1735337eec),rust/regex/onepass,0.2.0,,613423,6339,4.51s,473.06us,0.00ns,473.27us,4.45us,463.92us,492.62us

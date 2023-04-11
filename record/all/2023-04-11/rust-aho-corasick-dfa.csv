@@ -1,0 +1,9 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+aho-corasick/compile/dictionary-english,compile,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,,27,4.91s,110.51ms,0.00ns,110.54ms,748.71us,109.31ms,112.72ms
+aho-corasick/compile/dictionary-english-10,compile,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,,16,4.71s,188.21ms,74.12us,187.84ms,1.70ms,184.24ms,191.12ms
+aho-corasick/compile/dictionary-english-15,compile,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,,205,4.56s,14.71ms,0.00ns,14.65ms,137.37us,14.34ms,15.00ms
+aho-corasick/dictionary/english,count,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,61436,8437,4.92s,355.27us,0.00ns,355.58us,3.55us,343.24us,407.01us
+aho-corasick/dictionary/english-tiny,count,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,108,1000000,1.34s,208.00ns,0.00ns,209.00ns,16.00ns,196.00ns,5.91us
+aho-corasick/dictionary/english-10,count,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,61436,25513,4.87s,117.16us,0.00ns,117.56us,1.31us,116.41us,166.08us
+aho-corasick/dictionary/english-15,count,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,61436,34984,4.56s,85.62us,0.00ns,85.72us,645.00ns,85.08us,116.09us
+aho-corasick/dictionary/i787-noword,count,0.0.1 (rev 1735337eec),rust/aho-corasick/dfa,0.7.20,,122775,15411,4.51s,194.72us,0.00ns,194.63us,1.85us,186.89us,236.78us

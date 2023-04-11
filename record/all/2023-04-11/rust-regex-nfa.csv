@@ -1,0 +1,13 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+dictionary/compile/english,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,72,4.81s,39.66ms,2.81us,40.19ms,1.56ms,39.17ms,45.97ms
+dictionary/compile/english-10,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,156,4.66s,18.46ms,781.00ns,18.50ms,132.42us,18.28ms,18.92ms
+dictionary/compile/english-15,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,1526,4.56s,1.91ms,3.00ns,1.92ms,38.43us,1.87ms,3.02ms
+reported/i787-keywords/compile,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,16765,4.51s,18.82us,0.00ns,18.85us,207.00ns,18.47us,22.71us
+unicode/compile/one-letter,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,39305,4.57s,70.75us,0.00ns,70.88us,1.09us,67.63us,132.14us
+unicode/compile/fifty-letters,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,1014,4.51s,2.83ms,32.00ns,2.82ms,41.74us,2.74ms,2.92ms
+unicode/compile/fifty-letters-ascii,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,238830,4.62s,3.72us,0.00ns,3.73us,113.00ns,3.01us,8.59us
+unicode/compile/match-every-line,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,269510,4.68s,10.29us,0.00ns,10.31us,262.00ns,9.99us,82.04us
+unicode/compile/match-every-line-ascii,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,1000000,3.69s,842.00ns,0.00ns,850.00ns,48.00ns,760.00ns,6.39us
+unicode/compile/negated-class-matches-codepoint,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,286568,4.68s,10.02us,0.00ns,10.06us,340.00ns,9.78us,94.56us
+wild/bibleref/compile,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,25207,4.51s,107.38us,0.00ns,107.56us,1.99us,102.82us,195.01us
+wild/grapheme/compile,compile,0.0.1 (rev 1735337eec),rust/regex/nfa,0.2.0,,,19889,4.51s,142.87us,0.00ns,143.07us,2.34us,136.88us,191.41us
