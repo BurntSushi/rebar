@@ -1,5 +1,5 @@
 analysis = '''
-This benchmark's regex came from a [reddit discussion].
+This benchmark's regex came from a [reddit discussion][reddit-rust-url].
 
 The actual regex was originally retrieved from a [comparison between the Rust
 regex crate and Oniguruma][rust-regex-vs-onig].

@@ -81,16 +81,10 @@ for name_with_slashes in $engines; do
   fi
 done
 
-engines="$(
-  ./scripts/all-meaningful-engines \
-    | tr '\n' ' ' \
-    | sed 's/ $//g' \
-    | sed 's/ /|/g'
-)"
 rebar report \
   --statistic median \
   --units throughput \
   "$dir"/*.csv \
-  -e "^(?:$engines)$" \
+  --summary-exclude '.*' \
   --relative-path-to-repo-root ../../../ \
   > "$dir"/README.md

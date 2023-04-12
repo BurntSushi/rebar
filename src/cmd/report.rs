@@ -523,29 +523,53 @@ performance profile of any specific regex engine or workload.
         stat = config.stat,
     );
 
-    writeln!(wtr, "### Summary")?;
-    writeln!(wtr, "")?;
-    writeln!(wtr, "{}", explanation.trim())?;
-    writeln!(wtr, "")?;
-
     let (grouped_compile, grouped_search) =
         grouped.partition(|g| g.data.model == "compile");
-    writeln!(wtr, "#### Summary of search-time benchmarks")?;
-    writeln!(wtr, "")?;
-    markdown_summary_table(
-        config,
-        engines,
-        &grouped_search.ranking(config.stat)?,
-        &mut wtr,
-    )?;
-    writeln!(wtr, "#### Summary of compile-time benchmarks")?;
-    writeln!(wtr, "")?;
-    markdown_summary_table(
-        config,
-        engines,
-        &grouped_compile.ranking(config.stat)?,
-        &mut wtr,
-    )?;
+    let ranked_compile: Vec<EngineSummary> = grouped_compile
+        .ranking(config.stat)?
+        .into_iter()
+        .filter(|s| s.count > 0)
+        .filter(|s| {
+            config
+                .summary_exclude
+                .as_ref()
+                .map_or(true, |re| !re.is_match(&s.name))
+        })
+        .collect();
+    let ranked_search: Vec<EngineSummary> = grouped_search
+        .ranking(config.stat)?
+        .into_iter()
+        .filter(|s| s.count > 0)
+        .filter(|s| {
+            config
+                .summary_exclude
+                .as_ref()
+                .map_or(true, |re| !re.is_match(&s.name))
+        })
+        .collect();
+
+    if !ranked_compile.is_empty() || !ranked_search.is_empty() {
+        writeln!(wtr, "### Summary")?;
+        writeln!(wtr, "")?;
+        writeln!(wtr, "{}", explanation.trim())?;
+        writeln!(wtr, "")?;
+
+        if !ranked_search.is_empty() {
+            writeln!(wtr, "#### Summary of search-time benchmarks")?;
+            writeln!(wtr, "")?;
+            markdown_summary_table(config, engines, &ranked_search, &mut wtr)?;
+        }
+        if !ranked_compile.is_empty() {
+            writeln!(wtr, "#### Summary of compile-time benchmarks")?;
+            writeln!(wtr, "")?;
+            markdown_summary_table(
+                config,
+                engines,
+                &ranked_compile,
+                &mut wtr,
+            )?;
+        }
+    }
 
     Ok(())
 }
@@ -559,11 +583,6 @@ fn markdown_summary_table<W: Write>(
     writeln!(wtr, "| Engine | Version | Geometric mean of speed ratios | Benchmark count |")?;
     writeln!(wtr, "| ------ | ------- | ------------------------------ | --------------- |")?;
     for summary in summaries.iter() {
-        if let Some(ref re) = config.summary_exclude {
-            if re.is_match(&summary.name) {
-                continue;
-            }
-        }
         if summary.count == 0 {
             continue;
         }
