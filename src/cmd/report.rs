@@ -73,7 +73,27 @@ then other engines in that benchmark will have a speed ratio above 1.
     Units::USAGE,
 ];
 
-fn usage() -> String {
+fn usage_short() -> String {
+    format!(
+        "\
+Print a Markdown formatted report of results for a group of benchmarks.
+
+USAGE:
+    rebar report [options] <csv-path> ...
+
+TIP:
+    use -h for short docs and --help for long docs
+
+OPTIONS:
+{options}
+",
+        options = Usage::short(USAGES),
+    )
+    .trim()
+    .to_string()
+}
+
+fn usage_long() -> String {
     format!(
         "\
 Print a Markdown formatted report of results for a group of benchmarks.
@@ -112,7 +132,7 @@ USAGE:
 OPTIONS:
 {options}
 ",
-        options = Usage::short(USAGES),
+        options = Usage::long(USAGES),
     )
     .trim()
     .to_string()
@@ -178,8 +198,8 @@ impl Config {
         while let Some(arg) = p.next()? {
             match arg {
                 Arg::Value(v) => c.csv_paths.push(PathBuf::from(v)),
-                Arg::Short('h') => anyhow::bail!("{}", usage()),
-                Arg::Long("help") => anyhow::bail!("{}", usage()),
+                Arg::Short('h') => anyhow::bail!("{}", usage_short()),
+                Arg::Long("help") => anyhow::bail!("{}", usage_long()),
                 Arg::Short('d') | Arg::Long("dir") => {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);
                 }

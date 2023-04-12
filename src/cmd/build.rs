@@ -15,10 +15,30 @@ const USAGES: &[Usage] = &[
     Filter::USAGE_ENGINE_NOT,
 ];
 
-fn usage() -> String {
+fn usage_short() -> String {
     format!(
         "\
-This builds runner programs that expose regex engines to rebar.
+This command builds runner programs that expose regex engines to rebar.
+
+USAGE:
+    rebar build [-e <engine> ...]
+
+TIP:
+    use -h for short docs and --help for long docs
+
+OPTIONS:
+{options}
+",
+        options = Usage::short(USAGES),
+    )
+    .trim()
+    .to_string()
+}
+
+fn usage_long() -> String {
+    format!(
+        "\
+This command builds runner programs that expose regex engines to rebar.
 
 One a runner program is built, its version is queried and printed as part of
 the output of this program. The version number is meant to act as a receipt
@@ -43,7 +63,7 @@ USAGE:
 OPTIONS:
 {options}
 ",
-        options = Usage::short(USAGES),
+        options = Usage::long(USAGES),
     )
     .trim()
     .to_string()
@@ -170,11 +190,10 @@ impl Config {
         c.dir = PathBuf::from("benchmarks");
         while let Some(arg) = p.next()? {
             match arg {
+                Arg::Short('h') => anyhow::bail!("{}", usage_short()),
+                Arg::Long("help") => anyhow::bail!("{}", usage_long()),
                 Arg::Long("color") => {
                     c.color = args::parse(p, "-c/--color")?;
-                }
-                Arg::Short('h') | Arg::Long("help") => {
-                    anyhow::bail!("{}", usage())
                 }
                 Arg::Short('d') | Arg::Long("dir") => {
                     c.dir = PathBuf::from(p.value().context("-d/--dir")?);

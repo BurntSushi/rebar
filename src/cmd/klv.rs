@@ -19,7 +19,27 @@ const USAGES: &[Usage] = &[
     Usage::MAX_WARMUP_TIME,
 ];
 
-fn usage() -> String {
+fn usage_short() -> String {
+    format!(
+        "\
+Print the given benchmark in key-length-value (KLV) format.
+
+USAGE:
+    rebar klv <benchmark-name>
+
+TIP:
+    use -h for short docs and --help for long docs
+
+OPTIONS:
+{options}
+",
+        options = Usage::short(USAGES),
+    )
+    .trim()
+    .to_string()
+}
+
+fn usage_long() -> String {
     format!(
         "\
 Print the given benchmark in key-length-value (KLV) format.
@@ -43,7 +63,7 @@ USAGE:
 OPTIONS:
 {options}
 ",
-        options = Usage::short(USAGES),
+        options = Usage::long(USAGES),
     )
     .trim()
     .to_string()
@@ -60,10 +80,15 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         match arg {
             Arg::Value(name) => {
                 if bench_name.is_some() {
-                    anyhow::bail!("{}", usage());
+                    anyhow::bail!(
+                        "only one benchmark name is accepted, \
+                         but multiple were given",
+                    );
                 }
                 bench_name = Some(name.string()?);
             }
+            Arg::Short('h') => anyhow::bail!("{}", usage_short()),
+            Arg::Long("help") => anyhow::bail!("{}", usage_long()),
             Arg::Short('d') | Arg::Long("dir") => {
                 dir = PathBuf::from(p.value().context("-d/--dir")?);
             }
@@ -86,7 +111,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         }
     }
     let bench_name = match bench_name {
-        None => anyhow::bail!("{}", usage()),
+        None => anyhow::bail!("missing benchmark name"),
         Some(bench_name) => bench_name,
     };
     let def = Benchmarks::find_one(&dir, &bench_name)?;
