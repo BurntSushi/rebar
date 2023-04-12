@@ -424,22 +424,18 @@ fn markdown<W: Write>(
     writeln!(wtr, " -->")?;
 
     markdown_summary(config, engines, grouped, &mut wtr)?;
-    markdown_bench_list(config, tree, &mut wtr)?;
+    markdown_bench_list(tree, &mut wtr)?;
     markdown_results(config, analysis, tree, &mut wtr)?;
     Ok(())
 }
 
 fn markdown_bench_list<W: Write>(
-    config: &Config,
     tree: &Tree,
     mut wtr: W,
 ) -> anyhow::Result<()> {
     let revision = match util::REBAR_REVISION {
         None => "".to_string(),
-        Some(rev) => {
-            let link = config.url(rev, &format!("tree/{}", rev));
-            format!(" (rev {})", link)
-        }
+        Some(rev) => format!(" (rev {})", rev),
     };
     let explanation = format!(
         r#"

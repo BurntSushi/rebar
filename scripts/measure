@@ -92,4 +92,5 @@ rebar report \
   --units throughput \
   "$dir"/*.csv \
   -e "^(?:$engines)$" \
+  --relative-path-to-repo-root ../../../ \
   > "$dir"/README.md
