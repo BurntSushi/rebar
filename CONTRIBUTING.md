@@ -38,7 +38,7 @@ directory.
 
 For more information about how the `benchmarks` directory is structured,
 including a complete description of the supported TOML format, please see
-the [`FORMAT.md`](FORMAT.md) document. With that said, it is likely simple
+the [`FORMAT`](FORMAT.md) document. With that said, it is likely simple
 enough that you can look at existing definitions, copy one of them and then
 work from there.
 
@@ -89,24 +89,24 @@ reported by each engine match what you expect:
 
 ```
 $ rebar measure -f wild/my-use-case/shebang --test
-wild/my-use-case/shebang,rust/regex,grep-captures,1.7.1,OK
-wild/my-use-case/shebang,re2,grep-captures,2023-03-01,OK
-wild/my-use-case/shebang,pcre2/jit,grep-captures,10.42 2022-12-11,OK
+wild/my-use-case/shebang,grep-captures,rust/regex,1.7.2,OK
+wild/my-use-case/shebang,grep-captures,re2,2023-03-01,OK
+wild/my-use-case/shebang,grep-captures,pcre2,10.42 2022-12-11,OK
 Traceback (most recent call last):
-  File "/home/andrew/code/rust/rebar/engines/python/main.py", line 427, in <module>
+  File "/home/andrew/code/rust/rebar/engines/python/main.py", line 429, in <module>
     results = model_grep_captures(config)
   File "/home/andrew/code/rust/rebar/engines/python/main.py", line 244, in model_grep_captures
     h = c.get_haystack()
   File "/home/andrew/code/rust/rebar/engines/python/main.py", line 85, in get_haystack
     return self.haystack.decode('utf-8')
 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf6 in position 10247181: invalid start byte
-wild/my-use-case/shebang,grep-captures,python/re,3.10.8,failed to run command for 'python/re'
+wild/my-use-case/shebang,grep-captures,python/re,3.10.9,failed to run command for 'python/re'
 some benchmarks failed
 ```
 
 Ah! One of the benchmarks failed. This is because `python/re` only supports
 searching valid UTF-8 when `unicode = true`. You can either set `unicode =
-true`, or force the haystack to be converted to UTF-8 lossily before taking
+false`, or force the haystack to be converted to UTF-8 lossily before taking
 measurements:
 
 ```toml
@@ -117,10 +117,10 @@ Now verification should succeed:
 
 ```
 $ rebar measure -f wild/my-use-case/shebang --test
-wild/my-use-case/shebang,rust/regex,grep-captures,1.7.1,OK
-wild/my-use-case/shebang,re2,grep-captures,2023-03-01,OK
-wild/my-use-case/shebang,pcre2/jit,grep-captures,10.42 2022-12-11,OK
-wild/my-use-case/shebang,python/re,grep-captures,3.10.8,OK
+wild/my-use-case/shebang,grep-captures,rust/regex,1.7.2,OK
+wild/my-use-case/shebang,grep-captures,re2,2023-03-01,OK
+wild/my-use-case/shebang,grep-captures,pcre2,10.42 2022-12-11,OK
+wild/my-use-case/shebang,grep-captures,python/re,3.10.9,OK
 ```
 
 You're now ready to collect results. Results are reported on stdout. I usually
@@ -129,11 +129,11 @@ printed as well:
 
 ```
 $ rebar measure -f wild/my-use-case/shebang | tee results.csv
-name,model,engine,version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
-wild/my-use-case/shebang,grep-captures,rust/regex,1.7.1,,32514634,26,4.56s,116.30ms,12.15us,116.19ms,592.97us,115.13ms,117.55ms
-wild/my-use-case/shebang,grep-captures,re2,2023-03-01,,32514634,84,4.62s,36.04ms,1.07us,36.08ms,117.93us,35.89ms,36.43ms
-wild/my-use-case/shebang,grep-captures,pcre2/jit,10.42 2022-12-11,,32514634,156,4.56s,19.26ms,469.00ns,19.27ms,78.63us,19.08ms,19.52ms
-wild/my-use-case/shebang,grep-captures,python/re,3.10.8,,32514634,9,5.17s,358.15ms,0.00ns,358.35ms,712.38us,357.21ms,360.02ms
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+wild/my-use-case/shebang,grep-captures,0.0.1 (rev 1735337eec),rust/regex,1.7.2,,32514634,26,4.66s,118.56ms,11.04us,118.04ms,1.31ms,115.77ms,119.84ms
+wild/my-use-case/shebang,grep-captures,0.0.1 (rev 1735337eec),re2,2023-03-01,,32514634,82,4.61s,37.04ms,3.21us,37.03ms,90.54us,36.85ms,37.30ms
+wild/my-use-case/shebang,grep-captures,0.0.1 (rev 1735337eec),pcre2,10.42 2022-12-11,,32514634,83,4.56s,36.24ms,0.00ns,36.27ms,237.40us,35.78ms,36.86ms
+wild/my-use-case/shebang,grep-captures,0.0.1 (rev 1735337eec),python/re,3.10.9,,32514634,7,5.06s,443.36ms,0.00ns,443.19ms,1.72ms,440.44ms,445.42ms
 ```
 
 Ah, but unless you look really carefully, these results are not particularly
@@ -141,9 +141,9 @@ easy to interpret. Instead, we can ask rebar to do a comparison for us:
 
 ```
 $ rebar cmp results.csv
-benchmark                 pcre2/jit            python/re           re2                 rust/regex
----------                 ---------            ---------           ---                 ----------
-wild/my-use-case/shebang  1610.0 MB/s (1.00x)  86.6 MB/s (18.60x)  860.4 MB/s (1.87x)  266.6 MB/s (6.04x)
+benchmark                 pcre2               python/re           re2                 rust/regex
+---------                 -----               ---------           ---                 ----------
+wild/my-use-case/shebang  855.6 MB/s (1.00x)  69.9 MB/s (12.23x)  837.2 MB/s (1.02x)  261.5 MB/s (3.27x)
 ```
 
 For your PR, include `results.csv` and the output of `rebar cmp` above in your
@@ -151,14 +151,14 @@ comment. That should make the benchmark and its results easier to review.
 
 ## Adding a new regex engine
 
-**Summary:** Write a program that accepts the [KLV](KLV.md) format on
-stdin, and prints CSV data consisting of of duration and count samples
-on stdout. Put the program in a new directory `engines/<name>`, add an
-entry for it to [`benchmarks/engines.toml`](benchmarks/engines.toml),
-build it with `rebar build <name>` and add it to the `all` definition in
-[`benchmarks/definitions/test.toml`](benchmarks/definitions/test.toml). Add it
-to other relevant definitions. Test it with `rebar measure -e <name> --test`.
-Finally, submit a PR with rationale for why the regex engine should be
+**Summary:** Write a program that accepts the [KLV](KLV.md) format on stdin,
+and prints CSV data consisting of of duration and count samples on stdout.
+Put the program in a new directory `engines/<name>`, add an entry for it to
+[`benchmarks/engines.toml`](benchmarks/engines.toml), build it with `rebar
+build <name>` and add it to as many benchmark definitions as possible in
+[`benchmarks/definitions/test`](benchmarks/definitions/test). Add it to other
+relevant definitions as appropriate. Test it with `rebar measure -e <name>
+--test`. Finally, submit a PR with rationale for why the regex engine should be
 included.
 
 Adding a new regex engine to this barometer generally requires doing the
@@ -280,29 +280,29 @@ ready to test it.
 data from any benchmark. For example, `rebar klv curated/08-words/all-english
 --max-time 3s --max-iters 10 | ./engines/go/main` will run the
 `curated/08-words/all-english` benchmark at most 10 times (and up to 3 seconds)
-using the `go` regex engine. Just swap out `./engines/go/main` with the
+using the `go/regexp` regex engine. Just swap out `./engines/go/main` with the
 executable to your program to test it.
 2. Add a new regex engine entry to
-[`benchmarks/engines.toml`](benchmarks/engines.toml). This makes it available
-as an engine that one can use inside benchmark definitions. See the
-[FORMAT.md](FORMAT.md) document for what kind of things are supported. One
+[`benchmarks/engines.toml`](benchmarks/engines.toml). This makes it
+available as an engine that one can use inside benchmark definitions. See
+the [FORMAT](FORMAT.md) document for what kind of things are supported. One
 important bit here is that getting the version number *must* act as a receipt
 that the regex engine has been built and can be run successfully in the current
 environment.
-3. Check that `rebar build <regex-engine-name>` works for your regex engine.
+3. Check that `rebar build -e <regex-engine-name>` works for your regex engine.
 4. Add your regex engine to as many of the benchmark definitions in
-[`benchmarks/definitions/`](benchmarks/definitions/test/) as
+[`benchmarks/definitions/test/`](benchmarks/definitions/test/) as
 possible. If none are appropriate, then please open an issue discussing the
-regex engine and why it should be added.
+regex engine and why it should be added at all.
 5. Test that everything works by running `rebar measure -f '^test/' -e
 go/regexp --test`, but with `go/regexp` replaced with the name
 of the regex engine you added to `engines.toml`. You should see output like
 `test/model/count,go/regexp,count,1.20.1,OK` (among others).
 6. Add the engine to benchmark definitions as appropriate.
-7. Add a `engines/{name}/README.md` file explaining some of the choices made
-in your runner program, and include a link to the regex engine. See the README
-files for other engines for examples.
+7. Add a `engines/{name}/README.md` file explaining some of the choices made in
+your runner program, and include an upstream link to the regex engine. See the
+README files for other engines for examples.
 8. Submit a pull request. Ensure that others are able to checkout your PR,
-run `rebar build <name>` and are able to test it by running `rebar measure -e
-<name> --test`. **CI must be able to run `rebar build` in its entirety
+run `rebar build -e <name>` and are able to test it by running `rebar measure
+-e <name> --test`. **CI must be able to run `rebar build` in its entirety
 successfully.**
