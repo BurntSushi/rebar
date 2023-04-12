@@ -84,10 +84,10 @@ strategies is that the `multi` approach permits not only identifying where a
 match occurred, but *which* word in the dictionary matched. And this is done
 without using capture groups.
 
-Hyperscan does really well here. While its source code is difficult penetrate,
-my understanding is that Hyperscan uses its "FDR" algorithm here, which is
-essentially SIMD-ified variant of multi-substring Shift-Or. This benchmark
-represents Hyperscan's bread and butter: multi-pattern search.
+Hyperscan does really well here. While its source code is difficult to
+penetrate, my understanding is that Hyperscan uses its "FDR" algorithm here,
+which is essentially SIMD-ified variant of multi-substring Shift-Or. This
+benchmark represents Hyperscan's bread and butter: multi-pattern search.
 
 `rust/regex` actually does _worse_ in the `multi` case versus the `single`
 case. `rust/regex`'s support for multi-pattern search is still young, and in
