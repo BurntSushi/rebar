@@ -88,3 +88,12 @@ rebar report \
   --summary-exclude '.*' \
   --relative-path-to-repo-root ../../../ \
   > "$dir"/README.md
+
+# We also record CPU information, so that the measurements can be put in
+# appropriate context.
+#
+# This is probably a Linux-only thing? Would be great to do the equivalent in
+# other environments. If you know how, please submit a PR!
+if command -v lscpu > /dev/null 2>&1; then
+  lscpu > "$dir"/lscpu.txt
+fi
