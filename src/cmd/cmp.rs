@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use unicode_width::UnicodeWidthStr;
 
 use crate::{
-    args::{self, Color, Filter, Filters, Stat, Threshold, Units, Usage},
+    args::{self, Color, Filter, Filters, Stat, ThresholdRange, Units, Usage},
     format::measurement::MeasurementReader,
     grouped,
     util::{write_divider, ShortHumanDuration},
@@ -35,7 +35,8 @@ do some kind of filtering to trim it down.
 "#,
     ),
     Stat::USAGE,
-    Threshold::USAGE,
+    ThresholdRange::USAGE_MIN,
+    ThresholdRange::USAGE_MAX,
     Units::USAGE,
 ];
 
@@ -122,8 +123,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
             writeln!(wtr, "")?;
 
             for group in measurements_by_name.groups.iter() {
-                let diff = group.biggest_difference(config.stat);
-                if !config.threshold.include(diff) {
+                if !group.is_within_range(config.stat, config.speedups) {
                     continue;
                 }
                 write!(wtr, "{}", group.name)?;
@@ -142,8 +142,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
             // Write column names.
             write!(wtr, "engine")?;
             for group in measurements_by_name.groups.iter() {
-                let diff = group.biggest_difference(config.stat);
-                if !config.threshold.include(diff) {
+                if !group.is_within_range(config.stat, config.speedups) {
                     continue;
                 }
                 write!(wtr, "\t{}", group.name)?;
@@ -154,8 +153,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
             // separation.
             write_divider(&mut wtr, '-', "engine".width())?;
             for group in measurements_by_name.groups.iter() {
-                let diff = group.biggest_difference(config.stat);
-                if !config.threshold.include(diff) {
+                if !group.is_within_range(config.stat, config.speedups) {
                     continue;
                 }
                 write!(wtr, "\t")?;
@@ -166,8 +164,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
             for engine in engines.iter() {
                 write!(wtr, "{}", engine)?;
                 for group in measurements_by_name.groups.iter() {
-                    let diff = group.biggest_difference(config.stat);
-                    if !config.threshold.include(diff) {
+                    if !group.is_within_range(config.stat, config.speedups) {
                         continue;
                     }
                     write!(wtr, "\t")?;
@@ -194,9 +191,8 @@ struct Config {
     stat: Stat,
     /// The statistical units we want to use in our comparisons.
     units: Units,
-    /// Defaults to 0, and is a percent. When the biggest difference in a row
-    /// is less than this threshold, then we skip writing that row.
-    threshold: Threshold,
+    /// The range of speedup ratios to show.
+    speedups: ThresholdRange,
     /// The user's color choice. We default to 'Auto'.
     color: Color,
     /// What the rows of the comparison table should be.
@@ -244,8 +240,11 @@ impl Config {
                 Arg::Short('s') | Arg::Long("statistic") => {
                     c.stat = args::parse(p, "-s/--statistic")?;
                 }
-                Arg::Short('t') | Arg::Long("threshold") => {
-                    c.threshold = args::parse(p, "-t/--threshold")?;
+                Arg::Short('t') | Arg::Long("threshold-min") => {
+                    c.speedups.set_min(args::parse(p, "-t/--threshold-min")?);
+                }
+                Arg::Short('T') | Arg::Long("threshold-max") => {
+                    c.speedups.set_max(args::parse(p, "-T/--threshold-max")?);
                 }
                 Arg::Short('u') | Arg::Long("units") => {
                     c.units = args::parse(p, "-u/--units")?;

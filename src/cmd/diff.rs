@@ -6,7 +6,7 @@ use std::{
 use unicode_width::UnicodeWidthStr;
 
 use crate::{
-    args::{self, Color, Filter, Filters, Stat, Threshold, Units, Usage},
+    args::{self, Color, Filter, Filters, Stat, ThresholdRange, Units, Usage},
     format::measurement::Measurement,
     util::{write_divider, ShortHumanDuration},
 };
@@ -20,7 +20,8 @@ const USAGES: &[Usage] = &[
     Filter::USAGE_MODEL,
     Filter::USAGE_MODEL_NOT,
     Stat::USAGE,
-    Threshold::USAGE,
+    ThresholdRange::USAGE_MIN,
+    ThresholdRange::USAGE_MAX,
     Units::USAGE,
 ];
 
@@ -97,8 +98,7 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     writeln!(wtr, "")?;
 
     for group in grouped_aggs.iter() {
-        let diff = group.biggest_difference(config.stat);
-        if !config.threshold.include(diff) {
+        if !group.is_within_range(config.stat, config.speedups) {
             continue;
         }
         write!(wtr, "{}", group.name)?;
@@ -160,9 +160,8 @@ struct Config {
     stat: Stat,
     /// The statistical units we want to use in our comparisons.
     units: Units,
-    /// Defaults to 0, and is a percent. When the biggest difference in a row
-    /// is less than this threshold, then we skip writing that row.
-    threshold: Threshold,
+    /// The range of speedup ratios to show.
+    speedups: ThresholdRange,
     /// The user's color choice. We default to 'Auto'.
     color: Color,
 }
@@ -202,8 +201,11 @@ impl Config {
                 Arg::Short('s') | Arg::Long("statistic") => {
                     c.stat = args::parse(p, "-s/--statistic")?;
                 }
-                Arg::Short('t') | Arg::Long("threshold") => {
-                    c.threshold = args::parse(p, "-t/--threshold")?;
+                Arg::Short('t') | Arg::Long("threshold-min") => {
+                    c.speedups.set_min(args::parse(p, "-t/--threshold-min")?);
+                }
+                Arg::Short('T') | Arg::Long("threshold-max") => {
+                    c.speedups.set_max(args::parse(p, "-T/--threshold-max")?);
                 }
                 Arg::Short('u') | Arg::Long("units") => {
                     c.units = args::parse(p, "-u/--units")?;
@@ -315,25 +317,6 @@ impl MeasurementGroup {
         MeasurementGroup { name, engine, measurements_by_data }
     }
 
-    /// Return the biggest difference, percentage wise, between aggregates
-    /// in this group. The comparison statistic given is used. If this group
-    /// is a singleton, then 0 is returned. (Which makes sense. There is no
-    /// difference at all, so specifying any non-zero threshold should exclude
-    /// it.)
-    fn biggest_difference(&self, stat: Stat) -> f64 {
-        if self.measurements_by_data.len() < 2 {
-            // I believe this is a redundant base case.
-            return 0.0;
-        }
-        let best = self.measurements_by_data[self.best(stat)]
-            .duration(stat)
-            .as_secs_f64();
-        let worst = self.measurements_by_data[self.worst(stat)]
-            .duration(stat)
-            .as_secs_f64();
-        ((best - worst).abs() / best) * 100.0
-    }
-
     /// Return the ratio between the 'this' benchmark and the best benchmark
     /// in the group. The 'this' is the best, then the ratio returned is 1.0.
     /// Thus, the ratio is how many times slower this benchmark is from the
@@ -351,6 +334,31 @@ impl MeasurementGroup {
         this / best
     }
 
+    /// Returns true only when this group contains at least one aggregate
+    /// measurement whose speedup ratio falls within the given range.
+    ///
+    /// The aggregate statistic used to test against the given range is
+    /// specified by `stat`.
+    fn is_within_range(&self, stat: Stat, range: ThresholdRange) -> bool {
+        let best_engine = self.best(stat);
+        let best = &self.measurements_by_data[best_engine]
+            .duration(stat)
+            .as_secs_f64();
+        for m in self.measurements_by_data.values() {
+            // The speedup ratio for the best engine is always 1.0, and so it
+            // isn't useful to filter on it.
+            if m.engine == best_engine {
+                continue;
+            }
+            let this = m.duration(stat).as_secs_f64();
+            let ratio = this / best;
+            if range.include(ratio) {
+                return true;
+            }
+        }
+        false
+    }
+
     /// Return the data name of the best measurement in this group. The name
     /// returned is guaranteed to exist in this group.
     fn best(&self, stat: Stat) -> &str {
@@ -363,20 +371,6 @@ impl MeasurementGroup {
             }
         }
         best_data_name
-    }
-
-    /// Return the data name of the worst measurement in this group. The name
-    /// returned is guaranteed to exist in this group.
-    fn worst(&self, stat: Stat) -> &str {
-        let mut it = self.measurements_by_data.iter();
-        let mut worst_data_name = it.next().unwrap().0;
-        for (data_name, candidate) in self.measurements_by_data.iter() {
-            let worst = &self.measurements_by_data[worst_data_name];
-            if candidate.duration(stat) > worst.duration(stat) {
-                worst_data_name = data_name;
-            }
-        }
-        worst_data_name
     }
 
     /// Returns true if and only if at least one measurement in this group

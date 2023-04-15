@@ -195,15 +195,24 @@ The `--intersection` flag is a filter that says, "only show results where every
 regex engine has a measurement."
 
 But sometimes looking at all results, even for a smaller set of engines, can be
-overwhelming. What about benchmarks for which there is a big difference between
-engines? The `-t/--threshold` flag let's you filter results down to "benchmarks
-for which there is at least an `N%` difference." This flag is usually useful
-when doing a comparison between two engines, but it works for any number. In
-this case, since `go/regexp` tends to be quite a bit slower in many cases than
-both `re2` and `rust/regex`, we limit our comparison to `re2` and `rust/regex`:
+overwhelming. What about only looking at benchmarks for which there is a big
+difference between engines? The `-t/--threshold-min` and `-T/--threshold-max`
+flags let's you filter results down to "benchmarks that contain at least one
+results whose speedup ratio compared to the best is within the threshold range
+given." The threshold flags are usually useful when doing a comparison between
+two engines, but it works for any number. For example, we might only want to
+see benchmarks in which there is at least one result that is 50 times slower
+than the best:
 
 ```
 $ rebar cmp record/all/2023-04-11/*.csv -e '^(re2|rust/regex)$' -t 50
+```
+
+Or perhaps we might only want to see benchmarks in which there is at least
+one result that is within 1.2 times the speed of the best:
+
+```
+$ rebar cmp record/all/2023-04-11/*.csv -e '^(re2|rust/regex)$' -T 1.20
 ```
 
 But what if we want to flip all of this around and look at all of the regex

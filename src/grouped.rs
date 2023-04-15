@@ -19,7 +19,7 @@ benchmarks.
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::{
-    args::Stat,
+    args::{Stat, ThresholdRange},
     format::{benchmarks::Definition, measurement::Measurement},
 };
 
@@ -336,20 +336,27 @@ impl<T> ByBenchmarkNameGroup<T> {
         Some(this / best)
     }
 
-    /// Return the biggest difference, percentage wise, between aggregates
-    /// in this group. The comparison statistic given is used. If this group
-    /// is a singleton, then 0 is returned. (Since in that case there is no
-    /// difference at all, so specifying any non-zero threshold should exclude
-    /// it.)
-    pub fn biggest_difference(&self, stat: Stat) -> f64 {
-        if self.by_engine.len() < 2 {
-            return 0.0;
+    /// Returns true only when this group contains at least one aggregate
+    /// measurement whose speedup ratio falls within the given range.
+    ///
+    /// The aggregate statistic used to test against the given range is
+    /// specified by `stat`.
+    pub fn is_within_range(&self, stat: Stat, range: ThresholdRange) -> bool {
+        let best_engine = self.best(stat);
+        let best = &self.by_engine[best_engine].duration(stat).as_secs_f64();
+        for m in self.by_engine.values() {
+            // The speedup ratio for the best engine is always 1.0, and so it
+            // isn't useful to filter on it.
+            if m.engine == best_engine {
+                continue;
+            }
+            let this = m.duration(stat).as_secs_f64();
+            let ratio = this / best;
+            if range.include(ratio) {
+                return true;
+            }
         }
-        let best =
-            self.by_engine[self.best(stat)].duration(stat).as_secs_f64();
-        let worst =
-            self.by_engine[self.worst(stat)].duration(stat).as_secs_f64();
-        ((best - worst).abs() / best) * 100.0
+        false
     }
 
     /// Return the engine name of the best measurement in this group. The name
@@ -365,23 +372,6 @@ impl<T> ByBenchmarkNameGroup<T> {
             }
         }
         best_engine
-    }
-
-    /// Return the engine name of the worst measurement in this group. The name
-    /// returned is guaranteed to exist in this group.
-    ///
-    /// This returns `None` if this group is empty.
-    pub fn worst(&self, stat: Stat) -> &str {
-        let mut it = self.by_engine.iter();
-        // The unwrap is OK because our group is guaranteed to be non-empty.
-        let mut worst_engine = it.next().unwrap().0;
-        for (engine, candidate) in self.by_engine.iter() {
-            let worst = &self.by_engine[worst_engine];
-            if candidate.duration(stat) > worst.duration(stat) {
-                worst_engine = engine;
-            }
-        }
-        worst_engine
     }
 }
 

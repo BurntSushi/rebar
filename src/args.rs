@@ -482,49 +482,94 @@ impl std::str::FromStr for Stat {
     }
 }
 
-/// An integer threshold value that can be used to filter out results whose
-/// differences are too small to care about.
-#[derive(Clone, Debug)]
-pub struct Threshold(f64);
+/// A possibly unbounded range of speedup ratios to filter benchmarks.
+///
+/// This range permits one to say, "only show benchmarks where at least one
+/// of the speedup ratios among the regex engines are within this range." The
+/// range can be completely unbounded (include everything), or it can be
+/// unbounded on either side (which corresponds to specifying either a minimum
+/// or a maximum).
+#[derive(Clone, Copy, Debug, Default)]
+pub struct ThresholdRange {
+    min: Option<Threshold>,
+    max: Option<Threshold>,
+}
 
-impl Threshold {
-    pub const USAGE: Usage = Usage::new(
-        "-t, --threshold <percentage>",
-        "Filter by percentage difference.",
+impl ThresholdRange {
+    pub const USAGE_MIN: Usage = Usage::new(
+        "-t, --threshold-min <speedup-ratio>",
+        "Only show benchmarks with at least this speedup ratio.",
         r#"
-The minimum threshold measurements must differ by to be shown.
+When set, only benchmarks that contain at least one result with at least the
+speedup ratio given will be shown. In other words, this sets a lower bound on
+the speedup ratio to display.
 
-The value given here is a percentage. Only benchmarks containing measurements
-with at least a difference of X% will be shown in the comparison output. So for
-example, given '-t5', only benchmarks whose minimum and maximum measurement
-differ by at least 5% will be shown.
+This flag may be combined with -T/--threshold-max to set an upper bound, in
+which case, only benchmarks that contain at least one result whose speedup
+ratio is within the range will be shown.
 
-By default, there is no threshold enforced. All benchmarks in the given data
-set matching the filters are shown.
+By default, there is no lower bound threshold enforced.
+
+The speedup ratio for the best engine in any given set of results for a
+benchmark is not considered as part of this filter. This is because the
+speedup ratio for the best engine is always 1.0, and it's not usually what is
+interesting to filter on.
 "#,
     );
 
-    /// Returns true if and only if the given difference exceeds or meets this
-    /// threshold. When no threshold was given by the user, then a threshold of
-    /// 0 is used, which everything exceeds or meets.
-    pub fn include(&self, difference: f64) -> bool {
-        !(difference < self.0)
+    pub const USAGE_MAX: Usage = Usage::new(
+        "-T, --threshold-max <speedup-ratio>",
+        "Only show benchmarks with at most this speedup ratio.",
+        r#"
+When set, only benchmarks that contain at least one result with at most the
+speedup ratio given will be shown. In other words, this sets a upper bound on
+the speedup ratio to display.
+
+If the upper bound is less than 1.0, then it would filter everything out
+because the minimum speedup ratio is 1.0.
+
+This flag may be combined with -t/--threshold-min to set a lower bound, in
+which case, only benchmarks that contain at least one result whose speedup
+ratio is within the range will be shown.
+
+By default, there is no upper bound threshold enforced.
+
+The speedup ratio for the best engine in any given set of results for a
+benchmark is not considered as part of this filter. This is because the
+speedup ratio for the best engine is always 1.0, and it's not usually what is
+interesting to filter on.
+"#,
+    );
+
+    /// Returns true if and only if the given ratio falls within this range.
+    pub fn include(&self, ratio: f64) -> bool {
+        self.min.map_or(true, |min| min.0 <= ratio)
+            && self.max.map_or(true, |max| ratio <= max.0)
+    }
+
+    /// Sets the minimum of this range to the given threshold.
+    pub fn set_min(&mut self, t: Threshold) {
+        self.min = Some(t);
+    }
+
+    /// Sets the maximum of this range to the given threshold.
+    pub fn set_max(&mut self, t: Threshold) {
+        self.max = Some(t);
     }
 }
 
-impl Default for Threshold {
-    fn default() -> Threshold {
-        Threshold(0.0)
-    }
-}
+/// A single threshold ratio.
+///
+/// Two of these make up a `ThresholdRange`.
+#[derive(Clone, Copy, Debug)]
+pub struct Threshold(f64);
 
 impl std::str::FromStr for Threshold {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> anyhow::Result<Threshold> {
-        let percent =
-            s.parse::<u32>().context("invalid integer percent threshold")?;
-        Ok(Threshold(f64::from(percent)))
+        let ratio = s.parse::<f64>().context("invalid threshold ratio")?;
+        Ok(Threshold(ratio))
     }
 }
 
