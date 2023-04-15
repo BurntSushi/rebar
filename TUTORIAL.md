@@ -1,13 +1,6 @@
 This document provides a guided exploration through several of rebar's
 sub-commands.
 
-Note that in order to run benchmarks, you need to build all of the regex engine
-runner programs that you want to collect measurements for. If you just want to
-explore some measurements, then you can skip to that section without needing to
-build any of the regex engines. That is, one can explore the measurements that
-are saved and committed to this repository without having to run any of the
-benchmark programs. You just need to build `rebar` itself.
-
 ## Table of contents
 
 * [Run benchmarks and gather measurements](#gather-measurements)
@@ -46,7 +39,8 @@ $ rebar build -e '^rust/regex$' -e '^go/regexp$' -e '^python/re$'
 
 The `-e/--engine` flag is accepted by most of rebar's sub-commands.
 
-You should see some output like the following:
+Assuming you have Cargo, Go and Python installed, you should see some output
+like the following:
 
 ```
 rust/regex: running: cd "engines/rust/regex" && "cargo" "build" "--release"
@@ -98,14 +92,14 @@ curated/04-ruff-noqa/compile-real,compile,0.0.1 (rev cef9e52192),rust/regex,1.7.
 
 The `-f/--filter` flag accepts a regex pattern just like the `-e/--engine`
 flag, but instead of being applied to the engine name, it's applied to the
-benchmark name. If we use both `-e/--engine` and `-f/--filter` like we do here,
-then the benchmark has to match both of them in order to run.
+benchmark name. If we use both `-e/--engine` and `-f/--filter` like we do
+above, then the benchmark has to match both of them in order to run.
 
 Notice here that I used `tee` to both write the measurement results to `stdout`
 _and_ capture them to a file. I did that because measurement results can be
 used as an input to other rebar sub-commands for inspection. Since measurement
-results can take a long time to record, it's very useful to be able to do it
-once and then inspect them many times.
+results can take a long time to record, it's nice to both be able to see the
+progress and to capture them for inspection later.
 
 The next section will discuss how to inspect the results. Namely, the raw CSV
 data isn't particularly amenable for each analysis. You *can* look at it
@@ -156,19 +150,11 @@ about 3 hours. Of course, you can always gather a subset of measurements too,
 as explained in the previous section.)
 
 All we need to do exploratory analysis on measurements is `rebar` and a
-checkout of this repository. The [BUILD](BUILD.md) document explains things in
-more detail, but as long as you have Cargo installed, all you should need is
-this:
+checkout of this repository. The [BUILD](BUILD.md) document explains that
+in more detail.
 
-```
-$ git clone https://github.com/BurntSushi/rebar
-$ cd rebar
-$ cargo install --path .
-```
-
-Your current working directory should now be at the root of the repository.
-In this tutorial, we'll be working with the first saved set of recorded
-measurements:
+Assuming your current working directory is at the root of the repository, we
+can start working with a saved set of recorded measurements:
 
 ```
 $ ls -l record/all/2023-04-11/*.csv | wc -l
@@ -191,15 +177,15 @@ Since the rows for the table are the benchmarks (i.e., each column reflects the
 results for a single regex engine), you can make the table more readable by
 limiting the regex engines one examines with the `-e/--engine` flag. For
 example, to compare the `rust/regex`, `re2` and `go/regexp` engines across all
-benchmark:
+benchmarks:
 
 ```
 $ rebar cmp record/all/2023-04-11/*.csv -e '^(re2|rust/regex|go/regexp)$'
 ```
 
-This shows all benchmarks where _at least one_ of the engines has a recorded
-result. You might only want to look at results where all three engines have a
-result:
+The above command shows all benchmarks where _at least one_ of the engines has
+a recorded result. You might instead only want to look at results where all
+three engines have a result:
 
 ```
 $ rebar cmp record/all/2023-04-11/*.csv -e '^(re2|rust/regex|go/regexp)$' --intersection
@@ -220,12 +206,12 @@ both `re2` and `rust/regex`, we limit our comparison to `re2` and `rust/regex`:
 $ rebar cmp record/all/2023-04-11/*.csv -e '^(re2|rust/regex)$' -t 50
 ```
 
-But what if we want to flip all of this around and really look at all of the
-regex engines, but only for a small set of benchmarks? In this case, the
-`--row` flag can be used to flip the rows and colummns. That is, the rows
-become regex engines and the columns become benchmarks. We use the
-`-f/--filter` flag to limit our benchmarks (otherwise we'd still have the
-problem of too many columns because there are so many benchmarks):
+But what if we want to flip all of this around and look at all of the regex
+engines, but only for a small set of benchmarks? In this case, the `--row`
+flag can be used to flip the rows and colummns. That is, the rows become regex
+engines and the columns become benchmarks. We use the `-f/--filter` flag to
+limit our benchmarks (otherwise we'd still have the problem of too many columns
+because there are so many benchmarks):
 
 ```
 $ rebar cmp record/all/2023-04-11/*.csv --row engine -f mariomka -f regex-redux
@@ -281,8 +267,9 @@ speedup ratio of `1.0`, and every other engine has a speedup ratio of `N`,
 where the engine is said to be "`N` times slower than the fastest."
 
 The `rebar rank` command then averages the speedup ratios for every engine
-using geometric mean. In other words, this distills the performance of a single
-regex engine across many benchmarks down into a single number.
+using the geometric mean. In other words, this distills the relative
+performance of a single regex engine across many benchmarks down into a single
+number.
 
 Naively, you can ask for a ranking of regex engines across all recorded
 results, and `rebar` will happily give it to you:
@@ -320,7 +307,7 @@ $ rebar rank record/all/2023-04-11/*.csv -M compile -f '^curated/'
 ```
 
 You can make the comparison a little bit more rigorous by limiting it to the
-set of benchmarks for which every regex engine as a result:
+set of benchmarks for which every regex engine has a result:
 
 ```
 $ rebar rank record/all/2023-04-11/*.csv -M compile -f '^curated/' --intersection
