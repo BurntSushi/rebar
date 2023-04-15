@@ -147,25 +147,36 @@ dotnet/compiled: dependency command failed: failed to run command and wait for o
 dotnet/nobacktrack: dependency command failed: failed to run command and wait for output
 ```
 
-The error messages above are telling you that `rebar` can't find the program
-`dotnet` and that `dotnet` is required in order to build the .NET benchmark
-program. Notice also that there are multiple regex engines that contain the
-string `dotnet`. This is because `dotnet` has three different regex engines
-that might be worth measuring: the default interpreter, a JIT and a
+The error messages above are telling you that `rebar` can't find a program
+dependency. Notice also that there are multiple regex engines that contain
+the string `dotnet`. This is because `dotnet` has three different regex
+engines that might be worth measuring: the default interpreter, a JIT and a
 non-backtracking finite automata based engine. Generally speaking, since all
-three are executed by the same runner program, if we can build one of them
-then we'll be able to build all of them. So let's just focus on one:
+three are executed by the same runner program, if we can build one of them then
+we'll be able to build all of them. So let's just focus on one. We'll also set
+`RUST_LOG=debug` so that we can get a little more information about what's
+failing:
 
 ```
-$ rebar build -e '^dotnet$'
+$ RUST_LOG=debug rebar build -e '^dotnet$'
+[2023-04-15T18:20:18Z DEBUG rebar::util] running command: cd "engines/dotnet" && "/home/andrew/code/rust/rebar/engines/dotnet/bin/Release/net7.0/main" "version"
+[2023-04-15T18:20:18Z DEBUG rebar::format::benchmarks] extracted version for engine 'dotnet' failed: failed to get version: failed to run command and wait for output: No such file or directory (os error 2)
+[2023-04-15T18:20:18Z DEBUG rebar::util] running command: "dotnet" "--list-sdks"
 dotnet: dependency command failed: failed to run command and wait for output
 note: a dependency that is required to build 'dotnet' could not be found, either because it isn't installed or because it didn't behave as expected
 note: run `RUST_LOG=debug rebar build -e '^dotnet$'` to see more details
 ```
 
-At this point, we know we need to get .NET installed, so let's try that. You'll
-need to follow [.NET installation instructions for your
-platform][dotnet-install], but for me on Archlinux, I'll try this:
+So why isn't `dotnet --list-sdks` working? Let's try it:
+
+```
+$ dotnet --list-sdks
+zsh: command not found: dotnet
+```
+
+Ah, because .NET is not installed! So let's get it installed. You'll need to
+follow [.NET installation instructions for your platform][dotnet-install], but
+for me on Archlinux, I'll try this:
 
 [dotnet-install]: https://dotnet.microsoft.com/en-us/download
 
