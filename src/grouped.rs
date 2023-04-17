@@ -352,7 +352,7 @@ impl<T> ByBenchmarkNameGroup<T> {
             }
             let this = m.duration(stat).as_secs_f64();
             let ratio = this / best;
-            if range.include(ratio) {
+            if range.contains(ratio) {
                 return true;
             }
         }

@@ -542,7 +542,7 @@ interesting to filter on.
     );
 
     /// Returns true if and only if the given ratio falls within this range.
-    pub fn include(&self, ratio: f64) -> bool {
+    pub fn contains(&self, ratio: f64) -> bool {
         self.min.map_or(true, |min| min.0 <= ratio)
             && self.max.map_or(true, |max| ratio <= max.0)
     }
