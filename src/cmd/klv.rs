@@ -1,4 +1,4 @@
-use std::{path::PathBuf, sync::Arc, time::Duration};
+use std::{io::Write, path::PathBuf, sync::Arc, time::Duration};
 
 use {
     anyhow::Context,
@@ -129,8 +129,14 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
         max_time,
         max_warmup_time,
     };
-    klvbench
-        .write(&mut std::io::stdout())
-        .context("failed to write KLV data to stdout")?;
+    let mut buf = vec![];
+    klvbench.write(&mut buf).context("failed to write KLV data")?;
+    if let Err(err) = std::io::stdout().write_all(&buf) {
+        if err.kind() == std::io::ErrorKind::BrokenPipe {
+            return Ok(());
+        }
+        return Err(anyhow::Error::from(err)
+            .context("failed to write KLV data to stdout"));
+    }
     Ok(())
 }
