@@ -3,7 +3,7 @@ sub-commands.
 
 ## Table of contents
 
-* [Run benchmarks and gather measurements](#gather-measurements)
+* [Run benchmarks and gather measurements](#run-benchmarks-and-gather-measurements)
 * [Explore measurements](#explore-measurements)
 * [Rank regex engines](#rank-regex-engines)
 
