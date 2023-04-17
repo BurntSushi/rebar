@@ -340,14 +340,14 @@ impl MeasurementGroup {
     /// The aggregate statistic used to test against the given range is
     /// specified by `stat`.
     fn is_within_range(&self, stat: Stat, range: ThresholdRange) -> bool {
-        let best_engine = self.best(stat);
-        let best = &self.measurements_by_data[best_engine]
+        let best_data_name = self.best(stat);
+        let best = &self.measurements_by_data[best_data_name]
             .duration(stat)
             .as_secs_f64();
-        for m in self.measurements_by_data.values() {
+        for (data_name, m) in self.measurements_by_data.iter() {
             // The speedup ratio for the best engine is always 1.0, and so it
             // isn't useful to filter on it.
-            if m.engine == best_engine {
+            if data_name == best_data_name {
                 continue;
             }
             let this = m.duration(stat).as_secs_f64();
