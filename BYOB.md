@@ -17,8 +17,10 @@ flag to any rebar commands that need to read the benchmark definitions. (For
 example, `rebar measure` and `rebar report`.)
 
 This document will demonstrate this by showing how to build our own `memmem`
-benchmark suite. We'll create our own benchmark definitions, create our
-own runner programs, create our own models and define our own engines. In
+benchmark suite. (`memmem` is a POSIX routine for substring search. That is,
+given a needle and a haystack, it returns the first occurrence of the needle
+in the haystack, if any.) We'll create our own benchmark definitions, create
+our own runner programs, create our own models and define our own engines. In
 this exploration, we will do a bake off between [the `memchr` crate's `memmem`
 routine][rust-memmem] and [libc's `memmem` routine][libc-memmem].
 
