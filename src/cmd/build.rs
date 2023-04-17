@@ -71,9 +71,8 @@ OPTIONS:
 
 pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
     let c = Config::parse(p)?;
-    let engines = Engines::from_file(&c.dir.join("engines.toml"), |e| {
-        c.engine_filter.include(&e.name)
-    })?;
+    let engines =
+        Engines::from_file(&c.dir, |e| c.engine_filter.include(&e.name))?;
 
     let mut printed_note = false;
     let mut printed_dep_note = false;

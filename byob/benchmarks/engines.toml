@@ -1,6 +1,6 @@
 [[engine]]
   name = "rust/memmem"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/release/runner"
     args = ["--version"]
@@ -16,7 +16,7 @@
 
 [[engine]]
   name = "rust/memmem/restricted"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/release/runner"
     args = ["--version"]
@@ -32,7 +32,7 @@
 
 [[engine]]
   name = "libc/memmem"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/release/runner"
     args = ["--version"]
@@ -48,7 +48,7 @@
 
 [[engine]]
   name = "musl/memmem"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/x86_64-unknown-linux-musl/release/runner"
     args = ["--version"]

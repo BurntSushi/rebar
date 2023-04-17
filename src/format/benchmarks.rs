@@ -42,9 +42,8 @@ impl Benchmarks {
         // version info for every regex engine in some cases even when we don't
         // need to.
         let enginerefs = wire.engine_references(&filters.engine);
-        let engines = Engines::from_file(&dir.join("engines.toml"), |e| {
-            enginerefs.contains(&e.name)
-        })?;
+        let engines =
+            Engines::from_file(dir, |e| enginerefs.contains(&e.name))?;
         let res = Regexes::new(dir, &wire)?;
         let hays = Haystacks::new(dir, &wire)?;
         let mut defs = vec![];
@@ -124,10 +123,18 @@ impl Engines {
     }
 
     pub fn from_file(
-        path: &Path,
+        parent_dir: &Path,
         mut include: impl FnMut(&Engine) -> bool,
     ) -> anyhow::Result<Engines> {
-        let data = std::fs::read(path).with_context(|| {
+        let Some(parent) = parent_dir.to_str() else {
+            anyhow::bail!(
+                "parent directory '{}' of engines.toml contains \
+                 invalid UTF-8",
+                parent_dir.display(),
+            );
+        };
+        let path = parent_dir.join("engines.toml");
+        let data = std::fs::read(&path).with_context(|| {
             format!("failed to read engines from {}", path.display())
         })?;
         let data = std::str::from_utf8(&data).with_context(|| {
@@ -142,7 +149,7 @@ impl Engines {
             // Note that validate can modify parts of the engine, e.g.,
             // to populate empty bin names with the path to the current
             // executable.
-            e.validate().with_context(|| {
+            e.validate(&parent).with_context(|| {
                 format!("validation for engine '{}' failed", e.name)
             })?;
             anyhow::ensure!(
@@ -184,7 +191,7 @@ impl Engine {
         self.version == "ERROR"
     }
 
-    fn validate(&mut self) -> anyhow::Result<()> {
+    fn validate(&mut self, bench_dir: &str) -> anyhow::Result<()> {
         static RE_ENGINE: Lazy<regex::Regex> = Lazy::new(|| {
             regex::Regex::new(r"^[-A-Za-z0-9]+(/[-A-Za-z0-9]+)*$").unwrap()
         });
@@ -195,6 +202,17 @@ impl Engine {
             self.name,
             RE_ENGINE.as_str(),
         );
+        self.cwd = {
+            let cwd = match self.cwd.take() {
+                None => Path::new(bench_dir).to_path_buf(),
+                Some(cwd) => Path::new(bench_dir).join(cwd),
+            };
+            // OK because we know bench_dir and the original cwd are valid
+            // UTF-8, and joining two valid UTF-8 strings together will always
+            // result in valid UTF-8. (Becuase the join delimiter is always
+            // ASCII in any reasonable context.)
+            Some(cwd.into_os_string().into_string().unwrap())
+        };
         let cwd = self.cwd.as_deref();
         self.run.validate(cwd)?;
         if let Some(ref mut run) = self.version_config.run {

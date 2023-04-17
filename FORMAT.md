@@ -70,9 +70,10 @@ following keys:
 
 * `name` - The name of the engine. This must be unique.
 * `cwd` - An optional key that specifies the working directory in which all
-commands for this engine are run. This can be overridden in each command. If
-omitted, the working directory defaults to the working directory of `rebar`.
-(Which is the root of this repository by convention.)
+commands for this engine are run. This can be overridden in each command.
+The `cwd` is interpreted relative to `{bench_dir}`, i.e., the directory
+containing the `engines.toml` file. If omitted, the working directory defaults
+to `{bench_dir}`. (Which is `./benchmarks/` by default.)
 * `version` - A TOML table specifying how to get the version of this regex
 engine.
 * `run` - A TOML table specifying a command to run the regex engine.
@@ -89,9 +90,9 @@ artifacts produced by building a regex engine.
 
 The command table has the following keys:
 
-* `cwd` - Sets the working directory in which this command is run. If it's
-absent, then the `cwd` set on the engine is used. If that's absent, then the
-working directory of `rebar` is used.
+* `cwd` - Sets the working directory in which this command is run, relative to
+`{bench_dir}`. If it's absent, then the `cwd` set on the engine is used. If
+that's absent, then it's set to `{bench_dir}`.
 * `bin` - A string corresponding to the binary name of the program. Note that
 because of platform idiosyncracies, when `cwd` is set (either here or on the
 engine) and `bin` contains a `/`, then it is assumed to be relative path. The
@@ -126,7 +127,7 @@ is the third party `regex` module and not the standard library `re` module):
 ```toml
 [[engine]]
   name = "python/regex"
-  cwd = "external/python"
+  cwd = "../engines/python"
   [engine.version]
     bin = "ve/bin/pip"
     args = ["show", "regex"]
