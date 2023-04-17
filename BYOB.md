@@ -76,7 +76,7 @@ benchmark definition to test with. So let's add one:
 ```toml
 [[bench]]
 model = "iter"
-name = ""
+name = "sherlock-holmes"
 regex = "Sherlock Holmes"
 haystack = { path = "sherlock.txt" }
 count = 91
@@ -87,7 +87,7 @@ There are actually a few decisions that we're making by writing this defintion:
 
 * There is a model named `iter`. It's up to us what it represents, but the
 idea is that implementations of the model will look for all matches of the
-needle in the haystack. We'll see this more concrete when we write our runner
+needle in the haystack. We'll see this more concretely when we write our runner
 program.
 * `memmem` of course does not support regexes, so we only write a literal
 string here even though the field is called `regex`.
@@ -239,7 +239,7 @@ impl OneKLV {
 
 Now that we can parse one KLV item, we just need to parse all of them and
 combine them into a single configuration object. This object will tell the
-program which benchmark to run. First, here's the `Config` type:
+program which benchmark to run. We'll start with the `Config` type:
 
 ```rust
 #[derive(Clone, Debug, Default)]
@@ -545,7 +545,7 @@ but left it empty. Here's the `rust/memmem` engine:
 ```toml
 [[engine]]
   name = "rust/memmem"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/release/runner"
     args = ["--version"]
@@ -566,7 +566,7 @@ first argument we pass when running the program:
 ```toml
 [[engine]]
   name = "libc/memmem"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/release/runner"
     args = ["--version"]
@@ -655,7 +655,7 @@ Then add the following engine definition to `benchmarks/engines.toml`:
 ```toml
 [[engine]]
   name = "musl/memmem"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/x86_64-unknown-linux-musl/release/runner"
     args = ["--version"]
@@ -781,7 +781,7 @@ In contrast, the `memchr` crate provides an API for building a
 searches. This is a legitimate advantage to better API design, and is in my
 opinion fair game. Still though, what if you were thinking about implementing
 your own libc? Legacy requires that you provide a `memmem` API. So how well
-the `memchr` crate fair?
+would the `memchr` crate fair?
 
 To figure this out, we should do two things:
 
@@ -792,9 +792,9 @@ API difference is a latency optimization, not a throughput one. Although, the
 more restrictive API might prevent one from doing more throughput optimizations
 if they would too negatively impact latency!)
 * Define a new `rust/memmem/restricted` engine that always rebuilds the
-searcher every time. We _could_ just change the code of `rust/memmem`, rebuild
-the runner program and then recapture measurements. And sometimes that might
-be the right thing to do. But in this case, it would be nice to have both
+searcher for every search. We _could_ just change the code of `rust/memmem`,
+rebuild the runner program and then recapture measurements. And sometimes that
+might be the right thing to do. But in this case, it would be nice to have both
 options available simultaneously since this really comes down to a public API
 difference and not some internal tweak that we're testing.
 
@@ -812,7 +812,6 @@ engines = [
   "libc/memmem",
   "musl/memmem",
   "rust/memmem",
-  "rust/memmem/restricted",
 ]
 ```
 
@@ -821,7 +820,7 @@ Now teach the new engine to rebar by adding it to `benchmarks/engines.toml`:
 ```toml
 [[engine]]
   name = "rust/memmem/restricted"
-  cwd = "runner"
+  cwd = "../runner"
   [engine.version]
     bin = "./target/release/runner"
     args = ["--version"]
