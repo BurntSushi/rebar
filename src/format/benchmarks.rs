@@ -109,6 +109,7 @@ pub struct Engines {
     #[serde(skip)]
     pub by_name: BTreeMap<String, Engine>,
     #[serde(rename = "engine")]
+    #[serde(default)] // allows empty TOML files
     pub list: Vec<Engine>,
 }
 
@@ -710,11 +711,6 @@ impl WireDefinition {
         filters: &Filters,
         engines: &Engines,
     ) -> anyhow::Result<Vec<Engine>> {
-        anyhow::ensure!(
-            !self.engines.is_empty(),
-            "'engines' is empty for benchmark '{}'",
-            self.name
-        );
         let mut resolved = vec![];
         for name in self.engines.iter() {
             if !filters.engine.include(name) {
