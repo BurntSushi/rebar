@@ -104,12 +104,6 @@ impl Benchmark {
                 .write(&mut wtr)
                 .context("failed to write 'model'")?;
 
-            for (i, p) in b.regex.patterns.iter().enumerate() {
-                OneKLV::new("pattern", p).write(&mut wtr).with_context(
-                    || format!("failed to write pattern {}", i),
-                )?;
-            }
-
             OneKLV::new(
                 "case-insensitive",
                 &b.regex.case_insensitive.to_string(),
@@ -120,13 +114,6 @@ impl Benchmark {
             OneKLV::new("unicode", &b.regex.unicode.to_string())
                 .write(&mut wtr)
                 .context("failed to write 'unicode'")?;
-
-            OneKLV {
-                key: "haystack".to_string(),
-                value: Arc::clone(&b.haystack),
-            }
-            .write(&mut wtr)
-            .context("failed to write 'haystack'")?;
 
             OneKLV::new("max-iters", &b.max_iters.to_string())
                 .write(&mut wtr)
@@ -146,6 +133,22 @@ impl Benchmark {
             )
             .write(&mut wtr)
             .context("failed to write 'max-warmup-time'")?;
+
+            // We write the patterns and haystack last because they can be big.
+            // If there are things after it, they can be easy to miss. This is
+            // also why we write patterns second to last, since there can be
+            // many patterns. (But usually there's only one.)
+            for (i, p) in b.regex.patterns.iter().enumerate() {
+                OneKLV::new("pattern", p).write(&mut wtr).with_context(
+                    || format!("failed to write pattern {}", i),
+                )?;
+            }
+            OneKLV {
+                key: "haystack".to_string(),
+                value: Arc::clone(&b.haystack),
+            }
+            .write(&mut wtr)
+            .context("failed to write 'haystack'")?;
 
             Ok(())
         }
