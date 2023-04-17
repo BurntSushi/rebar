@@ -1,0 +1,4 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),libc/memmem,0.1.0,,607430,53793,4.57s,54.18us,0.00ns,55.73us,2.67us,53.25us,79.13us
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),musl/memmem,0.1.0,,607430,12635,4.51s,237.25us,0.00ns,237.40us,1.45us,234.39us,257.20us
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),rust/memmem,0.1.0,,607430,209996,4.62s,14.22us,0.00ns,14.25us,152.00ns,13.86us,22.44us

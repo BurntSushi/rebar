@@ -1,0 +1,13 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),libc/memmem,0.1.0,,607430,53228,4.57s,54.31us,0.00ns,56.33us,3.16us,52.62us,68.37us
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),musl/memmem,0.1.0,,607430,12988,4.51s,229.55us,0.00ns,230.95us,3.35us,228.59us,245.80us
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),rust/memmem,0.1.0,,607430,214101,4.62s,13.95us,0.00ns,13.97us,138.00ns,13.73us,21.20us
+memmem/sherlock-holmes,iter,0.0.1 (rev e5d648ff17),rust/memmem/restricted,0.1.0,,607430,190542,4.62s,15.70us,0.00ns,15.71us,108.00ns,15.34us,24.48us
+memmem/very-common,iter,0.0.1 (rev e5d648ff17),libc/memmem,0.1.0,,607430,8583,4.51s,346.57us,0.00ns,349.49us,6.58us,341.61us,385.34us
+memmem/very-common,iter,0.0.1 (rev e5d648ff17),musl/memmem,0.1.0,,607430,6971,4.51s,429.35us,0.00ns,430.35us,5.91us,421.48us,481.65us
+memmem/very-common,iter,0.0.1 (rev e5d648ff17),rust/memmem,0.1.0,,607430,19886,4.51s,151.72us,0.00ns,150.83us,5.37us,141.05us,176.40us
+memmem/very-common,iter,0.0.1 (rev e5d648ff17),rust/memmem/restricted,0.1.0,,607430,11394,4.51s,262.70us,0.00ns,263.27us,3.47us,254.79us,299.04us
+memmem/every-position,iter,0.0.1 (rev e5d648ff17),libc/memmem,0.1.0,,607430,3219,4.51s,934.09us,0.00ns,932.06us,13.94us,817.35us,0.97ms
+memmem/every-position,iter,0.0.1 (rev e5d648ff17),musl/memmem,0.1.0,,607430,4296,4.51s,700.51us,0.00ns,698.35us,22.31us,583.76us,934.01us
+memmem/every-position,iter,0.0.1 (rev e5d648ff17),rust/memmem,0.1.0,,607430,3211,4.51s,934.01us,0.00ns,934.28us,4.98us,875.63us,0.97ms
+memmem/every-position,iter,0.0.1 (rev e5d648ff17),rust/memmem/restricted,0.1.0,,607430,524,4.51s,5.73ms,1.00ns,5.73ms,8.89us,5.72ms,5.79ms

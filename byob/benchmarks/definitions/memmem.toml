@@ -1,0 +1,25 @@
+[[bench]]
+model = "iter"
+name = "sherlock-holmes"
+regex = "Sherlock Holmes"
+haystack = { path = "sherlock.txt" }
+count = 91
+engines = [
+  "libc/memmem",
+  "musl/memmem",
+  "rust/memmem",
+  "rust/memmem/restricted",
+]
+
+[[bench]]
+model = "iter"
+name = "very-common"
+regex = "he"
+haystack = { path = "sherlock.txt" }
+count = 11_706
+engines = [
+  "libc/memmem",
+  "musl/memmem",
+  "rust/memmem",
+  "rust/memmem/restricted",
+]

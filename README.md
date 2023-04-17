@@ -22,6 +22,8 @@ programs for how to execute a benchmark.
 barometer.
 * [WANTED](WANTED.md) provides some ideas for other regex engines to add to
 rebar.
+* [BYOB](BYOB.md) discusses how to "bring your own benchmarks." That is, anyone
+can use `rebar` with their own engine and benchmark definitions.
 
 ## Results
 

@@ -28,6 +28,7 @@ members = [
 # automatic workspace detection because of this. So if a new entry is added to
 # this list, then '.vim/coc-settings.json' probably also needs to be updated.
 exclude = [
+  "byob/runner",
   "engines/hyperscan",
   "engines/icu",
   "engines/pcre2",

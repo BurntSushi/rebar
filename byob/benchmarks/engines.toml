@@ -1,0 +1,63 @@
+[[engine]]
+  name = "rust/memmem"
+  cwd = "runner"
+  [engine.version]
+    bin = "./target/release/runner"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/runner"
+    args = ["rust/memmem"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
+[[engine]]
+  name = "rust/memmem/restricted"
+  cwd = "runner"
+  [engine.version]
+    bin = "./target/release/runner"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/runner"
+    args = ["rust/memmem/restricted"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
+[[engine]]
+  name = "libc/memmem"
+  cwd = "runner"
+  [engine.version]
+    bin = "./target/release/runner"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/runner"
+    args = ["libc/memmem"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
+[[engine]]
+  name = "musl/memmem"
+  cwd = "runner"
+  [engine.version]
+    bin = "./target/x86_64-unknown-linux-musl/release/runner"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/x86_64-unknown-linux-musl/release/runner"
+    args = ["libc/memmem"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release", "--target", "x86_64-unknown-linux-musl"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean", "--target", "x86_64-unknown-linux-musl"]

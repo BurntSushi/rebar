@@ -1,0 +1,13 @@
+[package]
+publish = false
+name = "runner"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+libc = "0.2.141"
+memchr = "2.5.0"
+
+[[bin]]
+name = "runner"
+path = "main.rs"
