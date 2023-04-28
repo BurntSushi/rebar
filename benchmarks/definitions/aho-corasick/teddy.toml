@@ -1,0 +1,103 @@
+analysis = '''
+These benchmarks focus specifically on the Teddy searcher. Teddy is a
+vectorized algorithm for multiple substring search. It works by quickly
+identifying candidates in the haystack with a 1, 2, 3 or 4 byte prefix. It then
+confirms those candidates by checking whether the corresponding full pattern
+matches.
+
+Teddy can often be an order of magnitude (or more) faster than Aho-Corasick
+and/or a DFA based regex engine. With that said, Teddy has interesting
+performance cliffs and doesn't scale well to an arbitrary number of patterns.
+
+These benchmarks attempt to explore what Teddy is good and bad at. We also
+compare Teddy to the Aho-Corasick NFA and the lazy DFA regex engine.
+'''
+
+[[bench]]
+model = "count"
+name = "sherlock4-nocase-ascii"
+regex = [
+  "SHER", "SHEr", "SHeR", "SHer", "ShER", "ShEr", "SheR", "Sher",
+  "sHER", "sHEr", "sHeR", "sHer", "shER", "shEr", "sheR", "sher",
+]
+haystack = { path = "sherlock.txt" }
+count = 109
+engines = [
+  "rust/aho-corasick/nfa",
+  "rust/aho-corasick/teddy",
+  "rust/regex/hybrid",
+]
+
+[[bench]]
+model = "count"
+name = "sherlock4-nocase-unicode"
+regex = [
+  "SHER", "SHEr", "SHeR", "SHer", "ShER", "ShEr", "SheR", "Sher",
+  "sHER", "sHEr", "sHeR", "sHer", "shER", "shEr", "sheR", "sher",
+  "ſHE", "ſHe", "ſhE", "ſhe",
+]
+unicode = true
+haystack = { path = "sherlock.txt" }
+count = 109
+engines = [
+  "rust/aho-corasick/nfa",
+  "rust/aho-corasick/teddy",
+  "rust/regex/hybrid",
+]
+
+[[bench]]
+model = "count"
+name = "sherlock5-nocase-ascii"
+regex = [
+  "SHERL", "SHERl", "SHErL", "SHErl", "SHeRL", "SHeRl", "SHerL", "SHerl",
+  "ShERL", "ShERl", "ShErL", "ShErl", "SheRL", "SheRl", "SherL", "Sherl",
+  "sHERL", "sHERl", "sHErL", "sHErl", "sHeRL", "sHeRl", "sHerL", "sHerl",
+  "shERL", "shERl", "shErL", "shErl", "sheRL", "sheRl", "sherL", "sherl",
+]
+haystack = { path = "sherlock.txt" }
+count = 102
+engines = [
+  "rust/aho-corasick/nfa",
+  "rust/aho-corasick/teddy",
+  "rust/regex/hybrid",
+]
+
+[[bench]]
+model = "count"
+name = "sherlock5-nocase-unicode"
+regex = [
+  "SHERL", "SHERl", "SHErL", "SHErl", "SHeRL", "SHeRl", "SHerL", "SHerl",
+  "ShERL", "ShERl", "ShErL", "ShErl", "SheRL", "SheRl", "SherL", "Sherl",
+  "sHERL", "sHERl", "sHErL", "sHErl", "sHeRL", "sHeRl", "sHerL", "sHerl",
+  "shERL", "shERl", "shErL", "shErl", "sheRL", "sheRl", "sherL", "sherl",
+  "ſHER", "ſHEr", "ſHeR", "ſHer", "ſhER", "ſhEr", "ſheR", "ſher",
+]
+unicode = true
+haystack = { path = "sherlock.txt" }
+count = 102
+engines = [
+  "rust/aho-corasick/nfa",
+  "rust/aho-corasick/teddy",
+  "rust/regex/hybrid",
+]
+
+[[bench]]
+model = "count"
+name = "reported-i787-keywords"
+regex = [
+  "as", "break", "const", "continue", "crate", "else", "enum", "extern",
+  "false", "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod",
+  "move", "mut", "pub", "ref", "return", "self", "Self", "static", "struct",
+  "super", "trait", "true", "type", "unsafe", "use", "where", "while",
+  "abstract", "become", "box", "do", "final", "macro", "override", "priv",
+  "unsized", "virtual", "yield", "try", "i8", "i16", "i32", "i64", "i128",
+  "isize", "u8", "u16", "u32", "u64", "u128", "usize", "bool", "char", "str",
+  "f32", "f64",
+]
+haystack = { path = "bstr-ext-slice-65993b58.txt" }
+count = 4_896
+engines = [
+  "rust/aho-corasick/nfa",
+  "rust/aho-corasick/teddy",
+  "rust/regex/hybrid",
+]
