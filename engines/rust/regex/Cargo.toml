@@ -1,16 +1,11 @@
 [package]
 name = "main"
-version = "1.7.3"
+version = "1.8.1"
 edition = "2021"
 
 [[bin]]
 name = "main"
 path = "main.rs"
-
-[patch.crates-io]
-aho-corasick = { path = "/home/andrew/rust/aho-corasick" }
-regex = { path = "/home/andrew/rust/regex" }
-regex-syntax = { path = "/home/andrew/rust/regex/regex-syntax" }
 
 [dependencies]
 anyhow = "1.0.69"
@@ -26,7 +21,7 @@ lexopt = "0.3.0"
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-regex = "=1.7.3"
+regex = "=1.8.1"
 
 [dependencies.klv]
 path = "../../../shared/klv"
