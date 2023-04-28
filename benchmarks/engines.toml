@@ -652,6 +652,24 @@
     bin = "cargo"
     args = ["clean"]
 
+# A Teddy searcher. This is a vectorized multiple substring searcher. It only
+# works with a "small" number of literals.
+[[engine]]
+  name = "rust/aho-corasick/teddy"
+  cwd = "../engines/rust/aho-corasick"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["teddy", "--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["teddy"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
 # Single substring search. Used whenever possible to accelerate searches.
 # Utilizes heuristic frequency distribution of bytes, SIMD, Two-Way, memchr and
 # Rabin-Karp.
