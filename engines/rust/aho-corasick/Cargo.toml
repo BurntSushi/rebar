@@ -1,14 +1,11 @@
 [package]
 name = "main"
-version = "0.7.20"
+version = "1.0.1"
 edition = "2021"
 
 [[bin]]
 name = "main"
 path = "main.rs"
-
-[patch.crates-io]
-aho-corasick = { path = "/home/andrew/rust/aho-corasick" }
 
 [dependencies]
 anyhow = "1.0.69"
@@ -24,7 +21,7 @@ lexopt = "0.3.0"
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-aho-corasick = "=0.7.20"
+aho-corasick = "=1.0.1"
 
 [dependencies.klv]
 path = "../../../shared/klv"
