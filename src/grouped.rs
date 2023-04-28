@@ -342,6 +342,14 @@ impl<T> ByBenchmarkNameGroup<T> {
     /// The aggregate statistic used to test against the given range is
     /// specified by `stat`.
     pub fn is_within_range(&self, stat: Stat, range: ThresholdRange) -> bool {
+        // We don't filter on the "best" engine below because its speedup ratio
+        // is always 1. So if we have a group of size 1, then we don't filter
+        // on spedup ratio at all and thus would return false below, which
+        // doesn't seem right. So we detect that case and handle it specially
+        // here.
+        if self.by_engine.len() == 1 {
+            return range.contains(1.0);
+        }
         let best_engine = self.best(stat);
         let best = &self.by_engine[best_engine].duration(stat).as_secs_f64();
         for m in self.by_engine.values() {
