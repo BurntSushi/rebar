@@ -4,17 +4,11 @@ version = 3
 
 [[package]]
 name = "aho-corasick"
-version = "0.7.20"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67fc08ce920c31afb70f013dcce1bfc3a3195de6a228474e45e1f145b36f8d04"
 dependencies = [
  "log",
- "memchr",
-]
-
-[[package]]
-name = "aho-corasick"
-version = "0.7.20"
-source = "git+https://github.com/BurntSushi/aho-corasick#7edd3498722231f5c601ef5ae77e57233b071947"
-dependencies = [
  "memchr",
 ]
 
@@ -110,7 +104,7 @@ dependencies = [
 
 [[package]]
 name = "main"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "bstr",
@@ -131,18 +125,20 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "regex"
-version = "1.7.3"
+version = "1.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af83e617f331cc6ae2da5443c602dfa5af81e517212d9d611a5b3ba1777b5370"
 dependencies = [
- "aho-corasick 0.7.20 (git+https://github.com/BurntSushi/aho-corasick)",
+ "aho-corasick",
  "memchr",
  "regex-syntax",
 ]
 
 [[package]]
 name = "regex-automata"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
- "aho-corasick 0.7.20",
+ "aho-corasick",
  "log",
  "memchr",
  "regex-syntax",
@@ -150,7 +146,7 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.6.29"
+version = "0.7.1"
 
 [[package]]
 name = "regexredux"
