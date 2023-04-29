@@ -1,0 +1,10 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+dictionary/compile/english,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,34,4.81s,40.01ms,13.45us,40.08ms,296.05us,39.29ms,41.06ms
+dictionary/compile/english-10,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,82,4.66s,15.98ms,331.00ns,16.02ms,126.45us,15.81ms,16.41ms
+dictionary/compile/english-15,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,820,4.51s,838.23us,2.00ns,836.92us,16.97us,801.10us,908.24us
+reported/i787-keywords/compile,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,13150,4.51s,36.13us,0.00ns,36.16us,713.00ns,33.82us,47.64us
+reported/p893-hir-case-folding/subtract-empty,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,234975,4.62s,2.15us,0.00ns,2.16us,85.00ns,1.95us,7.71us
+reported/p893-hir-case-folding/subtract-non-empty,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,190416,4.62s,4.99us,0.00ns,5.01us,133.00ns,4.71us,12.30us
+reported/p893-hir-case-folding/repeated,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,791,4.51s,3.71ms,0.00ns,3.71ms,27.51us,3.64ms,3.77ms
+wild/bibleref/compile,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,22017,4.51s,11.63us,0.00ns,11.61us,521.00ns,8.46us,16.74us
+wild/grapheme/compile,compile,0.0.1 (rev c050f4a04c),rust/regex/hir,0.7.1,,,17323,4.51s,15.60us,0.00ns,15.68us,734.00ns,13.79us,20.87us

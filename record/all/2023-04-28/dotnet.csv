@@ -1,0 +1,2 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+imported/regex-redux/regex-redux,regex-redux,0.0.1 (rev c050f4a04c),dotnet,7.0.3,,,14,4.81s,218.05ms,132.97us,218.11ms,1.33ms,215.72ms,220.61ms
