@@ -61,6 +61,7 @@ count = [
 engines = [
   'hyperscan',
   'pcre2/jit',
+  'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -106,6 +107,7 @@ count = 1
 engines = [
   'hyperscan',
   'pcre2/jit',
+  'rust/regex',
   'rust/regex/meta',
   'rust/regexold',
 ]
