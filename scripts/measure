@@ -75,8 +75,7 @@ for name_with_slashes in $engines; do
     if [ -n "$curated" ]; then
       rebar measure -f '^curated/' -e "$pat" | tee "$path"
     else
-      # rebar measure -F '^test/' -e "$pat" | tee "$path"
-      rebar measure -f 'curated.*veryl.*multi' -e "$pat" | tee "$path"
+      rebar measure -F '^test/' -e "$pat" | tee "$path"
     fi
   fi
 done
