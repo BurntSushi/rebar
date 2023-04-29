@@ -85,6 +85,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -114,6 +115,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -143,6 +145,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]

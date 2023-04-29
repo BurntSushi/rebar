@@ -55,6 +55,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -95,8 +96,9 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-`regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
-aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
+`rust/regex/lite`, `regress`, `re2` and `go/regexp` are excluded because `\w`
+is not Unicode aware. `hyperscan` is exclude because it doesn't support a
+Unicode aware `\b`.
 
 For `dotnet/compiled`, since the length of matching spans is in the number of
 UTF-16 code units, its expected count is smaller.
@@ -130,6 +132,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -170,8 +173,9 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-`regress`, `re2` and `go/regexp` are excluded because `\w` is not Unicode
-aware. `hyperscan` is exclude because it doesn't support a Unicode aware `\b`.
+`rust/regex/lite`, `regress`, `re2` and `go/regexp` are excluded because `\w`
+is not Unicode aware. `hyperscan` is exclude because it doesn't support a
+Unicode aware `\b`.
 
 For `dotnet/compiled`, since the length of matching spans is in the number of
 UTF-16 code units, its expected count is smaller.

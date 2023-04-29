@@ -52,6 +52,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -79,6 +80,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -106,6 +108,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -137,6 +140,10 @@ engines = [
   'rust/regex/meta',
   'rust/regexold',
 ]
+analysis = '''
+`rust/regex/lite` is not included because it doesn't support Unicode-aware
+case insensitive matching.
+'''
 
 [[bench]]
 model = "count"
@@ -161,6 +168,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]

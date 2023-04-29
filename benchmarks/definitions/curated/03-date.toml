@@ -93,6 +93,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -146,6 +147,9 @@ increasing this limit.
 `dotnet/compiled` gets a different count here, but it's not clear why.
 
 `perl` is left out of this benchmark because it times out.
+
+`rust/regex/lite` is excluded because it doesn't support Unicode-aware `\w`,
+`\d` or `\s`.
 '''
 
 [[bench]]
@@ -169,6 +173,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]

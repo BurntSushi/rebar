@@ -36,6 +36,23 @@
     bin = "cargo"
     args = ["clean"]
 
+# The regex-lite crate. It's like the regex crate, but it prioritizes small
+# binary size and shorter compilation times over functionality and performance.
+[[engine]]
+  name = "rust/regex/lite"
+  cwd = "../engines/rust/regex-lite"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
 # The regress regex engine, written in Rust. It is meant to support EcmaScript
 # syntax.
 #

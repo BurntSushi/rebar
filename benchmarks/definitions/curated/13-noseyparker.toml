@@ -78,6 +78,7 @@ limit.
 * `python/*` is omitted because it times out.
 * `re2` is omitted because it seems to fail and reports a count of `0`.
 * `regress` is omitted because it doesn't support inline flags.
+* `rust/regex/lite` is omitted because it times out.
 '''
 
 [[bench]]

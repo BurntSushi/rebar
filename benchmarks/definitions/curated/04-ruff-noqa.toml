@@ -76,6 +76,7 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -99,6 +100,7 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
@@ -120,6 +122,7 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
+  'rust/regex/lite',
   'rust/regex/meta',
   'rust/regexold',
 ]
