@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [ $# = 0 ]; then
+  echo "Usage: $(basename "$0") <csv-path> ..." >&2
+  exit 1
+fi
+
+# We exclude rust/regex/meta because it's really an "internal" engine to
+# rust/regex, but it is available as a public API in the regex-automata crate.
+# The only reason it's included in the curated benchmarks at all is to ensure
+# there aren't any meaningful differences between it and rust/regex, and also
+# because there are a few benchmarks that require multi-pattern support. Only
+# rust/regex/meta supports it. rust/regex does not.
+#
+# We also exclude rust/regexold because it's more of a test to ensure we
+# didn't have any major regressions when we cut over to regex-automata in the
+# rust/regex 1.9 release. It otherwise isn't really meant to be measured as a
+# distinct engine in the curated set of benchmarks.
+exclude='^(rust/regex/meta|rust/regexold)$'
+exec rebar report \
+  --splice README.md \
+  --statistic median \
+  --units throughput \
+  -f '^curated/' \
+  --summary-exclude "$exclude" \
+  "$@"
