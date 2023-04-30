@@ -37,6 +37,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -51,6 +52,8 @@ count = [
   # The .NET runner program uses the invariant culture. I couldn't tell from
   # the docs whether this is intended behavior or not.
   { engine = 'dotnet.*', count = 0 },
+  # rust/regex/lite doesn't support Unicode-aware case insensitive matching.
+  { engine = '^rust/regex/lite$', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -70,6 +73,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -79,7 +83,11 @@ regex = 'Δ'
 unicode = true
 case-insensitive = true
 haystack = 'δ'
-count = 1
+count = [
+  # rust/regex/lite doesn't support Unicode-aware case insensitive matching.
+  { engine = '^rust/regex/lite$', count = 0 },
+  { engine = '.*', count = 1 },
+]
 engines = [
   'dotnet',
   'dotnet/compiled',
@@ -97,4 +105,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]

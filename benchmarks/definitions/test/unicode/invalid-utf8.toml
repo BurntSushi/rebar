@@ -51,6 +51,8 @@ analysis = '''
 `javascript/*` does not support searching arbitrary bytes.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
+
+`rust/regex/lite` does not support searching arbitrary bytes, only valid UTF-8.
 '''
 
 [[bench]]
@@ -96,6 +98,8 @@ enabled.
 enabled.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
+
+`rust/regex/lite` does not support searching arbitrary bytes, only valid UTF-8.
 '''
 
 [[bench]]
@@ -125,6 +129,8 @@ analysis = '''
 `javascript/*` does not support searching arbitrary bytes.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
+
+`rust/regex/lite` does not support searching arbitrary bytes, only valid UTF-8.
 
 N.B. The `pile-of-poo-prefix.txt` haystack consists of the bytes
 `\xF0\x9F\x92`, which corresponds to a valid prefix of 💩. A regex engine
@@ -182,6 +188,8 @@ enabled.
 enabled.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
+
+`rust/regex/lite` does not support searching arbitrary bytes, only valid UTF-8.
 '''
 
 [[bench]]
@@ -213,4 +221,6 @@ analysis = '''
 for specific invalid UTF-8 bytes.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
+
+`rust/regex/lite` does not support searching arbitrary bytes, only valid UTF-8.
 '''

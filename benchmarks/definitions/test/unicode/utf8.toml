@@ -31,6 +31,9 @@ count = [
   # as one codepoint (quite sensibly), but ECMAScript RegExps require that
   # the atom be the UTF-16 code unit when Unicode mode isn't enabled.
   { engine = 'regress', count = 1 },
+  # rust/regex/lite always matches one codepoint at a time. This cannot be
+  # disabled by design in the name simplicity of implementation.
+  { engine = 'rust/regex/lite', count = 1 },
   { engine = '.*', count = 4 },
 ]
 engines = [
@@ -50,6 +53,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -85,4 +89,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]

@@ -44,6 +44,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -54,7 +55,7 @@ unicode = true
 haystack = 'δ'
 count = [
   # None of these regex engines support the Unicode variant of \w.
-  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -74,6 +75,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -84,7 +86,7 @@ unicode = true
 haystack = "\u200D"
 count = [
   # None of these regex engines support the Unicode variant of \w.
-  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   # None of these include \p{Join_Control} in their definition of \w.
   { engine = 'dotnet.*|hyperscan|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 1 },
@@ -106,6 +108,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -116,7 +119,7 @@ unicode = true
 haystack = "\u0322"
 count = [
   # None of these regex engines support the Unicode variant of \w.
-  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   # None of these include \p{gc=Mark} in their definition of \w.
   { engine = 'hyperscan|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 1 },
@@ -138,6 +141,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -148,7 +152,7 @@ unicode = true
 haystack = '᠕'
 count = [
   # None of these regex engines support the Unicode variant of \w.
-  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -168,6 +172,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -178,7 +183,7 @@ unicode = true
 haystack = '⁀'
 count = [
   # None of these regex engines support the Unicode variant of \w.
-  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   # None of these include \p{gc=Connector_Punctuation} in their definition
   # of \w, although, they all at least include `_`, which is part of
   # `Connector_Punctuation`.
@@ -202,4 +207,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]

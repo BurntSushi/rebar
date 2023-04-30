@@ -46,6 +46,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -56,7 +57,7 @@ unicode = true
 haystack = "\u2000"
 count = [
   # None of these regex engines support the Unicode variant of \s.
-  { engine = 'go/regexp|re2', count = 0 },
+  { engine = 'go/regexp|re2|rust/regex/lite', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -76,4 +77,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]

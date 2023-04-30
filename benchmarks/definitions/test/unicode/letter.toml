@@ -44,6 +44,8 @@ analysis = '''
 `python/re` doesn't support Unicode character classes at all.
 
 `regress` has support for Unicode character classes, but not `\pL` syntax.
+
+`rust/regex/lite` does not support Unicode character classes.
 '''
 
 [[bench]]
@@ -72,6 +74,8 @@ engines = [
 ]
 analysis = '''
 `python/re` doesn't support Unicode character classes at all.
+
+`rust/regex/lite` does not support Unicode character classes.
 
 N.B. This matches a Greek delta that is within the BMP. The test below matches
 a different variant of a Greek delta that is *outside* the BMP. Why distinguish
@@ -110,6 +114,8 @@ analysis = '''
 probably a known and `wontfix` bug I imagine? See the note below.
 
 `python/re` doesn't support Unicode character classes at all.
+
+`rust/regex/lite` does not support Unicode character classes.
 
 N.B. This is a particularly interesting case for regex engines that are based
 on UTF-16, because it exposes whether they treat UTF-16 code units as the
@@ -153,6 +159,8 @@ analysis = '''
 `python/re` doesn't support Unicode character classes at all.
 
 `re2` does not support `\p{Letter}` syntax.
+
+`rust/regex/lite` does not support Unicode character classes.
 '''
 
 [[bench]]
@@ -190,6 +198,8 @@ intentional ECMAScript restriction.
 `regress` has support for Unicode character classes, but doesn't support the
 "loose matching" required by UTS#18. I believe this is due to an intentional
 ECMAScript restriction.
+
+`rust/regex/lite` does not support Unicode character classes.
 '''
 
 [[bench]]
@@ -221,6 +231,8 @@ analysis = '''
 `python/re` doesn't support Unicode character classes at all.
 
 `re2` does not support `\p{Letter}` syntax.
+
+`rust/regex/lite` does not support Unicode character classes.
 '''
 
 [[bench]]
@@ -255,4 +267,6 @@ analysis = '''
 `re2` does not support `\p{Letter}` syntax.
 
 `regress` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
+
+`rust/regex/lite` does not support Unicode character classes.
 '''

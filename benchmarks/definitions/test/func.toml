@@ -35,6 +35,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 analysis = '''
 `hyperscan` isn't included here since it reports all possible matches. So it
@@ -67,6 +68,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 analysis = '''
 Some regex engines permit `$` to match *both* at the end of a haystack and
@@ -98,4 +100,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]

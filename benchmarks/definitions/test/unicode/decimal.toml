@@ -44,6 +44,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
 
 [[bench]]
@@ -54,7 +55,7 @@ unicode = true
 haystack = '᠕'
 count = [
   # None of these regex engines support the Unicode variant of \d.
-  { engine = 'go/regexp|javascript.*|re2|regress', count = 0 },
+  { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -74,4 +75,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
 ]
