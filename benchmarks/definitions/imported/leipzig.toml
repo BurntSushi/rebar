@@ -50,7 +50,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -77,7 +76,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -103,7 +101,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -132,7 +129,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -158,7 +154,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -184,7 +179,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -210,7 +204,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -237,7 +230,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -263,7 +255,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -292,7 +283,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -318,7 +308,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -347,7 +336,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -376,7 +364,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -402,7 +389,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -431,7 +417,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -458,7 +443,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -484,7 +468,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -513,6 +496,5 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]

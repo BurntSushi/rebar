@@ -16,7 +16,7 @@ regex = '\w+\s+Holmes'
 haystack = { path = "sherlock.txt" }
 count = 4073
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   # Does not do it.
@@ -41,7 +41,7 @@ count = 0
 engines = [
   # This should run at some reasonable speed, ideally in a similar ballpark
   # as hyrbid.
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/hybrid',
   're2',
   'go/regexp',

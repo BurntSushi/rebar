@@ -16,11 +16,11 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'rust/regex',
   # We include this as a reference point to demonstrate the overhead of the
   # regex engine versus just calling one of the regex crate's internal regex
   # engines directly.
   'rust/regex/hybrid',
-  'rust/regex/meta',
 ]
 analysis = '''
 This is a baseline benchmark that matches every line. It also serves to
@@ -40,7 +40,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''
@@ -57,7 +57,7 @@ count = 5075
 engines = [
   'pcre2/jit',
   'python/regex',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''

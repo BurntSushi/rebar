@@ -16,7 +16,7 @@ regex = { path = "wild/parol-veryl.txt", per-line = "alternate" }
 haystack = { path = "wild/parol-veryl.vl" }
 count = 124_800
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -28,7 +28,7 @@ unicode = true
 haystack = { path = "wild/parol-veryl.vl" }
 count = 124_800
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -39,8 +39,8 @@ regex = { path = "wild/parol-veryl.txt", per-line = "pattern" }
 haystack = { path = "wild/parol-veryl.vl" }
 count = 150_600
 engines = [
+  'rust/regex',
   'rust/regex/dense',
-  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -50,5 +50,5 @@ regex = { path = "wild/parol-veryl.txt", per-line = "pattern" }
 haystack = { path = "wild/parol-veryl.vl" }
 count = 124_800
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
 ]

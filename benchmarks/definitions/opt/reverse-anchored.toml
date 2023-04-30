@@ -13,7 +13,7 @@ haystack = { contents = "*", repeat = 1_000_000, append = "X" }
 count = 1
 engines = [
   # Does a reverse anchored search.
-  'rust/regex/meta',
+  'rust/regex',
   # Does not.
   'rust/regex/hybrid',
   # Does not.

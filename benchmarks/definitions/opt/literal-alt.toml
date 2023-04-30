@@ -34,7 +34,7 @@ engines = [
   # Seems to do okay. Probably due to memory/budget differences between it and
   # RE2's lazy DFA.
   'rust/regex/hybrid',
-  'rust/regex/meta',
+  'rust/regex',
   # Perf is trashed because it uses the PikeVM
   # and doesn't have this optimization.
   'go/regexp',
@@ -53,7 +53,7 @@ count = 1
 engines = [
   # Currently uses an Aho-Corasick NFA and does well, but it builds an
   # enormous prefilter and could use some love.
-  'rust/regex/meta',
+  'rust/regex',
   # Perf is generally quite bad because it spends all of its time shuffling
   # states around for one big alternation.
   'rust/regex/pikevm',

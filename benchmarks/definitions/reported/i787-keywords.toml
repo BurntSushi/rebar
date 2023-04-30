@@ -53,9 +53,9 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'rust/regex',
   'rust/regex/ast',
   'rust/regex/hir',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -74,7 +74,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -88,7 +88,7 @@ count = 5_674
 engines = [
   'pcre2/jit',
   'python/regex',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -106,7 +106,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''
@@ -128,7 +128,7 @@ count = 5_674
 engines = [
   'pcre2/jit',
   'python/regex',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''

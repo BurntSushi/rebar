@@ -48,8 +48,8 @@ engines = [
   'python/re',
   're2',
   'regress',
+  'rust/regex',
   'rust/regex/backtrack',
-  'rust/regex/meta',
   'rust/regex/onepass',
   'rust/regex/pikevm',
 ]
@@ -71,8 +71,8 @@ engines = [
   'python/re',
   're2',
   'regress',
+  'rust/regex',
   'rust/regex/backtrack',
-  'rust/regex/meta',
   'rust/regex/onepass',
   'rust/regex/pikevm',
 ]
@@ -92,8 +92,8 @@ count = 19_224
 engines = [
   'pcre2/jit',
   'python/regex',
+  'rust/regex',
   'rust/regex/backtrack',
-  'rust/regex/meta',
   'rust/regex/onepass',
   'rust/regex/pikevm',
 ]
@@ -112,11 +112,11 @@ count = 579
 engines = [
   'pcre2/jit',
   'python/regex',
+  'rust/regex',
   'rust/regex/backtrack',
-  'rust/regex/meta',
-  'rust/regexold',
   'rust/regex/onepass',
   'rust/regex/pikevm',
+  'rust/regexold',
 ]
 analysis = '''
 This benchmark uses an ASCII word boundary to find all 9 letter words that
@@ -135,11 +135,11 @@ count = 873
 engines = [
   'pcre2/jit',
   'python/regex',
+  'rust/regex',
   'rust/regex/backtrack',
-  'rust/regex/meta',
-  'rust/regexold',
   'rust/regex/onepass',
   'rust/regex/pikevm',
+  'rust/regexold',
 ]
 analysis = '''
 This is the same as the English counterpart, but enables Unicode mode and thus

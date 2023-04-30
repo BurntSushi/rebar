@@ -19,7 +19,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
 A simple benchmark that matches each individual codepoint.
@@ -37,7 +37,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
 Same as 'any-one', but matches all the codepoints in one go.
@@ -61,7 +61,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
 This benchmarks finding 100 contiguous letters in a sequence of all codepoints.
@@ -95,7 +95,7 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = 1244
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # 're2', # does not support 'x' flag
   # 'go/regexp', # does not support 'x' flag
   # 'pcre2/jit', # lacks necessary property support
@@ -123,7 +123,7 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = 13
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # 're2', # appears to crap out and reports 0 matches
   # 'go/regexp', # insufficient Unicode property support
   'pcre2/jit',
@@ -160,5 +160,5 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
 ]

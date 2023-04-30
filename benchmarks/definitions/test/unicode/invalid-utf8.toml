@@ -40,7 +40,6 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
@@ -80,7 +79,6 @@ engines = [
   'perl',
   're2',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
@@ -116,7 +114,6 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
@@ -168,7 +165,6 @@ engines = [
   'perl',
   're2',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.
@@ -203,7 +199,6 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 `dotnet/*` does not support searching arbitrary bytes.

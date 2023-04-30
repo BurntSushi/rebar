@@ -21,7 +21,7 @@ regex = '(?m)^.*$'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 239_963
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/dense',
   're2',
   'pcre2/jit',
@@ -39,7 +39,7 @@ regex = '>[^\n]*\n|\n'
 haystack = { path = "imported/regex-redux-100000.fasta" }
 count = 16_745
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/dense',
   're2',
   'pcre2/jit',

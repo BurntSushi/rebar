@@ -27,7 +27,7 @@ haystack = 'abcdef'
 count = 0
 engines = [
   # Does it.
-	'rust/regex/meta',
+	'rust/regex',
   # Does not do it because it is a lower level regex engine. Included as a
   # point of comparison.
 	'rust/regex/hybrid',
@@ -39,8 +39,8 @@ engines = [
 analysis = '''
 This benchmark tests that the regex engine fails very quickly when it knows
 that a match is impossible because the haystack is too small. In this case,
-the regex needs to match at least 10 word ASCII bytes, but the haystack is
-shorter than that. You can see the difference between `rust/regex/meta` and
+the regex needs to match at least 10 word ASCII bytes, but the haystack
+is shorter than that. You can see the difference between `rust/regex` and
 `rust/regex/hybrid` for example.
 '''
 
@@ -52,7 +52,7 @@ haystack = '𝛃𝛃𝛃𝛃𝛃𝛃𝛃𝛃𝛃'
 unicode = true
 count = 0
 engines = [
-	'rust/regex/meta',
+	'rust/regex',
   # Does not do it. Included as a point of comparison.
 	'rust/regex/hybrid',
 ]
@@ -77,7 +77,7 @@ regex = '^\w{30}$'
 haystack = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
 count = 0
 engines = [
-	'rust/regex/meta',
+	'rust/regex',
   # Does not do it. Included as a point of comparison.
 	'rust/regex/hybrid',
   # Does not do it.
@@ -98,7 +98,7 @@ haystack = '𝛃𝛃𝛃𝛃𝛃𝛃𝛃𝛃𝛃𝛃𝛃'
 unicode = true
 count = 0
 engines = [
-	'rust/regex/meta',
+	'rust/regex',
   # Does not do it. Included as a point of comparison.
 	'rust/regex/hybrid',
 ]
@@ -113,7 +113,7 @@ regex = '^a{2,5}$'
 haystack = { contents = 'a', repeat = 10_000 }
 count = 0
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   're2',
@@ -130,7 +130,7 @@ regex = '^((aaa)|(aa))$'
 haystack = { contents = 'a', repeat = 10_000 }
 count = 0
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   're2',
@@ -148,7 +148,7 @@ unicode = true
 haystack = { contents = 'a', repeat = 1_000 }
 count = 0
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   # Does not do it.

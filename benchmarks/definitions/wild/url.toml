@@ -28,7 +28,7 @@ engines = [
   'python/re',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -39,7 +39,7 @@ haystack = { path = "rust-src-tools-3b0d4813.txt" }
 case-insensitive = true
 count = 234_965
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   're2',
   'go/regexp',
   'pcre2/jit',

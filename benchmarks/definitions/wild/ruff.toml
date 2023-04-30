@@ -30,7 +30,6 @@ count = 1_312_482
 engines = [
   'pcre2/jit',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -46,7 +45,6 @@ engines = [
   'pcre2/jit',
   're2',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -61,7 +59,6 @@ engines = [
   'pcre2/jit',
   're2',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -76,7 +73,6 @@ engines = [
   'pcre2/jit',
   're2',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -91,7 +87,6 @@ engines = [
   'pcre2/jit',
   're2',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 
@@ -107,6 +102,5 @@ engines = [
   'pcre2/jit',
   're2',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]

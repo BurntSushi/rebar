@@ -52,7 +52,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -70,7 +70,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -89,7 +89,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''
@@ -114,7 +114,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -130,7 +130,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''

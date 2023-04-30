@@ -19,8 +19,8 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
+  'rust/regex',
   'rust/regex/dense',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -40,8 +40,8 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
+  'rust/regex',
   'rust/regex/dense',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -73,7 +73,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/dense',
   'rust/regex/nfa',
   'rust/regexold',
@@ -104,7 +104,7 @@ engines = [
   'go/regexp',
   'pcre2/jit',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -120,7 +120,7 @@ regex = '(?m)^.+$'
 haystack = { path = "lines-with-invalid-utf8.txt" }
 count = 4
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/nfa',
   'rust/regexold',
   're2',
@@ -151,7 +151,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/nfa',
   'rust/regexold',
 ]

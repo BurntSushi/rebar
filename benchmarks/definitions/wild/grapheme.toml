@@ -15,7 +15,7 @@ haystack = "a\u0300\u0316\U0001F1FA\U0001F1F8"
 unicode = true
 count = 2
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/dense',
   'rust/regex/ast',
   'rust/regex/hir',
@@ -36,7 +36,7 @@ count = [
   { engine = '.*', count = 7_382_210 },
 ]
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/dense',
   'rust/regex/hybrid',
   'rust/regexold',
@@ -51,7 +51,7 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = 1109158
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/dense',
   'rust/regex/hybrid',
   'rust/regex/pikevm',

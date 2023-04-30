@@ -18,9 +18,9 @@ haystack = "zygotes"
 unicode = true
 count = 1
 engines = [
+  'rust/regex',
   'rust/regex/ast',
   'rust/regex/hir',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -35,9 +35,9 @@ count = 1
 engines = [
   'go/regexp',
   're2',
+  'rust/regex',
   'rust/regex/ast',
   'rust/regex/hir',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -53,9 +53,9 @@ engines = [
   'go/regexp',
   're2',
   'regress',
+  'rust/regex',
   'rust/regex/ast',
   'rust/regex/hir',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]

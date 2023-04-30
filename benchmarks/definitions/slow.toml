@@ -10,7 +10,7 @@ regex = '(?:A+){1000}|'
 haystack = { contents = "A", repeat = 999 }
 count = 1000
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/pikevm',
   're2',
   'go/regexp',

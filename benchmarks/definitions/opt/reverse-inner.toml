@@ -27,7 +27,7 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "sherlock.txt" }
 count = 2593
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   # Does not do it.
@@ -51,7 +51,7 @@ regex = '\w+@\w+'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = 47
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   # Does not do it.
@@ -79,7 +79,7 @@ unicode = true
 haystack = { path = "sherlock.txt" }
 count = 3542
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/hybrid',
   're2',
   'go/regexp',
@@ -111,7 +111,7 @@ count = 0
 engines = [
   # This should run at some reasonable speed, ideally in a similar ballpark
   # as hybrid.
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/hybrid',
   're2',
   'go/regexp',
@@ -140,7 +140,7 @@ count = 0
 engines = [
   # This should run at some reasonable speed, ideally in a similar ballpark
   # as hybrid.
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regex/hybrid',
   're2',
   'go/regexp',

@@ -9,7 +9,7 @@ README](../regex/README.md) applies here.
 
 One thing worth mentioning is that this runner program does not just benchmark
 the `meta::Regex` API from `regex-automata`. There wouldn't be too much of a
-point to that, since as I mentioned, the `regex` crate is mostly a thin wrapper
+point to that, since as I mentioned, the `regex` crate is just a thin wrapper
 around it. Indeed, this runner program actually benchmarks several different
 regex engines from the `regex-automata` crate:
 
@@ -31,6 +31,8 @@ of transitions is being used inefficiently, and will fall back to a different
 regex engine.
 * `meta` - A meta regex engine that combines many other regex engines together
 (along with prefilters) in order to execute searches as quickly as possible.
+Generally this shouldn't be used as this is what the `rust/regex` runner
+program uses.
 * `nfa` - This is not actually a regex engine and only supports the `compile`
 benchmark model. This simply measures how long it takes to build a Thompson NFA
 from a regex's high-level intermediate representation (HIR).

@@ -31,7 +31,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -45,7 +45,7 @@ engines = [
   # 'pcre2', # times out(!)
   'pcre2/jit',
   'python/regex',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -63,7 +63,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -76,7 +76,7 @@ count = 21_332
 engines = [
   'pcre2/jit',
   'python/regex',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -95,7 +95,7 @@ engines = [
   'regress',
   # Uses the 'reverse inner' optimization which looks for 'Holmes' and then
   # does a reverse search for '\b\w+\s+' to find the start position.
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
 Looks for occurrences of `Holmes` and the words surrounding them while
@@ -110,7 +110,7 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
 count = 44
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'pcre2/jit',
   'python/regex',
 ]

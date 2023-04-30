@@ -15,7 +15,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -26,7 +26,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 15
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -38,7 +38,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -50,7 +50,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 15
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -62,7 +62,7 @@ unicode = true
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -74,7 +74,7 @@ unicode = true
 count = 23
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -87,7 +87,7 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -100,7 +100,7 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 23
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -111,7 +111,7 @@ haystack = { path = "sherlock.txt" }
 count = 319
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -122,7 +122,7 @@ haystack = { path = "sherlock.txt" }
 count = 4073
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 # The 'literal-inner' benchmarks test how Hyperscan does with a literal that is
@@ -137,7 +137,7 @@ haystack = { path = "sherlock.txt" }
 count = 137
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -148,7 +148,7 @@ haystack = { path = "sherlock.txt" }
 count = 2593
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 # The 'fixed-length-words' benchmarks are specifically designed to omit any
@@ -161,7 +161,7 @@ haystack = { path = "sherlock.txt" }
 count = 120
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 [[bench]]
@@ -172,7 +172,7 @@ haystack = { path = "sherlock.txt" }
 count = 2400
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 
 # This one enables Unicode mode, which slows Hyperscan down quite a bit.
@@ -188,5 +188,5 @@ haystack = { path = "sherlock.txt" }
 count = 120
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]

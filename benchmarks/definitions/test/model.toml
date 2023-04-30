@@ -32,7 +32,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 This benchmark is a way to test the most basic capabilities of probably almost
@@ -64,7 +63,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 This is like `count`, but uses the `count-spans` model to ensure the count is
@@ -93,7 +91,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 This is like `count`, but uses the `count-captures` model to ensure the runner
@@ -123,7 +120,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 This is like `count`, but uses the `grep` model to ensure the runner program
@@ -153,7 +149,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 This is like `count`, but uses the `grep-captures` model to ensure the runner
@@ -185,7 +180,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 analysis = '''
 This is like `count`, but uses the `compile` model to ensure the count is

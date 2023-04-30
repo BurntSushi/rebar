@@ -23,9 +23,9 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
+  'rust/regex',
   'rust/regex/ast',
   'rust/regex/hir',
-  'rust/regex/meta',
   'rust/regex/nfa',
   'rust/regexold',
 ]
@@ -41,7 +41,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 unicode = true
 count = 874
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
   're2',
   'go/regexp',
@@ -68,7 +68,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''
@@ -102,7 +102,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 unicode = true
 count = 874
 engines = [
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
   're2',
   'go/regexp',

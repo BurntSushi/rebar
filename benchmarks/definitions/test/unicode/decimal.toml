@@ -44,7 +44,6 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]
 
 [[bench]]
@@ -75,5 +74,4 @@ engines = [
   're2',
   'regress',
   'rust/regex',
-  'rust/regex/meta',
 ]

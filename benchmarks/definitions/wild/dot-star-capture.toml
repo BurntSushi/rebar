@@ -34,5 +34,5 @@ engines = [
   'pcre2/jit',
   'python/re',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
 ]

@@ -30,7 +30,7 @@ engines = [
   'python/re',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 analysis = '''

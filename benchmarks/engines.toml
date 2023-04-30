@@ -436,12 +436,15 @@
 # A "meta" regex engine that combines several others: a PikeVM, a backtracker,
 # a one-pass DFA, a lazy DFA, a full DFA, Aho-Corasick, Teddy and memmem.
 #
-# The "meta" regex engine is nearly equivalent to the 'rust/regex' engine,
-# as the latter is "just" a light wrapper over the meta engine. The meta
-# engine principally exposes a lower level API and doesn't do any internal
-# synchronization to access mutable scratch space. (Because it requires the
-# caller to pass that mutable scratch space directly, unlike the higher level
-# regex crate API.)
+# Note that we generally don't use this in favor of 'rust/regex'. In the
+# original conception of rebar, 'rust/regex' used the top-level regex crate
+# APIs while 'rust/regex/meta' used the regex-automata meta::Regex APIs. But
+# the former is quite literally a wrapper around the latter that does no extra
+# work. So it was quite confusing to have both.
+#
+# We keep the engine definition around in case it proves useful, but until (and
+# if) the 'rust/regex' runner program uses the actual top-level regex crate
+# APIs, there's not much point in using 'rust/regex/meta'.
 [[engine]]
   name = "rust/regex/meta"
   cwd = "../engines/rust/regex-automata"

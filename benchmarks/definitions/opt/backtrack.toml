@@ -44,7 +44,6 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 40_536
 engines = [
   'rust/regex',
-  'rust/regex/meta',
   'rust/regex/backtrack',
   'rust/regex/pikevm',
   'regress',
@@ -67,7 +66,6 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 27_996
 engines = [
   'rust/regex',
-  'rust/regex/meta',
   'rust/regex/backtrack',
   'rust/regex/pikevm',
   'python/regex',

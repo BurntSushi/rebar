@@ -25,7 +25,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -44,7 +44,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -63,7 +63,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -82,7 +82,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -101,7 +101,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -120,7 +120,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -139,7 +139,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -157,7 +157,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -175,7 +175,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -193,7 +193,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -212,7 +212,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -230,7 +230,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -249,7 +249,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -267,7 +267,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -286,7 +286,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -304,7 +304,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -322,7 +322,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -340,7 +340,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -359,7 +359,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -378,7 +378,7 @@ engines = [
   're2',
   'regress',
   'rust/memchr/memmem',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -397,7 +397,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -420,7 +420,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -452,7 +452,7 @@ engines = [
   'python/re',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -469,7 +469,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -486,7 +486,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -503,7 +503,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -521,7 +521,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -539,7 +539,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -557,7 +557,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -575,7 +575,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -589,7 +589,7 @@ engines = [
   'go/regexp',
   're2',
   # 'regress', # timeout
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -606,7 +606,7 @@ engines = [
   'python/re',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -623,7 +623,7 @@ engines = [
   'python/re',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -640,7 +640,7 @@ engines = [
   'python/re',
   'python/regex',
   're2',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -658,7 +658,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -676,7 +676,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
 
@@ -694,6 +694,6 @@ engines = [
   'python/regex',
   're2',
   'regress',
-  'rust/regex/meta',
+  'rust/regex',
   'rust/regexold',
 ]
