@@ -52,16 +52,17 @@ alternation in the `single` benchmark, but treats each one as a distinct
 pattern. Doing this requires explicit support for searching multiple regex
 patterns. (RE2's and Rust's regex crate "regex set" functionality is not enough
 for this, as it only reports which patterns match a haystack, and not where
-they match. That's why the lower level `regex/automata/meta` engine is used,
-which exposes a more powerful but more complex API.)
+they match. That's partially why the `rust/regex` engine in this barometer
+actually just use the lower level `meta::Regex` APIs from the `regex-automata`
+crate.)
 
-In the `multiple` case, the `rust/regex/meta` does very well and the key reason
-is the abdication of capture groups as a necessary tool to determine which
-token matched. Namely, now we can simply use a pattern ID from the match to
-determine which "branch" in the original regex was taken. We no longer need to
-ask for or inspect capture groups. This gives a critical benefit to automata
-engines that support searching for multiple patterns, because it no longer
-requires them to use slower engines for resolving capturing groups.
+In the `multiple` case, the `rust/regex` does very well and the key reason is
+the abdication of capture groups as a necessary tool to determine which token
+matched. Namely, now we can simply use a pattern ID from the match to determine
+which "branch" in the original regex was taken. We no longer need to ask for or
+inspect capture groups. This gives a critical benefit to automata engines that
+support searching for multiple patterns, because it no longer requires them to
+use slower engines for resolving capturing groups.
 
 [Veryl]: https://github.com/dalance/veryl
 [Parol]: https://github.com/jsinger67/parol
@@ -89,7 +90,6 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -118,7 +118,6 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -136,7 +135,7 @@ count = [
 ]
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
 Hyperscan reports everything that matches, including overlapping matches,

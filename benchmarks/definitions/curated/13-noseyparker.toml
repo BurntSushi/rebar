@@ -11,8 +11,8 @@ I went through each of its rules and extracted a total of 96 regular
 expressions, as of [commit `be8c26e8`][be8c26e8]. These 96 regexes make up the
 `single` and `multi` benchmarks below, with `single` corresponding to joining
 all of patterns into one big alternation and `multi` corresponding to treating
-each pattern as its own regex. In the latter case, only the `rust/regex/meta`
-and `hyperscan` engines are measured, since they are the only ones to support
+each pattern as its own regex. In the latter case, only the `rust/regex` and
+`hyperscan` engines are measured, since they are the only ones to support
 multi-regex matching.
 
 This is a particularly brutal benchmark. Most regex engines can't deal with it
@@ -30,10 +30,10 @@ avoids doing redundant work. Although how it all fits together and avoids
 pitfalls such as worst case quadratic search time doesn't appear to be written
 down anywhere.
 
-`rust/regex/meta` just barely does serviceably here. It uses its lazy DFA to
-handle this regex, but with the default cache sizes, profiling suggests that it
-is spending a lot of its time building the DFA. It's plausible that increasing
-the cache size for such a big regex would let it execute searches faster.
+`rust/regex` just barely does serviceably here. It uses its lazy DFA to handle
+this regex, but with the default cache sizes, profiling suggests that it is
+spending a lot of its time building the DFA. It's plausible that increasing the
+cache size for such a big regex would let it execute searches faster.
 
 `pcre2/jit` doesn't do as well here, but one might expect that because it is
 a backtracking engine. With that said, no other backtracking engine could deal
@@ -62,7 +62,6 @@ engines = [
   'hyperscan',
   'pcre2/jit',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -92,11 +91,13 @@ count = [
 ]
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
-Only `hyperscan` and `rust/regex/meta` are included because they are the only
-regex engines to support multi-pattern regexes.
+Only `hyperscan` and `rust/regex` are included because they are the only
+regex engines to support multi-pattern regexes. (Note that the `regex` crate
+API does not support this. You need to drop down to the `meta::Regex` API in
+the `regex-automata` crate.)
 '''
 
 [[bench]]
@@ -109,7 +110,6 @@ engines = [
   'hyperscan',
   'pcre2/jit',
   'rust/regex',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -124,7 +124,7 @@ haystack = "TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'"
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
 We only include the engines that are measured in the `multi` benchmark.

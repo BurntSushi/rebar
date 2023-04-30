@@ -120,7 +120,6 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -139,11 +138,13 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
-Only `hyperscan` and `rust/regex/meta` are included because they are the only
-regex engines to support multi-pattern regexes.
+Only `hyperscan` and `rust/regex` are included because they are the only regex
+engines to support multi-pattern regexes. (Note that the `regex` crate API
+does not support this. You need to drop down to the `meta::Regex` API in the
+`regex-automata` crate.)
 '''
 
 [[bench]]
@@ -162,7 +163,6 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
-  'rust/regex/meta',
   'rust/regexold',
 ]
 analysis = '''
@@ -189,9 +189,11 @@ haystack = "Zubeneschamali's"
 count = 1
 engines = [
   'hyperscan',
-  'rust/regex/meta',
+  'rust/regex',
 ]
 analysis = '''
-Only `hyperscan` and `rust/regex/meta` are included because they are the only
-regex engines to support multi-pattern regexes.
+Only `hyperscan` and `rust/regex` are included because they are the only regex
+engines to support multi-pattern regexes. (Note that the `regex` crate API
+does not support this. You need to drop down to the `meta::Regex` API in the
+`regex-automata` crate.)
 '''

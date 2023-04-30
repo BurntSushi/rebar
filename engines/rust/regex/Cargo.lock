@@ -50,6 +50,7 @@ dependencies = [
  "klv",
  "lexopt",
  "regex",
+ "regex-automata",
  "regexredux",
  "timer",
 ]

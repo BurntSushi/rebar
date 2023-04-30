@@ -4,7 +4,8 @@ use {
     anyhow::Context,
     bstr::ByteSlice,
     lexopt::Arg,
-    regex::bytes::{Regex, RegexBuilder},
+    // See README for why we use regex-automata instead of regex.
+    regex_automata::{meta::Regex, Input},
 };
 
 fn main() -> anyhow::Result<()> {
@@ -71,29 +72,30 @@ fn model_count_spans(
     re: &Regex,
 ) -> anyhow::Result<Vec<timer::Sample>> {
     let haystack = &*b.haystack;
-    timer::run(b, || {
-        Ok(re.find_iter(haystack).map(|m| m.as_bytes().len()).sum())
-    })
+    timer::run(b, || Ok(re.find_iter(haystack).map(|m| m.len()).sum()))
 }
 
 fn model_count_captures(
     b: &klv::Benchmark,
     re: &Regex,
 ) -> anyhow::Result<Vec<timer::Sample>> {
-    let haystack = &*b.haystack;
-    let mut caps = re.capture_locations();
+    let mut input = Input::new(&*b.haystack);
+    let mut caps = re.create_captures();
     timer::run(b, || {
-        let mut at = 0;
+        input.set_start(0);
         let mut count = 0;
-        while let Some(m) = re.captures_read_at(&mut caps, haystack, at) {
-            for i in 0..caps.len() {
-                if caps.get(i).is_some() {
+        while let Some(m) = {
+            re.search_captures(&input, &mut caps);
+            caps.get_match()
+        } {
+            for i in 0..caps.group_len() {
+                if caps.get_group(i).is_some() {
                     count += 1;
                 }
             }
             // Benchmark definition says we may assume empty matches are
             // impossible.
-            at = m.end();
+            input.set_start(m.end());
         }
         Ok(count)
     })
@@ -120,20 +122,23 @@ fn model_grep_captures(
     re: &Regex,
 ) -> anyhow::Result<Vec<timer::Sample>> {
     let haystack = &*b.haystack;
-    let mut caps = re.capture_locations();
+    let mut caps = re.create_captures();
     timer::run(b, || {
         let mut count = 0;
         for line in haystack.lines() {
-            let mut at = 0;
-            while let Some(m) = re.captures_read_at(&mut caps, line, at) {
-                for i in 0..caps.len() {
-                    if caps.get(i).is_some() {
+            let mut input = Input::new(line);
+            while let Some(m) = {
+                re.search_captures(&input, &mut caps);
+                caps.get_match()
+            } {
+                for i in 0..caps.group_len() {
+                    if caps.get_group(i).is_some() {
                         count += 1;
                     }
                 }
                 // Benchmark definition says we may assume empty matches are
                 // impossible.
-                at = m.end();
+                input.set_start(m.end());
             }
         }
         Ok(count)
@@ -145,7 +150,7 @@ fn model_regex_redux(
 ) -> anyhow::Result<Vec<timer::Sample>> {
     let haystack = b.haystack_str()?;
     let compile = |pattern: &str| -> anyhow::Result<regexredux::RegexFn> {
-        let re = compile_pattern(b, pattern)?;
+        let re = compile_pattern(b, &[pattern])?;
         let find = move |h: &str| {
             Ok(re.find(h.as_bytes()).map(|m| (m.start(), m.end())))
         };
@@ -155,14 +160,32 @@ fn model_regex_redux(
 }
 
 fn compile(b: &klv::Benchmark) -> anyhow::Result<Regex> {
-    compile_pattern(b, b.regex.one()?)
+    compile_pattern(b, &b.regex.patterns)
 }
 
-fn compile_pattern(b: &klv::Benchmark, pat: &str) -> anyhow::Result<Regex> {
-    let re = RegexBuilder::new(pat)
+fn compile_pattern<P: AsRef<str>>(
+    b: &klv::Benchmark,
+    patterns: &[P],
+) -> anyhow::Result<Regex> {
+    let config = Regex::config()
+        // Disabling UTF-8 here just means that zero-width matches that split
+        // a codepoint are allowed.
+        .utf8_empty(false)
+        .nfa_size_limit(Some((1 << 20) * 100));
+    let syntax = regex_automata::util::syntax::Config::new()
+        // Disabling UTF-8 just makes it possible to build regexes that won't
+        // necessarily match UTF-8. Whether Unicode is actually usable or not
+        // depends on the 'unicode' option.
+        //
+        // This basically corresponds to the use of regex::bytes::Regex instead
+        // of regex::Regex.
+        .utf8(false)
         .unicode(b.regex.unicode)
-        .case_insensitive(b.regex.case_insensitive)
-        .size_limit((1 << 20) * 100)
-        .build()?;
+        .case_insensitive(b.regex.case_insensitive);
+
+    let re = Regex::builder()
+        .configure(config)
+        .syntax(syntax)
+        .build_many(patterns)?;
     Ok(re)
 }
