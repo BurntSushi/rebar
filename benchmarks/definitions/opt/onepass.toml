@@ -52,6 +52,7 @@ engines = [
   'rust/regex/backtrack',
   'rust/regex/onepass',
   'rust/regex/pikevm',
+  'rust/regexold',
 ]
 analysis = '''
 This benchmark just tries to extract some properties of a subset of functions
@@ -75,6 +76,7 @@ engines = [
   'rust/regex/backtrack',
   'rust/regex/onepass',
   'rust/regex/pikevm',
+  'rust/regexold',
 ]
 analysis = '''
 This benchmark looks for the first three "words" in each line, and captures
@@ -96,6 +98,7 @@ engines = [
   'rust/regex/backtrack',
   'rust/regex/onepass',
   'rust/regex/pikevm',
+  'rust/regexold',
 ]
 analysis = '''
 This is the same as `first-three-words-english`, but enables Unicode and runs

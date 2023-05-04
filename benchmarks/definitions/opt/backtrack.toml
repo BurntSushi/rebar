@@ -46,6 +46,7 @@ engines = [
   'rust/regex',
   'rust/regex/backtrack',
   'rust/regex/pikevm',
+  'rust/regexold',
   'regress',
   're2',
   'go/regexp',
@@ -68,6 +69,7 @@ engines = [
   'rust/regex',
   'rust/regex/backtrack',
   'rust/regex/pikevm',
+  'rust/regexold',
   'python/regex',
 ]
 analysis = '''

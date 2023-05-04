@@ -35,4 +35,5 @@ engines = [
   'python/re',
   're2',
   'rust/regex',
+  'rust/regexold',
 ]

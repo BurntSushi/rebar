@@ -31,6 +31,8 @@ engines = [
   # Does not do it because it is a lower level regex engine. Included as a
   # point of comparison.
 	'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
   # Does not appear to do it.
   're2',
   # Does do it!
@@ -55,6 +57,8 @@ engines = [
 	'rust/regex',
   # Does not do it. Included as a point of comparison.
 	'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
 ]
 analysis = '''
 Same idea as `too-small-ascii`, but for Unicode.
@@ -81,6 +85,8 @@ engines = [
   # Does not do it. Included as a point of comparison.
 	'rust/regex/hybrid',
   # Does not do it.
+  'rust/regexold',
+  # Does not do it.
   're2',
   # Does not do it.
   # See: https://github.com/golang/go/issues/33484
@@ -101,6 +107,8 @@ engines = [
 	'rust/regex',
   # Does not do it. Included as a point of comparison.
 	'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
 ]
 analysis = '''
 Same idea as `too-big-ascii`, but for Unicode.
@@ -116,6 +124,8 @@ engines = [
   'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
   're2',
   'go/regexp',
 ]
@@ -133,6 +143,8 @@ engines = [
   'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
   're2',
   'go/regexp',
 ]
@@ -151,6 +163,8 @@ engines = [
   'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
   # Does not do it.
   're2',
   # Does not do it.

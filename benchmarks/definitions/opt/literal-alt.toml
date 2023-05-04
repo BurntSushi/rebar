@@ -26,6 +26,7 @@ unicode = true
 haystack = { path = "opensubtitles/en-tiny.txt", append = "Zoroastrianisms" }
 count = 1
 engines = [
+  'rust/regex',
   # Maintains respectable speed (relative to what one can expect from the
   # PikeVM). This is the main point of comparison here, as the same regex
   # engine on what is essentially the same regex in the 'pattern-per-word'
@@ -34,7 +35,7 @@ engines = [
   # Seems to do okay. Probably due to memory/budget differences between it and
   # RE2's lazy DFA.
   'rust/regex/hybrid',
-  'rust/regex',
+  'rust/regexold',
   # Perf is trashed because it uses the PikeVM
   # and doesn't have this optimization.
   'go/regexp',

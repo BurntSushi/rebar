@@ -12,6 +12,7 @@ count = 1000
 engines = [
   'rust/regex',
   'rust/regex/pikevm',
+  'rust/regexold',
   're2',
   'go/regexp',
 ]

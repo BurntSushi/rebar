@@ -16,6 +16,7 @@ count = 1
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -27,6 +28,7 @@ count = 15
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -39,6 +41,7 @@ count = 1
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -51,6 +54,7 @@ count = 15
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -63,6 +67,7 @@ count = 1
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -75,6 +80,7 @@ count = 23
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -88,6 +94,7 @@ count = 1
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -101,6 +108,7 @@ count = 23
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -112,6 +120,7 @@ count = 319
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -123,6 +132,7 @@ count = 4073
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 # The 'literal-inner' benchmarks test how Hyperscan does with a literal that is
@@ -138,6 +148,7 @@ count = 137
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -149,6 +160,7 @@ count = 2593
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 # The 'fixed-length-words' benchmarks are specifically designed to omit any
@@ -162,6 +174,7 @@ count = 120
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -173,6 +186,7 @@ count = 2400
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]
 
 # This one enables Unicode mode, which slows Hyperscan down quite a bit.
@@ -189,4 +203,5 @@ count = 120
 engines = [
   'hyperscan',
   'rust/regex',
+  'rust/regexold',
 ]

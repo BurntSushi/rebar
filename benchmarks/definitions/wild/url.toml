@@ -29,6 +29,7 @@ engines = [
   'python/regex',
   're2',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -39,13 +40,14 @@ haystack = { path = "rust-src-tools-3b0d4813.txt" }
 case-insensitive = true
 count = 234_965
 engines = [
-  'rust/regex',
-  're2',
   'go/regexp',
-  'pcre2/jit',
   'pcre2',
+  'pcre2/jit',
   'python/re',
   'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regexold',
 ]
 analysis = '''
 Benchmarking the search is quite interesting for the regex crate. It starts

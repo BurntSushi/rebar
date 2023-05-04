@@ -32,6 +32,8 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -46,6 +48,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -64,6 +67,8 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -77,6 +82,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   'rust/regex',
+  'rust/regexold',
 ]
 
 [[bench]]
@@ -96,6 +102,8 @@ engines = [
   # Uses the 'reverse inner' optimization which looks for 'Holmes' and then
   # does a reverse search for '\b\w+\s+' to find the start position.
   'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
 ]
 analysis = '''
 Looks for occurrences of `Holmes` and the words surrounding them while
@@ -110,9 +118,10 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
 count = 44
 engines = [
-  'rust/regex',
   'pcre2/jit',
   'python/regex',
+  'rust/regex',
+  'rust/regexold',
 ]
 analysis = '''
 Like `around-holmes-english`, but make it Unicode aware and run it on a

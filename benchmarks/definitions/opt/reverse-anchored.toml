@@ -16,6 +16,8 @@ engines = [
   'rust/regex',
   # Does not.
   'rust/regex/hybrid',
+  # Does it!
+  'rust/regexold',
   # Does not.
   'pcre2/jit',
   # Does it!

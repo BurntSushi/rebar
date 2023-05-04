@@ -31,6 +31,8 @@ engines = [
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
   # Does not do it.
+  'rust/regexold',
+  # Does not do it.
   're2',
   # Does not do it.
   'go/regexp',
@@ -54,6 +56,8 @@ engines = [
   'rust/regex',
   # Does not do it. Included as a point of comparison.
   'rust/regex/hybrid',
+  # Does not do it.
+  'rust/regexold',
   # Does not do it.
   're2',
   # Does not do it.
@@ -81,6 +85,7 @@ count = 3542
 engines = [
   'rust/regex',
   'rust/regex/hybrid',
+  'rust/regexold',
   're2',
   'go/regexp',
   'pcre2/jit',
@@ -113,6 +118,7 @@ engines = [
   # as hybrid.
   'rust/regex',
   'rust/regex/hybrid',
+  'rust/regexold',
   're2',
   'go/regexp',
   'pcre2/jit',
@@ -142,6 +148,7 @@ engines = [
   # as hybrid.
   'rust/regex',
   'rust/regex/hybrid',
+  'rust/regexold',
   're2',
   'go/regexp',
   'pcre2/jit',
