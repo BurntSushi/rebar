@@ -1,0 +1,25 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+aho-corasick/teddy/sherlock4-nocase-ascii,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4337,4.51s,690.87us,0.00ns,691.79us,1.84us,690.65us,736.40us
+aho-corasick/teddy/sherlock4-nocase-unicode,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4338,4.51s,690.84us,0.00ns,691.53us,1.88us,690.61us,733.31us
+aho-corasick/teddy/sherlock5-nocase-ascii,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4339,4.51s,690.68us,0.00ns,691.49us,2.18us,690.47us,735.35us
+aho-corasick/teddy/sherlock5-nocase-unicode,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4316,4.51s,690.81us,0.00ns,695.09us,6.00us,690.48us,744.62us
+aho-corasick/teddy/reported-i787-keywords,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,123141,8653,4.51s,346.34us,0.00ns,346.66us,4.69us,337.18us,394.44us
+grep/every-line,grep,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,7384531,1018,4.51s,2.95ms,13.00ns,2.95ms,31.15us,2.88ms,3.13ms
+opt/fixed-length/too-small-ascii,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,6,1000000,532.15ms,25.00ns,0.00ns,25.00ns,19.00ns,22.00ns,18.24us
+opt/fixed-length/too-small-unicode,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,36,1000000,631.49ms,59.00ns,0.00ns,60.00ns,8.00ns,57.00ns,2.22us
+opt/fixed-length/too-big-ascii,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,52,1000000,579.13ms,53.00ns,0.00ns,53.00ns,7.00ns,51.00ns,2.41us
+opt/fixed-length/too-big-unicode,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,44,1000000,637.94ms,65.00ns,0.00ns,65.00ns,10.00ns,62.00ns,4.48us
+opt/fixed-length/go33484-1,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,10000,1000000,529.98ms,24.00ns,0.00ns,24.00ns,6.00ns,22.00ns,2.82us
+opt/fixed-length/go33484-2,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,10000,1000000,529.64ms,22.00ns,0.00ns,22.00ns,6.00ns,19.00ns,2.45us
+opt/fixed-length/go33484-3,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,1000,1000000,1.08s,314.00ns,0.00ns,314.00ns,16.00ns,310.00ns,7.32us
+opt/literal-alt/one-pattern,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,123,1000000,884.30ms,188.00ns,0.00ns,189.00ns,13.00ns,182.00ns,7.60us
+opt/reverse-anchored/word-end,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,1000001,2597,4.51s,1.15ms,0.00ns,1.16ms,2.35us,1.15ms,1.18ms
+opt/reverse-inner/holmes,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4317,4.51s,694.09us,0.00ns,694.90us,1.90us,693.80us,731.92us
+opt/reverse-inner/email,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,7384531,352,4.51s,8.53ms,11.00ns,8.53ms,6.16us,8.52ms,8.56ms
+opt/reverse-inner/factored-prefix,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4218,4.51s,708.35us,0.00ns,711.28us,8.23us,707.37us,760.60us
+opt/reverse-inner/no-quadratic-backward,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,8000,323078,4.67s,9.25us,0.00ns,9.26us,99.00ns,9.23us,13.27us
+opt/reverse-inner/no-quadratic-forward,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,8000,322267,4.68s,9.25us,0.00ns,9.28us,120.00ns,9.22us,18.59us
+opt/reverse-suffix/holmes,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,594933,4261,4.51s,702.45us,0.00ns,704.18us,5.72us,701.83us,747.81us
+opt/reverse-suffix/no-quadratic,count-spans,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,8000,322998,4.68s,9.24us,0.00ns,9.26us,110.00ns,9.22us,16.16us
+wild/grapheme/source-code,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,7384531,18,4.76s,175.23ms,23.71us,175.25ms,591.14us,174.46ms,176.75ms
+wild/grapheme/codepoints,count,0.0.1 (rev c050f4a04c),rust/regex/hybrid,0.3.0,,4382592,96,4.56s,31.41ms,4.29us,31.43ms,199.84us,31.04ms,31.97ms

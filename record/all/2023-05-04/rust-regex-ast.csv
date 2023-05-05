@@ -1,0 +1,7 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+dictionary/compile/english,compile,0.0.1 (rev c050f4a04c),rust/regex/ast,0.7.1,,,14,4.71s,79.88ms,209.50us,77.17ms,3.94ms,72.24ms,81.29ms
+dictionary/compile/english-10,compile,0.0.1 (rev c050f4a04c),rust/regex/ast,0.7.1,,,32,4.56s,31.51ms,3.36us,32.60ms,2.10ms,30.31ms,35.94ms
+dictionary/compile/english-15,compile,0.0.1 (rev c050f4a04c),rust/regex/ast,0.7.1,,,534,4.51s,1.65ms,29.00ns,1.67ms,45.17us,1.62ms,1.81ms
+reported/i787-keywords/compile,compile,0.0.1 (rev c050f4a04c),rust/regex/ast,0.7.1,,,10629,4.51s,32.36us,0.00ns,32.53us,729.00ns,31.42us,40.34us
+wild/bibleref/compile,compile,0.0.1 (rev c050f4a04c),rust/regex/ast,0.7.1,,,19714,4.51s,8.86us,0.00ns,9.01us,545.00ns,8.14us,13.95us
+wild/grapheme/compile,compile,0.0.1 (rev c050f4a04c),rust/regex/ast,0.7.1,,,15762,4.51s,10.31us,0.00ns,10.34us,284.00ns,9.59us,14.63us
