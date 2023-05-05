@@ -58,6 +58,15 @@ analysis = '''
 This benchmark just tries to extract some properties of a subset of functions
 from a pile of Rust source code. We use capture groups to get the function name
 and parameters.
+
+This is an interesting case where `rust/regexold` is actually a little faster
+(1.34x on my system) than `rust/regex`. The trick here is that the old regex
+crate will use a literal optimization here even though it's anchored. And
+in this case, since most lines don't match, it ends up being a win. But
+`rust/regex` will skip the literal optimization and just run the one-pass DFA.
+
+There's probably more tuning to be done. It's not obvious that the strategy in
+`rust/regex` is the correct one.
 '''
 
 [[bench]]
