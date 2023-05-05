@@ -514,14 +514,17 @@ ns` and `25 ns` on a single benchmark, `A` has a speed ratio of `1.4` and
 `B` has a speed ratio of `1.0`. The geometric mean reported here is then the
 "average" speed ratio for that regex engine across all benchmarks.
 
-Each regex engine is linked to the directory containing the runner program
-responsible for compiling a regex, using it in a search and reporting timing
-results. Each directory contains a `README` file briefly describing any engine
-specific details for the runner program.
+If you're looking to compare two regex engines specifically, then it is better
+to do so based only on the benchmarks that they both participate in. For
+example, to compared based on the results recorded on 2023-05-04, one can do:
 
-Each regex engine is also defined in {engines_toml}, using the same name listed
-in the table below. Each definition includes instructions for how to run,
-build, clean and obtain the version of each regex engine.
+```
+$ rebar rank record/all/2023-05-04/*.csv -f '^curated/' -e '^(rust/regex|hyperscan)$' --intersection -M compile
+Engine      Version           Geometric mean of speed ratios  Benchmark count
+------      -------           ------------------------------  ---------------
+hyperscan   5.4.1 2023-02-22  2.03                            25
+rust/regex  1.8.1             2.13                            25
+```
 
 **Caution**: Using a single number to describe the overall performance of a
 regex engine is a fraught endeavor, and it is debatable whether it should be
@@ -538,8 +541,6 @@ performance profile of any specific regex engine or workload.
 
 [geometric mean]: https://dl.acm.org/doi/pdf/10.1145/5666.5673
 "#,
-        engines_toml = config
-            .url("`benchmarks/engines.toml`", "benchmarks/engines.toml",),
         stat = config.stat,
     );
 
