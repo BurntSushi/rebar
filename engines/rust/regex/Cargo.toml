@@ -15,6 +15,9 @@ regex-syntax = { path = "/home/andrew/rust/regex/regex-syntax" }
 [dependencies]
 anyhow = "1.0.69"
 bstr = { version = "1.2.0", default-features = false, features = ["std"] }
+# Using an older version here because I am really not a fan of the dependency
+# tree explosion that has happened in 0.10.
+env_logger = "0.9.3"
 lexopt = "0.3.0"
 # We use an '=' here to force a specific version. It is okay to update it,
 # but if you do, change the version of this Cargo package as well. This way,
@@ -26,7 +29,7 @@ lexopt = "0.3.0"
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-regex = { version = "=1.8.1", features = ["perf-dfa-full"] }
+regex = { version = "=1.8.1", features = ["logging", "perf-dfa-full"] }
 # So... we don't actually use the regex crate directly. We use the 'meta'
 # regex API from regex-automata. See the README for justification. When
 # bumping the regex crate version, this should be bumped if needed as well.

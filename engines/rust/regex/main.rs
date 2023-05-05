@@ -9,6 +9,8 @@ use {
 };
 
 fn main() -> anyhow::Result<()> {
+    env_logger::init();
+
     let mut p = lexopt::Parser::from_env();
     let (mut quiet, mut version) = (false, false);
     while let Some(arg) = p.next()? {
