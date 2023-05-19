@@ -8,7 +8,7 @@ harder, especially for automata oriented engines.
 
 The difference between the `ascii` and Unicode aware benchmarks can be quite
 brutal for automata engines. It can go from a bearable 50 MB/s for ASCII to
-an eye watering 1 MB/s for Unicode. The main problem is that `\pL` is just
+an eye watering 1 MB/s for Unicode. The main problem is that `\p{L}` is just
 absolutely huge, and there is a lot of overhead associated with plowing through
 the NFA states for it when resolving capture groups.
 '''
@@ -21,8 +21,13 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 case-insensitive = false
 count = 6_156
 engines = [
+  'dotnet/compiled',
   'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
   'pcre2/jit',
+  'perl',
   'python/regex',
   're2',
   'regress',
@@ -33,16 +38,22 @@ engines = [
 [[bench]]
 model = "grep-captures"
 name = "english"
-regex = '(\pL{14})|(\pL{13})|(\pL{12})|(\pL{11})|(\pL{10})|(\pL{9})|(\pL{8})|(\pL{7})|(\pL{6})|(\pL{5})'
+regex = '(\p{L}{14})|(\p{L}{13})|(\p{L}{12})|(\p{L}{11})|(\p{L}{10})|(\p{L}{9})|(\p{L}{8})|(\p{L}{7})|(\p{L}{6})|(\p{L}{5})'
 haystack = { path = "opensubtitles/en-medium.txt" }
 case-insensitive = false
 unicode = true
 count = 6_156
 engines = [
+  'dotnet/compiled',
   'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
   'pcre2/jit',
+  'perl',
   'python/regex',
   're2',
+  'regress',
   'rust/regex',
   'rust/regexold',
 ]
@@ -50,16 +61,22 @@ engines = [
 [[bench]]
 model = "grep-captures"
 name = "russian"
-regex = '(\pL{14})|(\pL{13})|(\pL{12})|(\pL{11})|(\pL{10})|(\pL{9})|(\pL{8})|(\pL{7})|(\pL{6})|(\pL{5})'
+regex = '(\p{L}{14})|(\p{L}{13})|(\p{L}{12})|(\p{L}{11})|(\p{L}{10})|(\p{L}{9})|(\p{L}{8})|(\p{L}{7})|(\p{L}{6})|(\p{L}{5})'
 haystack = { path = "opensubtitles/ru-medium.txt" }
 case-insensitive = false
 unicode = true
 count = 5_710
 engines = [
+  'dotnet/compiled',
   'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
   'pcre2/jit',
+  'perl',
   'python/regex',
   're2',
+  'regress',
   'rust/regex',
   'rust/regexold',
 ]
