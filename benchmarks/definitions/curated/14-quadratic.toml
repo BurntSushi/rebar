@@ -1,0 +1,176 @@
+analysis = '''
+This set of benchmarks is meant to convince you that, even if you use a regex
+engine that purports to guarantee worst case linear time searches, it is likely
+possible to use it in a way that results in worst case quadratic time!
+
+The regex we use here is `.*[^A-Z]|[A-Z]` and the haystack we search is the
+letter `A` repeated `100`, `200` and `1000` times. There are two key insights
+to understanding how this results in quadratic behavior:
+
+1. It requires one to iterate over all matches in a haystack. Some regex
+engines (e.g., `rust/regex` and `go/regexp`) provide first class APIs for such
+an operation. They typically handle the pathological case of an empty match
+for you, which would result in an infinite loop in naively written code. Some
+regex engines (e.g., `pcre2` and `re2`) do not provide any APIs for iterating
+over all matches. Callers have to write that code themselves. The point here
+is that a regex search is executed many times for a haystack. 2. Because of
+how leftmost-first match semantics work, a regex engine might scan all the way
+to the end of a haystack before reporting a match that starts and ends at the
+*beginning* of the haystack. The reason for this is that most regex engines
+will, by default, greedily consume as much as possible.
+
+Quadratic behavior occurs by exploiting both of the insights above: by crafting
+a regex and a haystack where every search scans to the end of the haystack, but
+also that every search reports a match at the beginning of the search that is
+exactly one character long.
+
+Indeed, this is exactly what the regex `.*[^A-Z]|[A-Z]` does on a haystack
+like `AAAAA`. Leftmost-first match semantics says that if there are multiple
+matches that occur at the same position, then the match generated "first" by
+the pattern should be preferred. In this case, `.*[^A-Z]` is preferred over
+`[A-Z]`. But since `.*` matches as much as possible, it is not actually known
+whether that branch matches until the regex engine reaches the end of the
+haystack and realizes that it cannot match. At that point, the match from the
+second branch, `[A-Z]` corresponding to the first `A`, is reported. Since we're
+iterating over every match, the search advances to immediately after the first
+`A` and repeats the same behavior: scanning all the way to the end of the
+haystack, only to discover there is no match, and then reporting the second `A`
+as the next match. This repeats itself, scanning the entire haystack a number
+of times proportional to `n^2`, where `n` is the length of the haystack.
+
+It is important to note that in a finite automata oriented regex engine, the
+fact that `[A-Z]` matches at the beginning of the haystack is known after the
+regex engine scans that part of the haystack. That is, its internal state is
+aware of the fact that a match exists. It specifically continues searching
+because leftmost-first semantics demand it. Once it reaches the end of the
+haystack (or a point at which no other match could occur), then it stops and
+returns the most recent match that it found. Unlike a backtracker, it does not
+need to go back to the beginning of the haystack and start looking for a match
+of the second branch.
+
+Given the semantics of leftmost-first matching, there is no way to avoid this.
+It is, unfortunately, just how the cookie crumbles.
+
+With all of that said, `hyperscan` is the one regex engine that manages to
+maintain the same throughput for each of the `1x`, `2x` and `10x` benchmarks.
+That is, it does **not** exhibit worst case quadratic behavior here. It
+retains its linear search time. How does it do it? The secret lay in the fact
+that Hyperscan doesn't implement leftmost-first match semantics. (Indeed,
+this is why some of its match counts differ throughout the benchmarks in
+rebar.) Instead, Hyperscan reports a match as soon as it is seen. Once a match
+is found, it doesn't continue on to try and greedily match the regex. For
+example, the regex `\w+` will report 5 matches in the haystack `aaaaa`, where
+as for most other regex engines, only one match will be reported. This means
+`hyperscan` can zip through this benchmark in one pass of the haystack.
+
+The `rust/regex` engine can also do this, but requires dropping down to the
+`regex-automata` crate and using `Input::new(haystack).earliest(true)` when
+running a search. This instructs the regex engine to report matches they're
+seen, just like Hyperscan. Indeed, if the `rust/regex` runner program uses this
+approach, then its throughput remains constant for the `1x`, `2x` and `10x`
+benchmarks, just like for Hyperscan.
+
+Credit goes to [this bug filed against the `go/regexp`
+engine][go-regexp-quadratic] for making me aware of this issue.
+
+Note: We use `[A-Z]` in this example instead of `A` in an attempt to subvert
+any sort of literal optimizations done by the regex engine.
+
+[go-regexp-quadratic]: https://github.com/golang/go/issues/11181
+'''
+
+[[bench]]
+model = "count"
+name = "1x"
+regex = '.*[^A-Z]|[A-Z]'
+haystack = { contents = "A", repeat = 100 }
+count = 100
+engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = '''
+This is our baseline benchmark the searches a haystack with the letter `A`
+repeated 100 times.
+'''
+
+[[bench]]
+model = "count"
+name = "2x"
+regex = '.*[^A-Z]|[A-Z]'
+haystack = { contents = "A", repeat = 200 }
+count = 200
+engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = '''
+This is like `1x`, but doubles the haystack length. This
+should provide a way to show the quadratic nature of this particular benchmark.
+
+The throughputs reported *should* remain roughly the same if the time
+complexity is linear, but in fact, the throughputs decrease by about a factor
+of 2. That demonstrates a superlinear relationship between the inputs and the
+time taken.
+'''
+
+[[bench]]
+model = "count"
+name = "10x"
+regex = '.*[^A-Z]|[A-Z]'
+haystack = { contents = "A", repeat = 1000 }
+count = 1000
+engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = '''
+This is like `1x`, but increases the haystack length by a factor of 10. This
+should provide more evidence that the relationship is quadratic in the same
+way that the `2x` benchmark does.
+'''
