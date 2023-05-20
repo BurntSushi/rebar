@@ -5,16 +5,20 @@ engines. Usually they are somewhat pathological, but not always.
 
 [[bench]]
 model = "count"
-name = "quadratic"
-regex = '(?:A+){1000}|'
-haystack = { contents = "A", repeat = 999 }
-count = 1000
+name = "quadratic-regex-1x"
+regex = '(?:A+){100}|'
+haystack = { contents = "A", repeat = 99 }
+count = 100
 engines = [
-  'rust/regex',
-  'rust/regex/pikevm',
-  'rust/regexold',
-  're2',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
   'go/regexp',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+  'rust/regex/pikevm',
 ]
 analysis = '''
 This one shows a particularly gnarly case where each search scans to the end
@@ -29,4 +33,121 @@ Each individual search is linear in the length of the haystack, but the overall
 iteration for every match is actually quadratic. Unfortunate, but unavoidable.
 
 Adapted from: https://github.com/golang/go/issues/11181
+
+Omitted engines because of timeouts or match limits:
+
+* `icu`
+* `java/hotspot`
+* `javascript/v8`
+* `pcre2`
+* `pcre2/jit`
+* `perl`
+* `python/re`
+* `python/regex`
+* `regress`
+
+We also leave out `hyperscan` here because this can match the empty string, and
+we don't configure our `hyperscan` runner program to be able to match the empty
+string. (We could, but it's not clear it's worth doing?)
+'''
+
+[[bench]]
+model = "count"
+name = "quadratic-regex-2x"
+regex = '(?:A+){200}|'
+haystack = { contents = "A", repeat = 198 }
+count = 199
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+  'rust/regex/pikevm',
+]
+analysis = '''
+This is like `quadratic-regex-1x`, but doubles the counted repetition and
+haystack length. This should provide a way to show the quadratic nature of this
+particular benchmark.
+
+The throughputs reported *should* remain roughly the same if the time
+complexity is linear, but in fact, the throughputs tend to decrease by a factor
+of 2. That demonstrates a superlinear relationship between the inputs and the
+time taken.
+'''
+
+[[bench]]
+model = "count"
+name = "quadratic-haystack-1x"
+regex = '.*[^A-Z]|[A-Z]'
+haystack = { contents = "A", repeat = 100 }
+count = 100
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+  'rust/regex/pikevm',
+]
+analysis = '''
+This is another case where the search is actually quadratic in the length of
+the haystack. Each search scans to the end of the haystack---no matter how
+long it is---and then realizes there is no match for the first branch in the
+alternation. But then reports a match for the second branch of the alternation
+at the position where the search began. It then restarts the search after that
+position and repeats itself.
+'''
+
+[[bench]]
+model = "count"
+name = "quadratic-haystack-2x"
+regex = '.*[^A-Z]|[A-Z]'
+haystack = { contents = "A", repeat = 200 }
+count = 200
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+  'rust/regex/pikevm',
+]
+analysis = '''
+This is like `quadratic-haystack-1x`, but doubles the haystack length. This
+should provide a way to show the quadratic nature of this particular benchmark.
+
+The throughputs reported *should* remain roughly the same if the time
+complexity is linear, but in fact, the throughputs tend to decrease by a factor
+of 2. That demonstrates a superlinear relationship between the inputs and the
+time taken.
 '''
