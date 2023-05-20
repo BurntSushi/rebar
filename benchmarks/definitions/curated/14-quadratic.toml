@@ -65,7 +65,7 @@ as for most other regex engines, only one match will be reported. This means
 
 The `rust/regex` engine can also do this, but requires dropping down to the
 `regex-automata` crate and using `Input::new(haystack).earliest(true)` when
-running a search. This instructs the regex engine to report matches they're
+running a search. This instructs the regex engine to report matches as they're
 seen, just like Hyperscan. Indeed, if the `rust/regex` runner program uses this
 approach, then its throughput remains constant for the `1x`, `2x` and `10x`
 benchmarks, just like for Hyperscan.
