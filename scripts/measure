@@ -12,22 +12,12 @@
 # comparing it against a previous baseline.
 
 usage() {
-  echo "Usage: $(basename "$0") [--verify --verbose --curated] [<engine> ...]"
+  echo "Usage: $(basename "$0") [--curated] [<engine> ...]"
 }
 
-verify=
-verbose=
 curated=
 while true; do
   case "$1" in
-    --verify)
-      verify=--verify
-      shift
-      ;;
-    --verbose)
-      verbose=--verbose
-      shift
-      ;;
     --curated)
       curated=1
       shift
@@ -69,14 +59,10 @@ for name_with_slashes in $engines; do
   pat="^(?:$name_with_slashes)$"
   path="$dir/$name.csv"
   echo "=== $path ==="
-  if [ -n "$verify" ]; then
-    rebar measure -F '^test/' -e "$pat" "$verify" "$verbose"
+  if [ -n "$curated" ]; then
+    rebar measure -f '^curated/' -e "$pat" | tee "$path"
   else
-    if [ -n "$curated" ]; then
-      rebar measure -f '^curated/' -e "$pat" | tee "$path"
-    else
-      rebar measure -F '^test/' -e "$pat" | tee "$path"
-    fi
+    rebar measure -F '^test/' -e "$pat" | tee "$path"
   fi
 done
 
