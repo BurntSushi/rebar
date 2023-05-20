@@ -1,0 +1,63 @@
+analysis = '''
+These regexes were [reported by Cloudflare][regex-issue-988] as examples that
+regressed somewhat significantly in the regex 1.8 release. The regex 1.8
+release didn't change too much about the regex engines themselves, but did
+come with a lot of surgery to `regex-syntax` as prep work for landing the
+regex engine rewrite in regex 1.9.
+
+The regex patterns themselves come from [OWASP ModSecurity Core Rule
+Set][owasp-project-modesecurity]. The project has a [website][coreruleset-www]
+and a [GitHub repository][coreruleset-github] where the actual patterns can be
+found. (Although I found it a little tricky to dig around in that repository
+without any other context. This is the first time I had heard of the project.)
+
+[regex-issue-988]: https://github.com/rust-lang/regex/issues/988
+[owasp-project-modsecurity]: https://owasp.org/www-project-modsecurity-core-rule-set/
+[coreruleset-www]: https://coreruleset.org/
+[coreruleset-github]: https://github.com/coreruleset/coreruleset
+'''
+
+[[bench]]
+model = "compile"
+name = "javascript-obfuscation"
+regex = '![!+ ]\[\]'
+unicode = false
+haystack = '!+[]'
+count = 1
+engines = [
+  're2',
+  'rust/regex',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = '''
+Seemingly from [REQUEST-941-APPLICATION-ATTACK-XSS].
+
+[REQUEST-941-APPLICATION-ATTACK-XSS]: https://github.com/coreruleset/coreruleset/blob/5f087a62c3a9b72f6262c6dc25e41b4bf436a120/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf#L610-L648
+'''
+
+
+[[bench]]
+model = "compile"
+name = "sql-injection"
+regex = '(?i:(?:(?:n(?:and|ot)|(?:x?x)?or|between|\|\||like|and|div|&&)\s+\s*?\w+\(|\)\s*?when\s*?\d+\s*?then|[`]\s*?(?:--|\{|#)|cha?r\s*?\(\s*?\d|/\*!\s?\d+))'
+unicode = false
+haystack = 'between word('
+count = 1
+engines = [
+  're2',
+  'rust/regex',
+  'rust/regex/ast',
+  'rust/regex/hir',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = '''
+I couldn't find where this regex came from in the coreruleset repository,
+but there are a number of regexes that resemble it. For example,
+[REQUEST-942-APPLICATION-ATTACK-SQLI].
+
+[REQUEST-942-APPLICATION-ATTACK-SQLI]: https://github.com/coreruleset/coreruleset/blob/5f087a62c3a9b72f6262c6dc25e41b4bf436a120/rules/REQUEST-942-APPLICATION-ATTACK-SQLI.conf#L910
+'''
