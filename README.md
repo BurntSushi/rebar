@@ -1973,11 +1973,11 @@ an operation. They typically handle the pathological case of an empty match
 for you, which would result in an infinite loop in naively written code. Some
 regex engines (e.g., `pcre2` and `re2`) do not provide any APIs for iterating
 over all matches. Callers have to write that code themselves. The point here
-is that a regex search is executed many times for a haystack. 2. Because of
-how leftmost-first match semantics work, a regex engine might scan all the way
-to the end of a haystack before reporting a match that starts and ends at the
-*beginning* of the haystack. The reason for this is that most regex engines
-will, by default, greedily consume as much as possible.
+is that a regex search is executed many times for a haystack.
+2. Because of how leftmost-first match semantics work, a regex engine might
+scan all the way to the end of a haystack before reporting a match that starts
+and ends at the *beginning* of the haystack. The reason for this is that most
+regex engines will, by default, greedily consume as much as possible.
 
 Quadratic behavior occurs by exploiting both of the insights above: by crafting
 a regex and a haystack where every search scans to the end of the haystack, but
