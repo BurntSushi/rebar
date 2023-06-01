@@ -1,5 +1,20 @@
 use std::env::var;
 
+const ABSEIL_DEPENDENCIES: &[&str] = &[
+    "absl_base",
+    "absl_core_headers",
+    "absl_fixed_array",
+    "absl_flags",
+    "absl_flat_hash_map",
+    "absl_flat_hash_set",
+    "absl_inlined_vector",
+    "absl_optional",
+    "absl_span",
+    "absl_str_format",
+    "absl_strings",
+    "absl_synchronization",
+];
+
 fn main() {
     let upstream = std::path::PathBuf::from("upstream");
 
@@ -39,5 +54,12 @@ fn main() {
     if var("DEBUG").unwrap_or(String::new()) == "1" {
         builder.debug(true);
     }
+    // Compile RE2 along with our binding in one go.
     builder.compile("libre2.a");
+
+    // Instruct the linker to bring in Abseil dependencies.
+    // (RE2 adopted a required dependency on Abseil as of June 2023.)
+    for dep in ABSEIL_DEPENDENCIES {
+        pkg_config::probe_library(dep).unwrap();
+    }
 }

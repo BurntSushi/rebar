@@ -8,7 +8,7 @@
 # necessary for building RE2.
 
 dest="engines/re2/upstream"
-version="2023-03-01"
+version="2023-06-01"
 dir="re2-$version"
 archive="$dir.tar.gz"
 url="https://github.com/google/re2/archive/refs/tags/$version.tar.gz"
@@ -48,7 +48,7 @@ needed_re2=(
   simplify.cc
   sparse_array.h
   sparse_set.h
-  stringpiece.cc
+  stringpiece.h
   tostring.cc
   unicode_casefold.cc
   unicode_casefold.h
@@ -63,13 +63,10 @@ needed_re2=(
 )
 needed_util=(
   logging.h
-  mix.h
-  mutex.h
   rune.cc
   strutil.cc
   strutil.h
   utf.h
-  util.h
 )
 for name in "${needed_re2[@]}"; do
   cp "$upstream/re2/$name" "$dest/re2/"
