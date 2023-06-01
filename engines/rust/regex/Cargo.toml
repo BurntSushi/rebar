@@ -1,6 +1,6 @@
 [package]
 name = "main"
-version = "1.8.1"
+version = "1.8.3"
 edition = "2021"
 
 [[bin]]
@@ -29,7 +29,7 @@ lexopt = "0.3.0"
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-regex = { version = "=1.8.1", features = ["logging", "perf-dfa-full"] }
+regex = { version = "=1.8.3", features = ["logging", "perf-dfa-full"] }
 # So... we don't actually use the regex crate directly. We use the 'meta'
 # regex API from regex-automata. See the README for justification. When
 # bumping the regex crate version, this should be bumped if needed as well.

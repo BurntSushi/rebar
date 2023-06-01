@@ -104,7 +104,7 @@ dependencies = [
 
 [[package]]
 name = "main"
-version = "1.8.1"
+version = "1.8.3"
 dependencies = [
  "anyhow",
  "bstr",
@@ -125,7 +125,7 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "regex"
-version = "1.8.1"
+version = "1.8.3"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -145,7 +145,7 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.7.1"
+version = "0.7.2"
 
 [[package]]
 name = "regexredux"
