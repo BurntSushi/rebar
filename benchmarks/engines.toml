@@ -92,6 +92,9 @@
   [[engine.dependency]]
     bin = "c++"
     args = ["--version"]
+  [[engine.dependency]]
+    bin = "pkg-config"
+    args = ["--libs", "--cflags", "absl_base"]
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]
