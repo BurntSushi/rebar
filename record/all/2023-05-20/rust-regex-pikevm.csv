@@ -1,0 +1,15 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+opt/backtrack/words-english,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,613357,168,4.56s,17.89ms,235.00ns,17.90ms,93.80us,17.69ms,18.33ms
+opt/backtrack/words-russian,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,613423,146,4.56s,20.58ms,1.16us,20.60ms,128.84us,20.28ms,21.01ms
+opt/literal-alt/one-pattern,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,123,794717,4.94s,3.74us,0.00ns,3.75us,82.00ns,3.55us,11.80us
+opt/literal-alt/pattern-per-word,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,123,5,6.42s,735.77ms,0.00ns,735.84ms,269.63us,735.46ms,736.29ms
+opt/onepass/fn-predicate,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,7384531,73,4.56s,41.52ms,0.00ns,41.49ms,233.99us,41.09ms,42.33ms
+opt/onepass/first-three-words-english,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,613357,544,4.51s,5.52ms,16.00ns,5.52ms,48.19us,5.37ms,5.71ms
+opt/onepass/first-three-words-russian,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,613423,588,4.51s,5.11ms,119.00ns,5.11ms,43.69us,4.96ms,5.30ms
+opt/onepass/word-boundary-english,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,613357,1516,4.51s,1.98ms,17.00ns,1.98ms,23.10us,1.91ms,2.06ms
+opt/onepass/word-boundary-russian,grep-captures,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,613423,1574,4.51s,1.91ms,1.00ns,1.91ms,37.92us,1.82ms,2.01ms
+slow/quadratic-regex-1x,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,99,1136,4.51s,2.64ms,19.00ns,2.64ms,41.00us,2.55ms,2.76ms
+slow/quadratic-regex-2x,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,198,151,4.56s,19.95ms,0.00ns,19.99ms,186.20us,19.71ms,20.44ms
+slow/quadratic-haystack-1x,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,100,37645,4.57s,79.67us,0.00ns,79.66us,1.14us,75.57us,98.98us
+slow/quadratic-haystack-2x,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,200,9837,4.51s,304.88us,0.00ns,304.95us,3.78us,290.76us,323.33us
+wild/grapheme/codepoints,count,0.0.1 (rev 661a26bd76),rust/regex/pikevm,0.3.0,,4382592,6,5.01s,552.72ms,594.79us,552.84ms,929.31us,551.63ms,554.20ms

@@ -1,0 +1,12 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+dictionary/compile/english,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,32,4.81s,41.66ms,34.07us,43.72ms,4.14ms,41.04ms,52.02ms
+dictionary/compile/english-10,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,82,4.66s,16.88ms,5.64us,16.94ms,177.89us,16.64ms,17.41ms
+dictionary/compile/english-15,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,878,4.56s,819.18us,9.00ns,819.34us,17.22us,785.46us,907.57us
+reported/i787-keywords/compile,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,13098,4.51s,36.77us,0.00ns,36.83us,570.00ns,35.59us,46.55us
+reported/i988-cloudflare-compile/javascript-obfuscation,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,1000000,3.69s,396.00ns,0.00ns,396.00ns,33.00ns,307.00ns,5.42us
+reported/i988-cloudflare-compile/sql-injection,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,145862,4.62s,8.65us,0.00ns,8.65us,255.00ns,6.95us,20.25us
+reported/p893-hir-case-folding/subtract-empty,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,248321,4.62s,2.16us,0.00ns,2.17us,69.00ns,1.99us,7.51us
+reported/p893-hir-case-folding/subtract-non-empty,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,194907,4.62s,5.33us,0.00ns,5.33us,123.00ns,5.06us,11.62us
+reported/p893-hir-case-folding/repeated,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,800,4.51s,3.66ms,258.00ns,3.67ms,32.76us,3.59ms,3.76ms
+wild/bibleref/compile,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,22029,4.56s,11.66us,0.00ns,11.69us,434.00ns,8.42us,17.60us
+wild/grapheme/compile,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.1,,,17143,4.51s,17.60us,0.00ns,17.46us,1.25us,14.56us,22.12us
