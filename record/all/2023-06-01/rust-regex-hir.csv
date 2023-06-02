@@ -1,0 +1,12 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+dictionary/compile/english,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,34,4.86s,40.97ms,2.49us,41.00ms,229.80us,40.72ms,41.78ms
+dictionary/compile/english-10,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,73,4.66s,21.62ms,0.00ns,19.76ms,2.27ms,16.79ms,22.08ms
+dictionary/compile/english-15,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,850,4.51s,830.96us,41.00ns,835.68us,23.10us,788.30us,1.08ms
+reported/i787-keywords/compile,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,13046,4.51s,37.17us,0.00ns,37.28us,701.00ns,35.79us,47.83us
+reported/i988-cloudflare-compile/javascript-obfuscation,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,1000000,3.79s,385.00ns,0.00ns,386.00ns,33.00ns,309.00ns,1.79us
+reported/i988-cloudflare-compile/sql-injection,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,155390,4.62s,9.26us,0.00ns,9.28us,204.00ns,8.75us,14.90us
+reported/p893-hir-case-folding/subtract-empty,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,250996,4.67s,2.13us,0.00ns,2.14us,71.00ns,1.97us,5.78us
+reported/p893-hir-case-folding/subtract-non-empty,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,194702,4.62s,5.27us,0.00ns,5.28us,110.00ns,5.03us,13.18us
+reported/p893-hir-case-folding/repeated,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,708,4.51s,4.16ms,88.00ns,4.15ms,28.69us,4.06ms,4.21ms
+wild/bibleref/compile,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,22298,4.51s,11.67us,0.00ns,11.70us,397.00ns,8.65us,14.49us
+wild/grapheme/compile,compile,0.0.1 (rev 661a26bd76),rust/regex/hir,0.7.2,,,17187,4.51s,17.87us,0.00ns,17.76us,1.23us,15.06us,22.63us

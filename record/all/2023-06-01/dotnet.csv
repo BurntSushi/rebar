@@ -1,0 +1,6 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+imported/regex-redux/regex-redux,regex-redux,0.0.1 (rev 661a26bd76),dotnet,7.0.3,,,14,4.76s,217.42ms,155.82us,217.64ms,1.20ms,215.79ms,220.06ms
+slow/quadratic-regex-1x,count,0.0.1 (rev 661a26bd76),dotnet,7.0.3,,99,936577,5.00s,3.15us,0.00ns,3.16us,92.00ns,3.00us,27.80us
+slow/quadratic-regex-2x,count,0.0.1 (rev 661a26bd76),dotnet,7.0.3,,198,475840,4.78s,6.24us,0.00ns,6.26us,154.00ns,5.97us,16.52us
+slow/quadratic-haystack-1x,count,0.0.1 (rev 661a26bd76),dotnet,7.0.3,,100,69952,4.61s,42.89us,0.00ns,42.83us,681.00ns,40.29us,71.14us
+slow/quadratic-haystack-2x,count,0.0.1 (rev 661a26bd76),dotnet,7.0.3,,200,19594,4.61s,152.18us,0.00ns,153.03us,2.43us,149.23us,183.52us
