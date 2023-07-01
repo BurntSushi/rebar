@@ -1,0 +1,157 @@
+analysis = '''
+This benchmark tries really hard to test an NFA compiler optimization
+that reduces the number of epsilon transitions in the NFA
+by using "sparse" NFA states. Basically, for a class like
+`[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]]`, the old regex engine
+used to generate an NFA like this for Unicode regexes:
+
+```
+$ regex-debug compile '[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]'
+0000 Save(0) (start)
+0001 '0'-'2', '4'-'6', '8'-'9', 'A'-'C', 'E'-'G', 'I'-'K', 'M'-'O', 'Q'-'S', 'U'-'W', 'Y'-'Z', 'a'-'c', 'e'-'g', 'i'-'k', 'm'-'o', 'q'-'s', 'u'-'w', 'y'-'z'
+0002 Save(1)
+0003 Match(0)
+```
+
+And an NFA like this for regexes that could match invalid UTF-8 (and for NFAs
+that would be used to build a lazy DFA):
+
+```
+$ regex-debug compile --bytes '[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]'
+0000 Save(0) (start)
+0001 Split(2, 3)
+0002 Bytes(0, 2) (goto: 34)
+0003 Split(4, 5)
+0004 Bytes(4, 6) (goto: 34)
+0005 Split(6, 7)
+0006 Bytes(8, 9) (goto: 34)
+0007 Split(8, 9)
+0008 Bytes(A, C) (goto: 34)
+0009 Split(10, 11)
+0010 Bytes(E, G) (goto: 34)
+0011 Split(12, 13)
+0012 Bytes(I, K) (goto: 34)
+0013 Split(14, 15)
+0014 Bytes(M, O) (goto: 34)
+0015 Split(16, 17)
+0016 Bytes(Q, S) (goto: 34)
+0017 Split(18, 19)
+0018 Bytes(U, W) (goto: 34)
+0019 Split(20, 21)
+0020 Bytes(Y, Z) (goto: 34)
+0021 Split(22, 23)
+0022 Bytes(a, c) (goto: 34)
+0023 Split(24, 25)
+0024 Bytes(e, g) (goto: 34)
+0025 Split(26, 27)
+0026 Bytes(i, k) (goto: 34)
+0027 Split(28, 29)
+0028 Bytes(m, o) (goto: 34)
+0029 Split(30, 31)
+0030 Bytes(q, s) (goto: 34)
+0031 Split(32, 33)
+0032 Bytes(u, w) (goto: 34)
+0033 Bytes(y, z)
+0034 Save(1)
+0035 Match(0)
+```
+
+The above shows, in part, why we use a class with several non-adjacent ranges.
+It ends up creating more `Split` instructions and thus exacerbates the problem.
+
+The new NFA compiler does this instead:
+
+```
+$ regex-cli debug thompson --no-table '[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]'
+thompson::NFA(
+>000000: binary-union(2, 1)
+ 000001: \x00-\xFF => 0
+^000002: capture(pid=0, group=0, slot=0) => 3
+ 000003: sparse(0-2 => 4, 4-6 => 4, 8-9 => 4, A-C => 4, E-G => 4, I-K => 4, M-O => 4, Q-S => 4, U-W => 4, Y-Z => 4, a-c => 4, e-g => 4, i-k => 4, m-o => 4, q-s => 4, u-w => 4, y-z => 4)
+ 000004: capture(pid=0, group=0, slot=1) => 5
+ 000005: MATCH(0)
+)
+```
+
+The old representation for Unicode regexes is pretty close to what the new NFA
+compiler does, but the new one is doing it at a byte level. When the old NFA
+compiler has to generate a byte level NFA, it starts generating lots of epsilon
+transitions, as shown above.
+
+This benchmark tries to measure the improvement as a result of this
+optimization.
+'''
+
+[[bench]]
+model = "count"
+name = "small-repeated-class-bytes"
+regex = '[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]{100,}(?-u:[\x80-\xFF])\b'
+unicode = true
+haystack = { contents = "01245689ABCEFGIJKMNOQRSUVWYZabcefgijkmnoqrsuvwyz", repeat = 2_000, prepend = "💩" }
+count = 0
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/pikevm',
+]
+analysis = '''
+This benchmark compares the new NFA compiler with the old one, where the
+regex is constructed in a way to force the old NFA compiler to produce a byte
+oriented NFA.
+
+The regex here is a bit ham-fisted, but let's break it down. The
+`[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]` is basically what we're
+trying to test here, and it's what gets compiled down into a sparse state in
+the new NFA compiler and into a bunch of epsilon transitions in the old NFA
+compiler. We use lots of non-adjacent ranges to force the creation of more
+epsilon transitions and thus exacerbate the extra cost paid in the old regex
+crate in computing the epsilon closure over and over again.
+
+The `{100,}` counted repetition is used to exacerbate the issue yet again, as
+it requires computing the epsilon closure for the character class over and over
+again for each possible match. We could remove this and still see a difference,
+but it would be somewhat less. It's also a convenient way to "beef" up the
+regex so that the PikeVM is used instead of the bounded backtracker.
+
+The `(?-u:[\x80-\xFF])` part serves two purposes. First is that it makes it so
+no match will ever be found, since the haystack doesn't contain any bytes in
+`\x80-\xFF` except for the `💩` at the beginning. The second reason is to force
+the old NFA compiler to produce a byte oriented NFA. Without this, it will
+produce a Unicode oriented NFA that doesn't suffer from the epsilon transition
+problem.
+
+The `\b` at the end is specifically inserted to forcefully disable the use
+of the lazy DFA. This alone isn't actually enough. We need to also search
+a haystack that has at least some non-ASCII in it. That's why the haystack
+begins with a `💩`. Without the word boundary, it's likely the lazy DFA would
+be used and would inhibit us from measuring the true overhead of the epsilon
+transitions in the context of the PikeVM.
+
+In this case, the performance of the new NFA compiler is somewhere around an
+order of magnitude better than the old one.
+'''
+
+[[bench]]
+model = "count"
+name = "small-repeated-class-unicode"
+regex = '[0-24-68-9A-CE-GI-KM-OQ-SU-WY-Za-ce-gi-km-oq-su-wy-z]{100,}(?-u:[\x00-\x29])\b'
+unicode = true
+haystack = { contents = "01245689ABCEFGIJKMNOQRSUVWYZabcefgijkmnoqrsuvwyz", repeat = 2_000, prepend = "💩" }
+count = 0
+engines = [
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/pikevm',
+]
+analysis = '''
+This is like the byte oriented benchmark above, except it tweaks the regex to
+use `\x00-\x29` instead of `\x80-\xFF`. The former is ASCII, and thus valid
+UTF-8. This means the old NFA compiler can produce a Unicode oriented NFA,
+and it does not suffer from the epsilon transition problem. (Or at least, not
+in this specific case. All Thompson NFAs suffer from the epsilon transition
+problem in at least some respect.)
+
+In this case, the new byte oriented NFA is about on par with the old Unicode
+oriented NFA. (The new NFA compiler only produces byte oriented NFAs. It has no
+Unicode NFA equivalent.)
+'''
