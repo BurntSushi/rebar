@@ -66,6 +66,9 @@ for name_with_slashes in $engines; do
   fi
 done
 
+# Specifically exclude summaries in this report because they aren't really
+# meaningful across all benchmarks. It would give too much of a misleading
+# perspective.
 rebar report \
   --statistic median \
   --units throughput \
