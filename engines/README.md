@@ -51,7 +51,7 @@ This example shows how to build and run the `rust/regex` engine runner program
 directly for a specific benchmark. This also shows the output format.
 
 ```
-$ rebar build rust/regex
+$ rebar build -e '^rust/regex$'
 $ rebar klv imported/sherlock/repeated-class-negation --max-time 3s --max-iters 10 \
   | ./engines/rust/regex/target/release/main
 15033876,2130
