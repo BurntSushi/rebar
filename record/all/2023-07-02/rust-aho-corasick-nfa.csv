@@ -1,0 +1,14 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+aho-corasick/compile/dictionary-english,compile,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,,92,4.87s,31.80ms,2.89us,32.74ms,1.53ms,31.35ms,35.22ms
+aho-corasick/compile/dictionary-english-10,compile,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,,225,4.66s,13.23ms,0.00ns,13.35ms,342.36us,13.11ms,14.39ms
+aho-corasick/compile/dictionary-english-15,compile,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,,1988,4.51s,1.51ms,1.00ns,1.51ms,10.90us,1.49ms,1.56ms
+aho-corasick/dictionary/english,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,61436,6446,4.87s,464.14us,1.00ns,465.38us,6.11us,447.98us,500.53us
+aho-corasick/dictionary/english-tiny,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,108,1000000,1.49s,330.00ns,0.00ns,330.00ns,18.00ns,313.00ns,2.84us
+aho-corasick/dictionary/english-10,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,61436,8144,4.66s,370.60us,0.00ns,368.34us,8.15us,345.87us,421.56us
+aho-corasick/dictionary/english-15,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,61436,9111,4.56s,329.93us,0.00ns,329.23us,6.61us,306.65us,381.52us
+aho-corasick/dictionary/i787-noword,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,122775,6876,4.51s,435.27us,1.00ns,436.31us,5.06us,426.00us,484.14us
+aho-corasick/teddy/sherlock4-nocase-ascii,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,594933,3050,4.51s,0.98ms,1.00ns,0.98ms,4.68us,0.97ms,1.04ms
+aho-corasick/teddy/sherlock4-nocase-unicode,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,594933,3030,4.51s,0.99ms,2.00ns,0.99ms,8.61us,0.98ms,1.15ms
+aho-corasick/teddy/sherlock5-nocase-ascii,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,594933,3041,4.51s,0.98ms,0.00ns,0.99ms,5.94us,0.97ms,1.04ms
+aho-corasick/teddy/sherlock5-nocase-unicode,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,594933,3034,4.51s,0.99ms,3.00ns,0.99ms,5.69us,0.97ms,1.04ms
+aho-corasick/teddy/reported-i787-keywords,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/nfa,1.0.1,,123141,6805,4.51s,440.33us,0.00ns,440.86us,4.82us,429.74us,489.58us

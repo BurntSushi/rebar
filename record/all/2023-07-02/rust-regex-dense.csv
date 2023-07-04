@@ -1,0 +1,10 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+opt/accelerate/whole-line,grep,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,7384531,684,4.51s,4.38ms,24.00ns,4.39ms,42.58us,4.32ms,4.57ms
+opt/accelerate/non-dna,count-spans,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,1016745,6299,4.51s,475.38us,0.00ns,476.23us,5.04us,466.35us,519.01us
+unicode/compile/one-letter,compile,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,,277,4.51s,10.84ms,0.00ns,10.84ms,47.93us,10.71ms,10.96ms
+unicode/compile/fifty-letters,compile,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,,3,5.31s,1.06s,0.00ns,1.06s,478.37us,1.05s,1.06s
+unicode/compile/fifty-letters-ascii,compile,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,,31271,4.51s,95.14us,0.00ns,95.30us,1.11us,92.36us,109.37us
+wild/grapheme/compile,compile,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,,83,4.61s,36.52ms,0.00ns,36.52ms,69.49us,36.37ms,36.72ms
+wild/grapheme/source-code,count,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,7384531,31,4.71s,99.35ms,0.00ns,99.41ms,414.03us,98.82ms,100.83ms
+wild/grapheme/codepoints,count,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,4382592,152,4.56s,19.79ms,189.00ns,19.79ms,189.44us,19.34ms,20.26ms
+wild/parol-veryl/multi-patternid-ascii,count-spans,0.0.1 (rev 8c6edf6843),rust/regex/dense,0.3.0,,150600,1937,4.51s,1.55ms,0.00ns,1.55ms,15.88us,1.52ms,1.64ms
