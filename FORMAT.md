@@ -367,9 +367,9 @@ starts at `0`. This is applied after `trim`, but before `repeat`.
 * `repeat` - Repeat the haystack contents this many times. This is applied
 after `trim` but before `prepend` and `append`.
 * `prepend` - The given string is automatically prepended to the haystack. This
-occurs after trimming when `trim` is enabled.
+occurs after trimming and repetition, if enabled.
 * `append` - The given string is automatically appended to the haystack. This
-occurs after trimming when `trim` is enabled.
+occurs after trimming and repetition, if enabled.
 
 Here are some examples. This first one defines a simple haystack using a TOML
 string:
