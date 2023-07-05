@@ -7,9 +7,6 @@ edition = "2021"
 name = "main"
 path = "main.rs"
 
-[patch.crates-io]
-regex-lite = { path = "/home/andrew/rust/regex/regex-lite" }
-
 [dependencies]
 anyhow = "1.0.69"
 bstr = { version = "1.2.0", default-features = false, features = ["std"] }

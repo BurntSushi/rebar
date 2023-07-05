@@ -7,10 +7,6 @@ edition = "2021"
 name = "main"
 path = "main.rs"
 
-[patch.crates-io]
-regex-automata = { path = "/home/andrew/rust/regex/regex-automata" }
-regex-syntax = { path = "/home/andrew/rust/regex/regex-syntax" }
-
 [dependencies]
 anyhow = "1.0.69"
 bstr = { version = "1.2.0", default-features = false, features = ["std"] }
@@ -29,7 +25,7 @@ lexopt = "0.3.0"
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
 regex-automata = { version = "=0.3.0", features = ["logging"] }
-regex-syntax = "0.7.1"
+regex-syntax = "0.7.3"
 
 [dependencies.klv]
 path = "../../../shared/klv"
