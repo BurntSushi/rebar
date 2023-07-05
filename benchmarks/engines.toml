@@ -736,3 +736,19 @@
   [[engine.clean]]
     bin = "cargo"
     args = ["clean"]
+
+# An off-the-cuff experiment to benchmark the regex 1.0.0 release.
+[[engine]]
+  name = "rust/regexinit"
+  cwd = "../engines/rust/regex-init"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]

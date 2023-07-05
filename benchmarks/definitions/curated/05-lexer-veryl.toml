@@ -90,6 +90,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 analysis = '''
@@ -118,6 +119,7 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 analysis = '''

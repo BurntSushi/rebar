@@ -102,6 +102,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 analysis = '''
@@ -132,6 +133,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 analysis = '''
@@ -167,6 +169,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 analysis = '''
