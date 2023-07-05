@@ -134,7 +134,7 @@ performance profile of any specific regex engine or workload.
 | Engine | Version | Geometric mean of speed ratios | Benchmark count |
 | ------ | ------- | ------------------------------ | --------------- |
 | [hyperscan](benchmarks/../engines/hyperscan) | 5.4.2 2023-04-22 | 2.03 | 28 |
-| [rust/regex](benchmarks/../engines/rust/regex) | 1.8.4 | 2.70 | 38 |
+| [rust/regex](benchmarks/../engines/rust/regex) | 1.9.0 | 2.70 | 38 |
 | [pcre2/jit](benchmarks/../engines/pcre2) | 10.42 2022-12-11 | 5.26 | 34 |
 | [dotnet/compiled](benchmarks/../engines/dotnet) | 7.0.7 | 6.24 | 34 |
 | [re2](benchmarks/../engines/re2) | 2023-07-01 | 9.03 | 31 |
@@ -161,7 +161,7 @@ performance profile of any specific regex engine or workload.
 | [go/regexp](benchmarks/../engines/go) | 1.20.5 | 5.06 | 10 |
 | [pcre2/jit](benchmarks/../engines/pcre2) | 10.42 2022-12-11 | 5.50 | 11 |
 | [re2](benchmarks/../engines/re2) | 2023-07-01 | 10.84 | 10 |
-| [rust/regex](benchmarks/../engines/rust/regex) | 1.8.4 | 10.97 | 14 |
+| [rust/regex](benchmarks/../engines/rust/regex) | 1.9.0 | 10.97 | 14 |
 | [dotnet/compiled](benchmarks/../engines/dotnet) | 7.0.7 | 19.40 | 10 |
 | [python/re](benchmarks/../engines/python) | 3.11.3 | 32.63 | 11 |
 | [python/regex](benchmarks/../engines/python) | 2023.6.3 | 90.04 | 11 |
