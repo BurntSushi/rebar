@@ -8,7 +8,7 @@
 # necessary for building RE2.
 
 dest="engines/re2/upstream"
-version="2023-07-01"
+version="2023-08-01"
 dir="re2-$version"
 archive="$dir.tar.gz"
 url="https://github.com/google/re2/archive/refs/tags/$version.tar.gz"
