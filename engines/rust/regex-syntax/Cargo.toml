@@ -1,16 +1,12 @@
 [package]
 name = "main"
-version = "0.7.3"
+version = "0.7.4"
 edition = "2021"
 publish = false
 
 [[bin]]
 name = "main"
 path = "main.rs"
-
-[patch.crates-io]
-regex-automata = { path = "/home/andrew/rust/regex/regex-automata" }
-regex-syntax = { path = "/home/andrew/rust/regex/regex-syntax" }
 
 [dependencies]
 anyhow = "1.0.69"
@@ -28,7 +24,7 @@ regex-automata = { version = "0.3.0", features = ["logging"] }
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-regex-syntax = "=0.7.3"
+regex-syntax = "=0.7.4"
 
 [dependencies.klv]
 path = "../../../shared/klv"
