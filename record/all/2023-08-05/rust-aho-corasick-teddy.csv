@@ -1,0 +1,6 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+aho-corasick/teddy/sherlock4-nocase-ascii,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/teddy,1.0.1,,594933,86028,4.57s,34.76us,0.00ns,34.84us,244.00ns,34.54us,49.15us
+aho-corasick/teddy/sherlock4-nocase-unicode,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/teddy,1.0.1,,594933,84722,4.56s,35.30us,0.00ns,35.37us,234.00ns,35.08us,45.09us
+aho-corasick/teddy/sherlock5-nocase-ascii,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/teddy,1.0.1,,594933,77871,4.56s,39.31us,0.00ns,38.49us,1.90us,35.36us,47.89us
+aho-corasick/teddy/sherlock5-nocase-unicode,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/teddy,1.0.1,,594933,46637,4.56s,66.21us,0.00ns,64.29us,2.84us,60.18us,77.51us
+aho-corasick/teddy/reported-i787-keywords,count,0.0.1 (rev 8c6edf6843),rust/aho-corasick/teddy,1.0.1,,123141,5643,4.51s,531.43us,0.00ns,531.63us,3.93us,521.15us,571.02us

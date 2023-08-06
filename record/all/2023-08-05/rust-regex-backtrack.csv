@@ -1,0 +1,8 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+opt/backtrack/words-english,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,613357,288,4.51s,10.42ms,163.00ns,10.43ms,48.37us,10.32ms,10.56ms
+opt/backtrack/words-russian,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,613423,231,4.56s,13.04ms,0.00ns,13.04ms,65.94us,12.88ms,13.21ms
+opt/onepass/fn-predicate,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,7384531,150,4.56s,20.01ms,30.00ns,20.02ms,55.27us,19.88ms,20.15ms
+opt/onepass/first-three-words-english,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,613357,1178,4.51s,2.55ms,8.00ns,2.55ms,11.61us,2.52ms,2.60ms
+opt/onepass/first-three-words-russian,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,613423,1323,4.51s,2.26ms,0.00ns,2.27ms,31.18us,2.21ms,2.41ms
+opt/onepass/word-boundary-english,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,613357,2852,4.51s,1.05ms,0.00ns,1.05ms,4.63us,1.04ms,1.08ms
+opt/onepass/word-boundary-russian,grep-captures,0.0.1 (rev 8c6edf6843),rust/regex/backtrack,0.3.6,,613423,3492,4.51s,858.58us,3.00ns,859.19us,3.50us,850.65us,885.81us

@@ -1,0 +1,9 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+dictionary/compile/english,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,16,4.81s,69.26ms,23.61us,69.06ms,477.71us,67.91ms,69.65ms
+dictionary/compile/english-10,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,35,4.61s,29.86ms,0.00ns,30.64ms,1.71ms,29.37ms,34.32ms
+dictionary/compile/english-15,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,559,4.51s,1.64ms,0.00ns,1.64ms,21.38us,1.61ms,1.90ms
+reported/i787-keywords/compile,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,10587,4.51s,32.75us,0.00ns,32.98us,865.00ns,31.29us,41.33us
+reported/i988-cloudflare-compile/javascript-obfuscation,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,1000000,4.64s,475.00ns,0.00ns,477.00ns,32.00ns,413.00ns,2.75us
+reported/i988-cloudflare-compile/sql-injection,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,100069,4.57s,5.02us,0.00ns,5.03us,147.00ns,4.58us,10.01us
+wild/bibleref/compile,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,20041,4.52s,8.58us,0.00ns,8.61us,289.00ns,7.86us,20.64us
+wild/grapheme/compile,compile,0.0.1 (rev 8c6edf6843),rust/regex/ast,0.7.4,,,15765,4.52s,10.99us,0.00ns,11.13us,507.00ns,10.10us,14.37us
