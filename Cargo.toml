@@ -48,7 +48,6 @@ name = "rebar"
 
 [dependencies]
 anyhow = "1.0.28"
-atty = "0.2.14"
 bstr = { version = "1.2.0", default-features = false, features = ["std"] }
 csv = "1.2.0"
 # Using an older version here because I am really not a fan of the dependency

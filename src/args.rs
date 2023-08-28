@@ -122,8 +122,9 @@ colorized. The choices are: auto, always, never.
     /// Return true if colors should be used. When the color choice is 'auto',
     /// this only returns true if stdout is a tty.
     pub fn should_color(&self) -> bool {
+        use std::io::IsTerminal;
         match *self {
-            Color::Auto => atty::is(atty::Stream::Stdout),
+            Color::Auto => std::io::stdout().is_terminal(),
             Color::Always => true,
             Color::Never => false,
         }

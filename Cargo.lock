@@ -147,7 +147,6 @@ name = "rebar"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "atty",
  "bstr",
  "csv",
  "env_logger",
