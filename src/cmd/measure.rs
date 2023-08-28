@@ -671,7 +671,12 @@ impl ExecBenchmark {
             let nanos = s1.parse::<u64>().with_context(|| {
                 format!("failed to parse duration field {:?} as u64", s1)
             })?;
-            let duration = Duration::from_nanos(nanos);
+            // If we get a measurement of 0 nanoseconds, then that winds up
+            // being pretty meaningless. So we "round up" to 1. Basically, we
+            // just give up trying to measure anything that reliably takes less
+            // than 1 nanosecond.
+            let duration =
+                Duration::from_nanos(if nanos == 0 { 1 } else { nanos });
             let count = s2.parse::<u64>().with_context(|| {
                 format!("failed to parse count field {:?} as u64", s2)
             })?;
