@@ -9,6 +9,7 @@ use {
     anyhow::Context,
     bstr::{BString, ByteSlice},
     once_cell::sync::Lazy,
+    regex_lite::Regex as RRegex,
 };
 
 use crate::{
@@ -60,7 +61,7 @@ impl Benchmarks {
         name: &str,
     ) -> anyhow::Result<Definition> {
         // This is a little cumbersome, but we go to war with the army we have.
-        let pattern = format!("^(?:{})$", regex_syntax::escape(&name));
+        let pattern = format!("^(?:{})$", regex_lite::escape(&name));
         let filters = Filters {
             name: Filter::from_pattern(&pattern)?,
             ..Filters::default()
@@ -192,8 +193,8 @@ impl Engine {
     }
 
     fn validate(&mut self, bench_dir: &str) -> anyhow::Result<()> {
-        static RE_ENGINE: Lazy<regex::Regex> = Lazy::new(|| {
-            regex::Regex::new(r"^[-A-Za-z0-9]+(/[-A-Za-z0-9]+)*$").unwrap()
+        static RE_ENGINE: Lazy<RRegex> = Lazy::new(|| {
+            RRegex::new(r"^[-A-Za-z0-9]+(/[-A-Za-z0-9]+)*$").unwrap()
         });
 
         anyhow::ensure!(
@@ -697,10 +698,10 @@ impl WireDefinition {
     }
 
     fn name(&self) -> anyhow::Result<DefinitionName> {
-        static RE_GROUP: Lazy<regex::Regex> =
-            Lazy::new(|| regex::Regex::new(r"^[-A-Za-z0-9]+$").unwrap());
-        static RE_NAME: Lazy<regex::Regex> =
-            Lazy::new(|| regex::Regex::new(r"^[-A-Za-z0-9]+$").unwrap());
+        static RE_GROUP: Lazy<RRegex> =
+            Lazy::new(|| RRegex::new(r"^[-A-Za-z0-9]+$").unwrap());
+        static RE_NAME: Lazy<RRegex> =
+            Lazy::new(|| RRegex::new(r"^[-A-Za-z0-9]+$").unwrap());
 
         for piece in self.group.split("/") {
             anyhow::ensure!(
@@ -833,7 +834,7 @@ impl WireDefinition {
                 let mut counts = vec![];
                 for wire in engine_counts.iter() {
                     let pat = format!("^(?:{})$", wire.engine);
-                    let re = regex::Regex::new(&pat).context(
+                    let re = RRegex::new(&pat).context(
                         "failed to parse engine count name as regex",
                     )?;
                     counts.push(CountEngine {
@@ -845,7 +846,7 @@ impl WireDefinition {
                 Ok(counts)
             }
             WireCount::All(count) => Ok(vec![CountEngine {
-                re: Regex(regex::Regex::new(r"^.*$").unwrap()),
+                re: Regex(RRegex::new(r"^.*$").unwrap()),
                 engine: r".*".to_string(),
                 count,
             }]),
@@ -936,7 +937,7 @@ impl WireRegexOptions {
     fn transform(&self, mut pats: Vec<String>) -> Vec<String> {
         if self.literal {
             for p in pats.iter_mut() {
-                *p = regex_syntax::escape(p);
+                *p = regex_lite::escape(p);
             }
         }
         if let Some(ref prepend) = self.prepend {
@@ -1164,7 +1165,7 @@ impl HaystackKey {
 }
 
 #[derive(Clone, Debug)]
-pub struct Regex(regex::Regex);
+pub struct Regex(RRegex);
 
 impl Eq for Regex {}
 
@@ -1175,8 +1176,8 @@ impl PartialEq for Regex {
 }
 
 impl std::ops::Deref for Regex {
-    type Target = regex::Regex;
-    fn deref(&self) -> &regex::Regex {
+    type Target = RRegex;
+    fn deref(&self) -> &RRegex {
         &self.0
     }
 }
@@ -1201,7 +1202,7 @@ impl<'de> serde::Deserialize<'de> for Regex {
             }
 
             fn visit_str<E: Error>(self, v: &str) -> Result<Regex, E> {
-                regex::Regex::new(v)
+                RRegex::new(v)
                     .map(Regex)
                     .map_err(|err| E::custom(err.to_string()))
             }
@@ -1262,7 +1263,7 @@ mod tests {
 
     fn count_all(count: u64) -> Vec<CountEngine> {
         vec![CountEngine {
-            re: Regex(regex::bytes::Regex::new(r"^.*$").unwrap()),
+            re: Regex(RRegex::new(r"^.*$").unwrap()),
             engine: r".*".to_string(),
             count,
         }]
@@ -1689,8 +1690,13 @@ count = 1
         assert_eq!(expected, *got);
     }
 
+    // We used to treat `engines = []` as an error, but I changed that because
+    // it was needlessly inflexible. It can be nice to define a benchmark
+    // with no engines to get started, and then incrementally add them. Also,
+    // removing all engines from a benchmark is one way of disabling it while
+    // keeping it around and visible to rebar.
     #[test]
-    fn error_empty_engines() {
+    fn ok_empty_engines() {
         let raw = r#"
 [[bench]]
 model = "count"
@@ -1702,7 +1708,7 @@ count = 1
 "#;
         let es = Engines::from_list(vec![]);
         let filters = Filters::default();
-        assert!(Benchmarks::from_slice(&es, &filters, "group", raw).is_err());
+        assert!(Benchmarks::from_slice(&es, &filters, "group", raw).is_ok());
     }
 
     #[test]

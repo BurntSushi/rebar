@@ -6,7 +6,7 @@ use std::{
 use {
     anyhow::Context,
     lexopt::{Arg, Parser, ValueExt},
-    regex::Regex,
+    regex_lite::Regex,
 };
 
 use crate::format::measurement::Measurement;

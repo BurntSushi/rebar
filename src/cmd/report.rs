@@ -6,7 +6,7 @@ use std::{
 
 use {
     anyhow::Context, bstr::ByteSlice, lexopt::ValueExt, once_cell::sync::Lazy,
-    regex::Regex,
+    regex_lite::Regex,
 };
 
 use crate::{
@@ -268,7 +268,7 @@ impl Config {
     ) -> anyhow::Result<Benchmarks> {
         let mut engine_names: Vec<String> = measurements
             .iter()
-            .map(|m| regex_syntax::escape(&m.engine))
+            .map(|m| regex_lite::escape(&m.engine))
             .collect();
         engine_names.sort();
         engine_names.dedup();
@@ -276,10 +276,8 @@ impl Config {
         let engine_filter = Filter::from_pattern(&pat)
             .context("failed to build filter for engine names")?;
 
-        let bench_names: Vec<String> = measurements
-            .iter()
-            .map(|m| regex_syntax::escape(&m.name))
-            .collect();
+        let bench_names: Vec<String> =
+            measurements.iter().map(|m| regex_lite::escape(&m.name)).collect();
         let pat = format!("^(?:{})$", bench_names.join("|"));
         let bench_filter = Filter::from_pattern(&pat)
             .context("failed to build filter for benchmark names")?;
@@ -824,26 +822,26 @@ fn markdown_table_escape(v: &str) -> String {
     v.replace("|", r"\|")
 }
 
-/// Splices the given report into the given file path. This returns an error
-/// if reading or writing the file fails, or if appropriate begin and end
-/// markers for the report could not be found.
+/// Splices the given report into the given file path. This returns an error if
+/// reading or writing the file fails, or if the report isn't valid UTF-8, or
+/// if appropriate begin and end markers for the report could not be found.
 fn splice(path: &Path, report: &[u8]) -> anyhow::Result<()> {
-    static RE: Lazy<regex::bytes::Regex> = Lazy::new(|| {
-        regex::bytes::Regex::new(
+    static RE: Lazy<Regex> = Lazy::new(|| {
+        Regex::new(
             r"\n<!-- BEGIN: report -->\n((?s:.*?))<!-- END: report -->\n",
         )
         .unwrap()
     });
-    let src =
-        std::fs::read(path).with_context(|| path.display().to_string())?;
+    let src = std::fs::read_to_string(path)
+        .with_context(|| path.display().to_string())?;
     let remove = match RE.captures(&src) {
         None => anyhow::bail!("could not find report markers in splice file"),
         Some(caps) => caps.get(1).unwrap(),
     };
     let mut out = vec![];
-    out.extend_from_slice(&src[..remove.start()]);
+    out.extend_from_slice(src[..remove.start()].as_bytes());
     out.extend_from_slice(report);
-    out.extend_from_slice(&src[remove.end()..]);
+    out.extend_from_slice(&src[remove.end()..].as_bytes());
     std::fs::write(path, &out).with_context(|| path.display().to_string())?;
     Ok(())
 }

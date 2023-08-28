@@ -4,7 +4,7 @@ use {
     anyhow::Context,
     bstr::{BString, ByteSlice},
     once_cell::sync::Lazy,
-    regex::Regex,
+    regex_lite::Regex,
 };
 
 /// The rebar Cargo package version. This environment variable is guaranteed
