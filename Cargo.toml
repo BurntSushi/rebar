@@ -62,7 +62,7 @@ serde = { version = "1.0.137", features = ["derive"] }
 tabwriter = { version = "1.2.1", features = ["ansi_formatting"] }
 termcolor = "1.1.3"
 textwrap = { version = "0.16.0", default-features = false }
-toml = "0.7.1"
+toml = "0.5.11"
 unicode-width = "0.1.7"
 walkdir = "2.3.2"
 
