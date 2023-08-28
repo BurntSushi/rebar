@@ -3,8 +3,6 @@ use std::time::Duration;
 use {
     anyhow::Context,
     bstr::{BString, ByteSlice},
-    once_cell::sync::Lazy,
-    regex_lite::Regex,
 };
 
 /// The rebar Cargo package version. This environment variable is guaranteed
@@ -95,22 +93,19 @@ impl std::str::FromStr for ShortHumanDuration {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> anyhow::Result<ShortHumanDuration> {
-        static RE: Lazy<Regex> = Lazy::new(|| {
-            Regex::new(
-                r"(?x)
+        let re = regex!(
+            r"(?x)
                 ^
                 (?P<float>[0-9]+(?:\.[0-9]*)?|\.[0-9]+)
                 (?P<units>s|ms|us|ns)
                 $
             ",
-            )
-            .unwrap()
-        });
+        );
         // Special case: if we have 0, then it's the same regardless of units.
         if s == "0" {
             return Ok(ShortHumanDuration::default());
         }
-        let caps = match RE.captures(s) {
+        let caps = match re.captures(s) {
             Some(caps) => caps,
             None => anyhow::bail!(
                 "duration '{}' not in '<decimal>(s|ms|us|ns)' format",
@@ -225,19 +220,16 @@ impl std::str::FromStr for Throughput {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> anyhow::Result<Throughput> {
-        static RE: Lazy<Regex> = Lazy::new(|| {
-            Regex::new(
-                r"(?x)
+        let re = regex!(
+            r"(?x)
                 ^
                 (?P<float>[0-9]+(?:\.[0-9]*)?|\.[0-9]+)
                 \s*
                 (?P<units>B|KB|MB|GB)/s
                 $
             ",
-            )
-            .unwrap()
-        });
-        let caps = match RE.captures(s) {
+        );
+        let caps = match re.captures(s) {
             Some(caps) => caps,
             None => anyhow::bail!(
                 "throughput '{}' not in '<decimal>(B|KB|MB|GB)/s' format",

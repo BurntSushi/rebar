@@ -4,10 +4,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use {
-    anyhow::Context, bstr::ByteSlice, lexopt::ValueExt, once_cell::sync::Lazy,
-    regex_lite::Regex,
-};
+use {anyhow::Context, bstr::ByteSlice, lexopt::ValueExt, regex_lite::Regex};
 
 use crate::{
     args::{self, Filter, Filters, Stat, Units, Usage},
@@ -826,15 +823,11 @@ fn markdown_table_escape(v: &str) -> String {
 /// reading or writing the file fails, or if the report isn't valid UTF-8, or
 /// if appropriate begin and end markers for the report could not be found.
 fn splice(path: &Path, report: &[u8]) -> anyhow::Result<()> {
-    static RE: Lazy<Regex> = Lazy::new(|| {
-        Regex::new(
-            r"\n<!-- BEGIN: report -->\n((?s:.*?))<!-- END: report -->\n",
-        )
-        .unwrap()
-    });
+    let re =
+        regex!(r"\n<!-- BEGIN: report -->\n((?s:.*?))<!-- END: report -->\n",);
     let src = std::fs::read_to_string(path)
         .with_context(|| path.display().to_string())?;
-    let remove = match RE.captures(&src) {
+    let remove = match re.captures(&src) {
         None => anyhow::bail!("could not find report markers in splice file"),
         Some(caps) => caps.get(1).unwrap(),
     };
@@ -849,6 +842,6 @@ fn splice(path: &Path, report: &[u8]) -> anyhow::Result<()> {
 /// Formats the name of something by applying various conventions used in
 /// benchmark definitions.
 fn nice_name(name: &str) -> String {
-    static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^([0-9]+-)").unwrap());
-    RE.replace(name, "").into_owned()
+    let re = regex!(r"^([0-9]+-)");
+    re.replace(name, "").into_owned()
 }

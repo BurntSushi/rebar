@@ -1,5 +1,8 @@
 use std::io::Write;
 
+#[macro_use]
+mod macros;
+
 mod args;
 mod cmd;
 mod format;

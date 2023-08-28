@@ -8,7 +8,6 @@ use std::{
 use {
     anyhow::Context,
     bstr::{BString, ByteSlice},
-    once_cell::sync::Lazy,
     regex_lite::Regex as RRegex,
 };
 
@@ -193,15 +192,13 @@ impl Engine {
     }
 
     fn validate(&mut self, bench_dir: &str) -> anyhow::Result<()> {
-        static RE_ENGINE: Lazy<RRegex> = Lazy::new(|| {
-            RRegex::new(r"^[-A-Za-z0-9]+(/[-A-Za-z0-9]+)*$").unwrap()
-        });
+        let re_engine = regex!(r"^[-A-Za-z0-9]+(/[-A-Za-z0-9]+)*$");
 
         anyhow::ensure!(
-            RE_ENGINE.is_match(&self.name),
+            re_engine.is_match(&self.name),
             "engine name '{}' does not match format '{}'",
             self.name,
-            RE_ENGINE.as_str(),
+            re_engine.as_str(),
         );
         self.cwd = {
             let cwd = match self.cwd.take() {
@@ -698,26 +695,24 @@ impl WireDefinition {
     }
 
     fn name(&self) -> anyhow::Result<DefinitionName> {
-        static RE_GROUP: Lazy<RRegex> =
-            Lazy::new(|| RRegex::new(r"^[-A-Za-z0-9]+$").unwrap());
-        static RE_NAME: Lazy<RRegex> =
-            Lazy::new(|| RRegex::new(r"^[-A-Za-z0-9]+$").unwrap());
+        let re_group = regex!(r"^[-A-Za-z0-9]+$");
+        let re_name = regex!(r"^[-A-Za-z0-9]+$");
 
         for piece in self.group.split("/") {
             anyhow::ensure!(
-                RE_GROUP.is_match(piece),
+                re_group.is_match(piece),
                 "part '{}' from group name '{}' does not match format '{}' \
                  (group name is usually derived from TOML file name)",
                 piece,
                 self.group,
-                RE_GROUP.as_str(),
+                re_group.as_str(),
             );
         }
         anyhow::ensure!(
-            RE_NAME.is_match(&self.local),
+            re_name.is_match(&self.local),
             "benchmark name '{}' does not match format '{}'",
             self.name,
-            RE_NAME.as_str(),
+            re_name.as_str(),
         );
         Ok(DefinitionName {
             full: self.name.clone(),
