@@ -270,6 +270,7 @@ impl VersionConfig {
         } else {
             anyhow::bail!("must set either 'file' or 'run' for version config")
         };
+        let outstr = out.to_str()?;
         log::trace!("version command output: {:?}", out.as_bstr());
         let re = match self.regex {
             Some(ref re) => re,
@@ -286,7 +287,7 @@ impl VersionConfig {
             "version regex {:?} does not contain a 'version' capture group",
             re.as_str(),
         );
-        let caps = match re.captures(&out) {
+        let caps = match re.captures(outstr) {
             Some(caps) => caps,
             None => anyhow::bail!(
                 "version regex {:?} did not match output",
@@ -300,7 +301,7 @@ impl VersionConfig {
                 re.as_str(),
             ),
         };
-        let version = m.as_bytes().to_str()?.to_string();
+        let version = m.as_str().to_string();
         anyhow::ensure!(
             !version.contains('\n'),
             "version regex {:?} matched a version with a \\n",
@@ -431,7 +432,7 @@ pub struct Definition {
 impl Definition {
     pub fn count(&self, engine: &str) -> anyhow::Result<u64> {
         for ce in self.count.iter() {
-            if ce.re.is_match(engine.as_bytes()) {
+            if ce.re.is_match(engine) {
                 return Ok(ce.count);
             }
         }
@@ -832,7 +833,7 @@ impl WireDefinition {
                 let mut counts = vec![];
                 for wire in engine_counts.iter() {
                     let pat = format!("^(?:{})$", wire.engine);
-                    let re = regex::bytes::Regex::new(&pat).context(
+                    let re = regex::Regex::new(&pat).context(
                         "failed to parse engine count name as regex",
                     )?;
                     counts.push(CountEngine {
@@ -844,7 +845,7 @@ impl WireDefinition {
                 Ok(counts)
             }
             WireCount::All(count) => Ok(vec![CountEngine {
-                re: Regex(regex::bytes::Regex::new(r"^.*$").unwrap()),
+                re: Regex(regex::Regex::new(r"^.*$").unwrap()),
                 engine: r".*".to_string(),
                 count,
             }]),
@@ -1163,7 +1164,7 @@ impl HaystackKey {
 }
 
 #[derive(Clone, Debug)]
-pub struct Regex(regex::bytes::Regex);
+pub struct Regex(regex::Regex);
 
 impl Eq for Regex {}
 
@@ -1174,8 +1175,8 @@ impl PartialEq for Regex {
 }
 
 impl std::ops::Deref for Regex {
-    type Target = regex::bytes::Regex;
-    fn deref(&self) -> &regex::bytes::Regex {
+    type Target = regex::Regex;
+    fn deref(&self) -> &regex::Regex {
         &self.0
     }
 }
@@ -1200,7 +1201,7 @@ impl<'de> serde::Deserialize<'de> for Regex {
             }
 
             fn visit_str<E: Error>(self, v: &str) -> Result<Regex, E> {
-                regex::bytes::Regex::new(v)
+                regex::Regex::new(v)
                     .map(Regex)
                     .map_err(|err| E::custom(err.to_string()))
             }

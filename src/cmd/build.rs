@@ -96,8 +96,26 @@ pub fn run(p: &mut lexopt::Parser) -> anyhow::Result<()> {
                     continue 'ENGINES;
                 }
             };
+            let outstr = match out.to_str() {
+                Ok(outstr) => outstr,
+                Err(err) => {
+                    util::colorize_label(&mut stderr, |w| {
+                        write!(w, "{}: ", e.name)
+                    })?;
+                    util::colorize_error(&mut stderr, |w| {
+                        write!(
+                            w,
+                            "dependency command output is not UTF-8: {}",
+                            err,
+                        )
+                    })?;
+                    print_dep_note(&mut stderr, e, &mut printed_dep_note)?;
+                    print_note(&mut stderr, e, &mut printed_note)?;
+                    continue 'ENGINES;
+                }
+            };
             if let Some(ref re) = dep.regex {
-                if !re.is_match(&out) {
+                if !re.is_match(outstr) {
                     util::colorize_label(&mut stderr, |w| {
                         write!(w, "{}: ", e.name)
                     })?;
