@@ -21,7 +21,7 @@ path = "../../shared/regexredux"
 path = "../../shared/timer"
 
 [build-dependencies]
-cc = { version = "1.0.73", features = ["parallel"] }
+cc = { version = "1.0.83", features = ["parallel"] }
 pkg-config = "0.3.26"
 
 [profile.release]

@@ -23,6 +23,7 @@ fn main() {
 
     let mut builder = cc::Build::new();
     builder.cpp(true);
+    builder.std("c++14");
     builder.include(&upstream);
     // Currently compiling RE2 leads to a number of unused parameter warnings.
     // I'm not quite sure why, as the parameters are clearly being used for any
