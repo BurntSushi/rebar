@@ -24,7 +24,7 @@ There are several knots to untangle here.
 First, we'll tackle the reason why `go/regexp` has a poor showing here. The
 answer lies in how the Thompson NFA construction works. A Thompson NFA can be
 built in worst case linear time (in the size of the pattern), but in exchange,
-it has _epsilson transitions_ in its state graph. Epsilon transitions are
+it has _epsilon transitions_ in its state graph. Epsilon transitions are
 transitions in a finite state machine that are followed without consuming
 any input. In a case like `foo|bar|quux`, you can think of the corresponding
 Thompson NFA (very loosely) as creating a single starting state with three
