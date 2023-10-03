@@ -1,0 +1,198 @@
+analysis = '''
+This benchmark comes from [issue #1095] reported against the Rust regex crate.
+
+The issue reports that, effectively, compilation of `\w{256}` is far too slow.
+They report that compilation takes around 40 milliseconds, which is roughly in
+the same ballpark of what I found here:
+
+```
+$ rebar cmp i1095-word-repetition.csv -e '^rust/regex$'
+benchmark                                       rust/regex
+---------                                       ----------
+reported/i1095-word-repetition/unicode-compile  31.43ms (1.00x)
+reported/i1095-word-repetition/unicode-search   824.4 KB/s (1.00x)
+reported/i1095-word-repetition/ascii-compile    41.12us (1.00x)
+reported/i1095-word-repetition/ascii-search     406.9 MB/s (1.00x)
+```
+
+The main thing we try to measure here is both how long the regex takes to
+compile and its search time, in addition to varying whether Unicode is enabled
+or not. Ideally we would just measure `\w{256}` with and without Unicode
+enabled, but this is difficult to do across a broad set of regex engines.
+Instead, for the Unicode case, we measure `\p{L}{256}`, which has broad
+support. And for the non-Unicode case, we just measure `[0-9A-Za-z_]{256}`.
+
+The results generally support the conclusion that finite automata engines such
+as RE2 and Rust's regex crate can take a long time to compile patterns with
+large Unicode character classes, especially with large bounded repetitions.
+The one exception to this is Go's `regexp` package which has respectable
+compilation times while also using finite automata:
+
+```
+$ rebar cmp i1095-word-repetition.csv -e '^(rust/regex|re2|go/regexp)$' -f 'unicode-compile'
+benchmark                                       go/regexp       re2                 rust/regex
+---------                                       ---------       ---                 ----------
+reported/i1095-word-repetition/unicode-compile  8.21us (1.00x)  59.12ms (7200.97x)  31.43ms (3828.26x)
+```
+
+The reason for this is likely that Go's finite automata regexp engine is based
+on codepoints rather than bytes, where as the regex crate and RE2 are based on
+bytes. Being based on codepoints means you can avoid the compilation step that
+builds byte-oriented UTF-8 automata from huge Unicode classes. The trade off
+is that searching by codepoint is generally slower, although in this case, Go
+does quite well:
+
+```
+$ rebar cmp i1095-word-repetition.csv -e '^(rust/regex|re2|go/regexp)$' -f 'unicode-search'
+benchmark                                      go/regexp           re2                   rust/regex
+---------                                      ---------           ---                   ----------
+reported/i1095-word-repetition/unicode-search  220.9 MB/s (1.00x)  322.6 KB/s (701.36x)  824.4 KB/s (274.44x)
+```
+
+The trick here is that RE2 and the regex crate both really want to use their
+lazy DFA for this, but the regex is so big that it blows its default limits.
+This in turn forces it to use the PikeVM (for both RE2 and the regex crate).
+The PikeVM is then especially burdened by dealing with bytes instead of
+codepoints, since it needs to do a lot of work shuffling the NFA states around.
+In Go's case, it merely needs a single NFA state with a sorted sequence of
+Unicode ranges. And because the NFA is itself much smaller, it uses its bounded
+backtracker.
+
+However, if one increases the lazy DFA cache capacity to something higher, than
+RE2 and the regex crate can go quite a bit faster:
+
+```
+$ rebar cmp moar-cache.csv
+benchmark                                      rust/regex
+---------                                      ----------
+reported/i1095-word-repetition/unicode-search  339.1 MB/s (1.00x)
+```
+
+A similar speedup is likely possible for RE2.
+
+[issue #1095]: https://github.com/rust-lang/regex/issues/1095
+'''
+
+[[bench]]
+model = "compile"
+name = "unicode-compile"
+regex = '\p{L}{256}'
+unicode = true
+haystack = { contents = 'δ', repeat = 256 }
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+`hyperscan` doesn't support regexes that are this big.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`rust/regex/lite` does not support Unicode character classes.
+'''
+
+[[bench]]
+model = "count-spans"
+name = "unicode-search"
+regex = '\p{L}{256}'
+unicode = true
+haystack = { contents = 'δ', repeat = 256 }
+count = [
+  # Spans are counted as either UTF-16 code units or Unicode scalar values.
+  { engine = 'dotnet.*|icu|javascript.*|java/.*|perl', count = 256 },
+  { engine = '.*', count = 512 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+`hyperscan` doesn't support regexes that are this big.
+
+`python/re` doesn't support Unicode character classes at all.
+
+`rust/regex/lite` does not support Unicode character classes.
+'''
+
+[[bench]]
+model = "compile"
+name = "ascii-compile"
+regex = '[0-9A-Za-z_]{256}'
+unicode = false
+haystack = { contents = 'b', repeat = 256 }
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/lite',
+]
+
+[[bench]]
+model = "count-spans"
+name = "ascii-search"
+regex = '[0-9A-Za-z_]{256}'
+unicode = false
+haystack = { contents = 'b', repeat = 256 }
+count = 256
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+  'rust/regex/lite',
+]
