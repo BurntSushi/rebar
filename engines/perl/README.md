@@ -28,8 +28,24 @@ to measure. After a cursory search, I could neither confirm nor deny this
 hypothesis and could find no way to clear any cache that Perl might be using.
 (Python has `re.purge()`, which we use for exactly this purpose.)
 
-Because of this, Perl's regex engine is not included in any of the curated
-compilation benchmarks.
+UPDATE: Thanks to Nick Johnston, it can be confirmed that my suspicion above is
+correct. Namely, that Perl has some caching mechanism to avoid re-compiling
+the same regex pattern in at least some cases. One can confirm this via the
+following command:
+
+```
+$ perl -Mre=debug -E '
+    my $re = qr/(snake|crocodile)/;
+    my $haystack = "snake on a crocodile";
+    say $1 while $haystack =~ /$re/g;
+'
+```
+
+Specifically, even though `/$re/g` is used twice, the regex itself is only
+compiled once.
+
+There is still yet no known way to avoid this caching behavior, and thus Perl's
+regex engine is not included in any of the curated compilation benchmarks.
 
 ## Unicode
 
