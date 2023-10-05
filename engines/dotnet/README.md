@@ -25,9 +25,13 @@ this kind of thing, so we don't require .NET to do it.
 
 ## Unicode
 
-.NET's regex engine has pretty good Unicode support. It does Unicode case
+.NET's regex engine has pretty good Unicode support, but it's limited to
+matching UTF-16 code units and not Unicode codepoints. It does Unicode case
 folding for case insensitive matching, `\w`/`\s`/`\d` are all Unicode-aware.
-`\b` is also Unicode-aware. And things like `.` match entire codepoints.
+`\b` is also Unicode-aware. Unfortunately, due to the atom of matching being
+a UTF-16 code unit, things like `\w` and even `.` will only match codepoints
+limited to the basic multi-lingual plane. Any codepoint requiring the encoding
+of two UTF-16 code units won't be matched.
 
 As far as I can tell, there is no obvious way to disable Unicode features, so
 it is always enabled. Because other regex engines also don't permit toggling
