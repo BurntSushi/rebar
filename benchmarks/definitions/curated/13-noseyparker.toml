@@ -59,13 +59,13 @@ count = [
   { engine = '.*', count = 55 },
 ]
 engines = [
-  'dlang/std',
   'hyperscan',
   'pcre2/jit',
   'rust/regex',
   'rust/regexold',
 ]
 analysis = '''
+* `dlang/std` is omitted becasue it times out.
 * `dotnet/compiled` is omitted because it times out.
 * `dotnet/nobacktrack` is omitted because the regex is too big.
 * `go/regexp` is omitted because there are bounded repeats that exceed its
@@ -108,7 +108,6 @@ regex = { path = "wild/noseyparker.txt", per-line = "alternate" }
 haystack = "TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'"
 count = 1
 engines = [
-  'dlang/std',
   'hyperscan',
   'pcre2/jit',
   'rust/regex',
