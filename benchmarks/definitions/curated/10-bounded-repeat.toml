@@ -45,6 +45,7 @@ count = [
   { engine = '.*', count = 1833 },
 ]
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -75,6 +76,7 @@ count = [
   { engine = '.*', count = 3475 },
 ]
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -102,6 +104,7 @@ count = [
   { engine = '.*', count = 53 },
 ]
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -131,6 +134,7 @@ count = [
   { engine = '.*', count = 11 },
 ]
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -153,7 +157,7 @@ engines = [
 [[bench]]
 model = "compile"
 name = "compile-context"
-regex = '[A-Za-z]{10}\s+(?s:.){0,100}Result(?s:.){0,100}\s+[A-Za-z]{10}'
+regex = '[A-Za-z]{10}\s+[\s\S]{0,100}Result[\s\S]{0,100}\s+[A-Za-z]{10}'
 haystack = 'abcdefghij blah blah blah Result blib blab klmnopqrst'
 count = 1
 engines = [
@@ -171,6 +175,9 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+`d/.*/std-regex` is excluded because it caches regex compilation.
+'''
 
 [[bench]]
 model = "compile"
@@ -197,3 +204,6 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+`d/.*/std-regex` is excluded because it caches regex compilation.
+'''

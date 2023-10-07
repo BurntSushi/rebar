@@ -11,6 +11,9 @@ name = "dot-matches-byte"
 regex = '.'
 haystack = '💩'
 count = [
+  # D's regex dosnt support disableing unicode. The fundamental atom is always
+  # a codepoint.
+  { engine = 'd/dmd/std-regex', count = 1 },
   # .NET always treats the UTF-16 code unit as the fundamental atom of
   # matching.
   { engine = 'dotnet.*', count = 2 },
@@ -37,6 +40,7 @@ count = [
   { engine = '.*', count = 4 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -73,6 +77,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

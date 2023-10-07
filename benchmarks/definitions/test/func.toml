@@ -20,6 +20,7 @@ regex = 'sam|samwise'
 haystack = 'samwise'
 count = 3
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -48,10 +49,11 @@ name = "dollar-only-matches-end"
 regex = '$'
 haystack = "\n\n"
 count = [
-  { engine = 'go/regexp|re2|regress|rust/regex.*', count = 1 },
+  { engine = 'd/dmd/std-regex|go/regexp|re2|regress|rust/regex.*', count = 1 },
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -72,9 +74,9 @@ engines = [
 ]
 analysis = '''
 Some regex engines permit `$` to match *both* at the end of a haystack and
-immediately for `\n` when `\n` is the last character in the haystack. Note that
-this is *without* enabling multi-line mode. If multi-line mode were enabled,
-then all regex engines would match this haystack 3 times.
+immediately after `\n` when `\n` is the last character in the haystack. Note
+that this is *without* enabling multi-line mode. If multi-line mode were
+enabled, then all regex engines would match this haystack 3 times.
 '''
 
 [[bench]]
@@ -84,6 +86,7 @@ regex = '[a-z]+?'
 haystack = 'abc'
 count = 3
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

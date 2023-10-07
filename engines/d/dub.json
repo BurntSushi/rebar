@@ -1,0 +1,9 @@
+{
+  "authors": [
+    "mai"
+  ],
+  "copyright": "Copyright © 2023, mai",
+  "description": "A rebar benchmark runner program for D.",
+  "license": "Unlicense",
+  "name": "main"
+}

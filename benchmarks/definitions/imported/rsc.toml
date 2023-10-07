@@ -24,6 +24,8 @@ regex = '(a+)*[b-z]'
 haystack = 'aaaaaaaaaaaaaaaaaaaaaaaaa'
 count = 0
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -42,6 +44,8 @@ regex = 'y'
 haystack = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy'
 count = 1
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -60,6 +64,8 @@ regex = '.y'
 haystack = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy'
 count = 2
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -78,6 +84,8 @@ regex = '[abcdw]'
 haystack = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw'
 count = 1
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -96,6 +104,8 @@ regex = '[ac]'
 haystack = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbc'
 count = 1
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -115,6 +125,8 @@ haystack = '☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5☃5
 unicode = true
 count = 1
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -131,6 +143,8 @@ regex = '^zbc(d|e)'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 0
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -149,6 +163,8 @@ regex = '^zbc(d|e)'
 haystack = { path = "imported/rsc/anchored-literal-long.txt" }
 count = 0
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -167,6 +183,8 @@ regex = '^.bc(d|e)'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 4
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -185,6 +203,8 @@ regex = '^.bc(d|e)'
 haystack = { path = "imported/rsc/anchored-literal-long.txt" }
 count = 4
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -203,6 +223,8 @@ regex = '^.bc(d|e)*$'
 haystack = 'abcddddddeeeededd'
 count = 17
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -221,6 +243,8 @@ regex = '.bc(d|e)*$'
 haystack = 'abcddddddeeeededd'
 count = 17
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -239,6 +263,8 @@ regex = '^abcdefghijklmnopqrstuvwxyz.*$'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 26
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -257,6 +283,8 @@ regex = '^.bcdefghijklmnopqrstuvwxyz.*$'
 haystack = 'abcdefghijklmnopqrstuvwxyz'
 count = 26
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -275,6 +303,8 @@ regex = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaab'
 haystack = { path = "imported/rsc/long-needle1.txt" }
 count = 31
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -293,6 +323,8 @@ regex = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbba'
 haystack = { path = "imported/rsc/long-needle2.txt" }
 count = 31
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -311,6 +343,8 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -329,6 +363,8 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -347,6 +383,8 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -365,6 +403,8 @@ regex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 26
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -383,6 +423,8 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -401,6 +443,8 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -419,6 +463,8 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -437,6 +483,8 @@ regex = 'A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "AABCCCDEEEFGGHHHIJJ" }
 count = 19
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -455,6 +503,8 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -473,6 +523,8 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -491,6 +543,8 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -509,6 +563,8 @@ regex = '[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "XABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -527,6 +583,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 58
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -545,6 +603,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -563,6 +623,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -581,6 +643,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 51
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -599,6 +663,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 58
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -617,6 +683,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -635,6 +703,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 27
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -653,6 +723,8 @@ regex = '[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ.*'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 count = 51
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -671,6 +743,8 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "Sherlock Holmes" }
 count = 47
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -689,6 +763,8 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "Sherlock Holmes" }
 count = 16
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -707,6 +783,8 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "Sherlock Holmes" }
 count = 16
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -725,6 +803,8 @@ regex = '\w+\s+Holmes'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "Sherlock Holmes" }
 count = 40
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -743,6 +823,8 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/32.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 51
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -761,6 +843,8 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/1K.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 20
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -779,6 +863,8 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/32K.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 20
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -797,6 +883,8 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "imported/rsc/1MB.txt", trim = true, append = "Sherlock Holmes wat" }
 count = 44
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'pcre2',
   'pcre2/jit',

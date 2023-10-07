@@ -37,6 +37,7 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-sampled.txt" }
 count = 513
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -64,6 +65,7 @@ regex = 'Sherlock Holmes'
 haystack = { path = "opensubtitles/en-sampled.txt" }
 count = 522
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -91,6 +93,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt" }
 count = 724
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -119,6 +122,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt" }
 count = 746
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -149,6 +153,7 @@ unicode = true
 haystack = { path = "opensubtitles/zh-sampled.txt" }
 count = 30
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

@@ -52,6 +52,8 @@ unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 15
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   'python/re',
   're2',

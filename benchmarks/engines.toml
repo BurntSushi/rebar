@@ -426,6 +426,76 @@
     bin = "cargo"
     args = ["clean"]
 
+# D's regex library, bundled with its standard library, using the DMD compiler.
+#
+# URL: https://dlang.org/phobos/std_regex.html
+[[engine]]
+  name = "d/dmd/std-regex"
+  cwd = "../engines/d"
+  [engine.version]
+    bin = "./main-dmd"
+    args = ["--version"]
+  [engine.run]
+    bin = "./main-dmd"
+  [[engine.dependency]]
+    bin = "dub"
+    args = ["--version"]
+    regex = '(?m)^DUB'
+  [[engine.dependency]]
+    bin = "dmd"
+    args = ["--version"]
+    regex = '(?m)^DMD'
+  [[engine.build]]
+    bin = "rm"
+    args = ["-f", "main-dmd"]
+  [[engine.build]]
+    bin = "dub"
+    args = ["build", "--build", "release-debug", "--compiler", "dmd"]
+  [[engine.build]]
+    bin = "mv"
+    args = ["main", "main-dmd"]
+  [[engine.clean]]
+    bin = "dub"
+    args = ["clean"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-f", "main-dmd"]
+
+# D's regex library, bundled with its standard library, using the LDC compiler.
+#
+# URL: https://dlang.org/phobos/std_regex.html
+[[engine]]
+  name = "d/ldc/std-regex"
+  cwd = "../engines/d"
+  [engine.version]
+    bin = "./main-ldc"
+    args = ["--version"]
+  [engine.run]
+    bin = "./main-ldc"
+  [[engine.dependency]]
+    bin = "dub"
+    args = ["--version"]
+    regex = '(?m)^DUB'
+  [[engine.dependency]]
+    bin = "ldc"
+    args = ["--version"]
+    regex = '(?m)^LDC'
+  [[engine.build]]
+    bin = "rm"
+    args = ["-f", "main-ldc"]
+  [[engine.build]]
+    bin = "dub"
+    args = ["build", "--build", "release-debug", "--compiler", "ldc"]
+  [[engine.build]]
+    bin = "mv"
+    args = ["main", "main-ldc"]
+  [[engine.clean]]
+    bin = "dub"
+    args = ["clean"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-f", "main-ldc"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and

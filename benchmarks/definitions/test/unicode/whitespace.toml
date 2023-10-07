@@ -19,6 +19,8 @@ name = "ascii-only"
 regex = '\s'
 haystack = "\u2000"
 count = [
+  # D'langs std.regex doesn't permit disabling the Unicode variant of \s.
+  { engine = 'd/dmd/std-regex', count = 1 },
   # .NET doesn't permit disabling the Unicode variant of \s.
   { engine = 'dotnet.*', count = 1 },
   # ICU doesn't permit disabling the Unicode variant of \s.
@@ -30,6 +32,7 @@ count = [
   { engine = '.*', count = 0 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -61,6 +64,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

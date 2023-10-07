@@ -93,12 +93,14 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-Note that we don't include Hyperscan here because it doesn't support the
-`count-captures` benchmark model. It is included in the `multiple` benchmark
-below, which doesn't require capture groups.
+`d/.*/std-regex` is excluded because its match count is 5,491,200. This suggest
+it is either buggy or something funny is going on.
 
-Also, I tried to use `dotnet/nobacktrack` here, but it failed because it was
-too big and it wasn't obvious to me how to raise the limit.
+`dotnet/nobacktrack` is excluded because it gives a "too big" error.
+
+`hyperscan` is excluded because it doesn't support the `count-captures`
+benchmark model. It is included in the `multiple` benchmark below, which
+doesn't require capture groups.
 '''
 
 [[bench]]
@@ -122,6 +124,15 @@ engines = [
 ]
 analysis = '''
 This measures how long it takes to a compile a moderately large lexer.
+
+`d/.*/std-regex` is excluded because its match count is 5,491,200. This
+suggests it is either buggy or something funny is going on.
+
+`dotnet/nobacktrack` is excluded because it gives a "too big" error.
+
+`hyperscan` is excluded because it doesn't support the `count-captures`
+benchmark model. It is included in the `multiple` benchmark below, which
+doesn't require capture groups.
 '''
 
 [[bench]]

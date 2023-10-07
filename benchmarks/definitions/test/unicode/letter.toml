@@ -24,6 +24,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'd/dmd/std-regex',
   'go/regexp',
   'hyperscan',
   'java/hotspot',
@@ -56,6 +57,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -93,6 +95,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -138,6 +141,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'd/dmd/std-regex',
   'icu',
   'javascript/v8',
   'perl',
@@ -171,6 +175,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'd/dmd/std-regex',
   'icu',
   'perl',
   'python/regex',
@@ -218,19 +223,21 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
-`dotnet/*` does not support `\p{Letter}` syntax.
+`d/dmd/std-regex` does not support `\p{gc=Letter}` syntax.
 
-`go/regexp` does not support `\p{Letter}` syntax.
+`dotnet/*` does not support `\p{gc=Letter}` syntax.
 
-`hyperscan` does not support `\p{Letter}` syntax.
+`go/regexp` does not support `\p{gc=Letter}` syntax.
 
-`java/*` does not support `\p{Letter}` syntax.
+`hyperscan` does not support `\p{gc=Letter}` syntax.
 
-`pcre2/*` does not support `\p{Letter}` syntax.
+`java/*` does not support `\p{gc=Letter}` syntax.
 
-`python/re` doesn't support Unicode character classes at all.
+`pcre2/*` does not support `\p{gc=Letter}` syntax.
 
-`re2` does not support `\p{Letter}` syntax.
+`python/re` does not support Unicode character classes.
+
+`re2` does not support `\p{gc=Letter}` syntax.
 
 `rust/regex/lite` does not support Unicode character classes.
 '''
@@ -248,23 +255,25 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
-`dotnet/*` does not support `\p{Letter}` syntax.
+`d/dmd/std-regex` does not support `\p{gc:Letter}` syntax.
 
-`go/regexp` does not support `\p{Letter}` syntax.
+`dotnet/*` does not support `\p{gc:Letter}` syntax.
 
-`hyperscan` does not support `\p{Letter}` syntax.
+`go/regexp` does not support `\p{gc:Letter}` syntax.
+
+`hyperscan` does not support `\p{gc:Letter}` syntax.
 
 `icu` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
 
-`java/*` does not support `\p{Letter}` syntax.
+`java/*` does not support `\p{gc:Letter}` syntax.
 
 `javascript/*` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
 
-`pcre2/*` does not support `\p{Letter}` syntax.
+`pcre2/*` does not support `\p{gc:Letter}` syntax.
 
-`python/re` doesn't support Unicode character classes at all.
+`python/re` does not support Unicode character classes.
 
-`re2` does not support `\p{Letter}` syntax.
+`re2` does not support `\p{gc:Letter}` syntax.
 
 `regress` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
 

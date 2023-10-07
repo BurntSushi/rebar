@@ -73,6 +73,10 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+`d/.*/std-regex` is exclused because it match count, `500`, differs from
+everything else.
+'''
 
 [[bench]]
 model = "compile"
@@ -95,3 +99,7 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+`d/.*/std-regex` is exclused because it match count in the `extract` benchmark,
+`500`, differs from everything else.
+'''

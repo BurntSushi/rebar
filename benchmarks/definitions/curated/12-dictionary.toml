@@ -108,6 +108,7 @@ regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = 
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'go/regexp',
   'icu',
@@ -166,6 +167,8 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
+`d/.*/std-regex` is excluded because it caches regex compilation.
+
 `dotnet/nobacktrack` is omitted because the regex is too large.
 
 `hyperscan` is omitted because the regex is too large.

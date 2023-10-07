@@ -45,6 +45,8 @@ regex = { path = "wild/date.txt" }
 case-insensitive = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
+  # Unknown why the count span differs here, although this does match regress.
+  { engine = 'd/.*/std-regex', count = 111_841 },
   # .NET counts spans of UTF-16 code units, which is the likely reason for
   # the difference here.
   { engine = 'dotnet.*', count = 111_825 },
@@ -79,6 +81,7 @@ count = [
   { engine = '.*', count = 111_817 },
 ]
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'go/regexp',
   'hyperscan',
@@ -116,6 +119,7 @@ count = [
   { engine = '.*', count = 111_841 },
 ]
 engines = [
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'icu',
   'java/hotspot',
@@ -129,10 +133,11 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-`regress` is included here despite its `\d` not being Unicode-aware (as
-required by ECMAScript). Notably, its `\s` _is_ Unicode aware. (`\w` is too,
-but it's not used in this regex.) In this particular haystack, `\d` being
-ASCII-only doesn't impact the match count.
+ECMAScript engines such as `d/.*/std-regex`, `javascript/v8` and `regress`
+are included here despite its `\d` not being Unicode-aware (as required by
+ECMAScript). Notably, its `\s` _is_ Unicode aware. (`\w` is too, but it's not
+used in this regex.) In this particular haystack, `\d` being ASCII-only doesn't
+impact the match count.
 
 However, neither `re2` nor `go/regexp` are included here because neither `\d`
 nor `\s` are Unicode-aware, and the `\s` being ASCII-only does impact the match
@@ -175,11 +180,11 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
-Notice that `regress` is now include in the ASCII benchmark, because in
-`compile-unicode` we specifically test that the `\d` used in this regex is
-Unicode-aware. `regress` does not make `\d` Unicode-aware, so it gets thrown
-into the ASCII group. But do note that it does appear to have some Unicode
-awareness.
+Notice that ECMAScript engines such as `d/.*/std-regex` and `regress` are
+included in this ASCII benchmark, because in `compile-unicode` we specifically
+test that the `\d` used in this regex is Unicode-aware. `regress` does not make
+`\d` Unicode-aware, so it gets thrown into the ASCII group. But do note that it
+does appear to have some Unicode awareness.
 '''
 
 [[bench]]
@@ -190,7 +195,7 @@ case-insensitive = true
 unicode = true
 haystack = "۲۰۱۰-۰۳-۱۴"
 count = [
-  # ECMAScript engines don't support Unicode-aware \d.
+  # ECMAScript engines don't support Unicode-aware \d. Although, D's does.
   { engine = 'javascript/v8|regress', count = 2 },
   { engine = '.*', count = 5 },
 ]

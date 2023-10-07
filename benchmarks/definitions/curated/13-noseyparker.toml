@@ -65,6 +65,7 @@ engines = [
   'rust/regexold',
 ]
 analysis = '''
+* `d/.*/std-regex` is omitted becasue it times out.
 * `dotnet/compiled` is omitted because it times out.
 * `dotnet/nobacktrack` is omitted because the regex is too big.
 * `go/regexp` is omitted because there are bounded repeats that exceed its

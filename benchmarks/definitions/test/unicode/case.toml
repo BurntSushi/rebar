@@ -17,10 +17,11 @@ case-insensitive = true
 haystack = 'ſ'
 count = [
   # None of these engines support disabling Unicode-aware case insensitivity.
-  { engine = 'go/regexp|icu|regress', count = 1 },
+  { engine = 'd/dmd/std-regex|go/regexp|icu|regress', count = 1 },
   { engine = '.*', count = 0 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -57,6 +58,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -89,6 +91,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

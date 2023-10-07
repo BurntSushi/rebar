@@ -22,6 +22,8 @@ haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 case-insensitive = false
 count = 17_549
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -47,6 +49,8 @@ regex = '([^ @]+)@([^ @]+)'
 haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 count = 15_057
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -72,6 +76,8 @@ regex = '([0-9][0-9]?)/([0-9][0-9]?)/([0-9][0-9]([0-9][0-9])?)'
 haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 count = 668
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -97,6 +103,8 @@ regex = '([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?|([^ @]+)@([^ @]+)'
 haystack = { path = "imported/lh3lh3-reb-howto.txt", utf8-lossy = true }
 count = 32_539
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

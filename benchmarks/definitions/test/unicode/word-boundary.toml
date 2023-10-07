@@ -16,6 +16,8 @@ name = "ascii-only"
 regex = '\b'
 haystack = 'δ'
 count = [
+  # D's std.regex doesn't permit disabling the Unicode variant of \b.
+  { engine = 'd/dmd/std-regex', count = 2 },
   # .NET doesn't permit disabling the Unicode variant of \b.
   { engine = 'dotnet.*', count = 2 },
   # ICU doesn't permit disabling the Unicode variant of \b.
@@ -23,6 +25,7 @@ count = [
   { engine = '.*', count = 0 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -56,6 +59,7 @@ count = [
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -90,10 +94,11 @@ count = [
   #
   # Notice that dotnet is not included here, despite the fact that
   # \p{Join_Control} is not part of the definition of \w!
-  { engine = 'hyperscan|icu|pcre2.*|python/re', count = 0 },
+  { engine = 'd/dmd/std-regex|hyperscan|icu|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -129,6 +134,7 @@ count = [
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -164,6 +170,7 @@ count = [
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -201,6 +208,7 @@ count = [
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'd/dmd/std-regex',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

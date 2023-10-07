@@ -47,6 +47,10 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+`d/.*/std-regex` is omitted because its match count, `523860`, differs from
+everything else. It's not clear whether it has a bug or not.
+'''
 
 [[bench]]
 model = "compile"
@@ -69,3 +73,8 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+`d/.*/std-regex` is omitted because its match count in the `parse-line`
+benchmark, `523860`, differs from everything else. It's not clear whether it
+has a bug or not.
+'''

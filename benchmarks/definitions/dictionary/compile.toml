@@ -50,6 +50,8 @@ haystack = "Zubeneschamali's"
 unicode = true
 count = 1
 engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
   'go/regexp',
   're2',
   'regress',
