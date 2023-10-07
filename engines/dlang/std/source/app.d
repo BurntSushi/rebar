@@ -105,12 +105,36 @@ struct Benchmark {
 }
 
 struct Sample {
-    Duration duration;
+    size_t duration;
     size_t count;
 }
 
 void run(ref Benchmark b, size_t delegate() bench) {
     run_and_count(b, (ref size_t count) => count, bench);
+}
+
+import core.time : MonoTimeImpl, ClockType;
+
+// Forces a MonoTime type with a precise clock
+alias MonoTimePrecise = MonoTimeImpl!(ClockType.precise);
+
+// Re-implements a basic std.datetime.stopwatch.StopWatch
+// with a more precise timing.
+struct PreciseStopWatch {
+    void start() @safe nothrow @nogc {
+        assert(
+            MonoTimePrecise.ticksPerSecond() == 1_000_000_000,
+            "Monotonic clock isn't precise enough!"
+        );
+        _timeStarted = MonoTimePrecise.currTime;
+    }
+
+    size_t peek() @safe const nothrow @nogc {
+        return MonoTimePrecise.currTime.ticks - _timeStarted.ticks;
+    }
+
+private:
+    MonoTimePrecise _timeStarted;
 }
 
 void run_and_count(T)(
@@ -132,7 +156,8 @@ void run_and_count(T)(
 
     auto run_timer = StopWatch(AutoStart.yes);
     for (int i = 0; i < b.max_iters; i++) {
-        auto bench_timer = StopWatch(AutoStart.yes);
+        auto bench_timer = PreciseStopWatch();
+        bench_timer.start();
         auto result = bench();
         auto duration = bench_timer.peek();
         auto _count = count(result);
@@ -143,7 +168,7 @@ void run_and_count(T)(
     }
 
     foreach (Sample s; samples) {
-        writeln(s.duration.total!"nsecs", ",", s.count);
+        writeln(s.duration, ",", s.count);
     }
 }
 
