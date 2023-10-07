@@ -59,6 +59,7 @@ count = [
   { engine = '.*', count = 55 },
 ]
 engines = [
+  'dlang/std',
   'hyperscan',
   'pcre2/jit',
   'rust/regex',
@@ -107,6 +108,7 @@ regex = { path = "wild/noseyparker.txt", per-line = "alternate" }
 haystack = "TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'"
 count = 1
 engines = [
+  'dlang/std',
   'hyperscan',
   'pcre2/jit',
   'rust/regex',

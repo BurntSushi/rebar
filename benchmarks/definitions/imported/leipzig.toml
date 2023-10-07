@@ -35,6 +35,7 @@ regex = 'Twain'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 811
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -61,6 +62,7 @@ case-insensitive = true
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 965
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -86,6 +88,7 @@ regex = '[a-z]shing'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 1540
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -114,6 +117,7 @@ count = [
   { engine = '.*', count = 262 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -139,6 +143,7 @@ regex = '\b\w+nn\b'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 262
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -164,6 +169,7 @@ regex = '[a-q][^u-z]{13}x'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 4094
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -189,6 +195,7 @@ regex = 'Tom|Sawyer|Huckleberry|Finn'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 2598
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -215,6 +222,7 @@ case-insensitive = true
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 4152
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -240,6 +248,7 @@ regex = '.{0,2}(Tom|Sawyer|Huckleberry|Finn)'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 2598
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -268,6 +277,7 @@ count = [
   { engine = '.*', count = 1976 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -293,6 +303,7 @@ regex = 'Tom.{10,25}river|river.{10,25}Tom'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 2
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -321,6 +332,7 @@ count = [
   { engine = '.*', count = 78_424 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -349,6 +361,7 @@ count = [
   { engine = '.*', count = 55_248 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -374,6 +387,7 @@ regex = '([A-Za-z]awyer|[A-Za-z]inn)\s'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 209
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -402,6 +416,7 @@ count = [
   { engine = '.*', count = 8_886 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -428,6 +443,7 @@ haystack = { path = "imported/leipzig-3200.txt" }
 unicode = true
 count = 2
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -454,6 +470,7 @@ haystack = { path = "imported/leipzig-3200.txt" }
 unicode = true
 count = 69
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -481,6 +498,7 @@ regex = '(.*?,){13}z'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = 0
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

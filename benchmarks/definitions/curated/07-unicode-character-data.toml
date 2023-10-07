@@ -55,6 +55,7 @@ regex = { path = "wild/ucd-parse.txt" }
 haystack = '249D;PARENTHESIZED LATIN SMALL LETTER B;So;0;L;<compat> 0028 0062 0029;;;;N;;;;;'
 count = 1
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

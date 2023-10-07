@@ -86,6 +86,7 @@ regex = '.*[^A-Z]|[A-Z]'
 haystack = { contents = "A", repeat = 100 }
 count = 100
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -116,6 +117,7 @@ regex = '.*[^A-Z]|[A-Z]'
 haystack = { contents = "A", repeat = 200 }
 count = 200
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -151,6 +153,7 @@ regex = '.*[^A-Z]|[A-Z]'
 haystack = { contents = "A", repeat = 1000 }
 count = 1000
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

@@ -24,10 +24,11 @@ regex = '\d'
 haystack = '᠕'
 count = [
   # These don't permit disabling the Unicode variant of \d.
-  { engine = 'dotnet.*|icu', count = 1 },
+  { engine = 'dotnet.*|icu|dlang/std', count = 1 },
   { engine = '.*', count = 0 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -59,6 +60,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

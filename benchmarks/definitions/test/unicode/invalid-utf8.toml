@@ -42,6 +42,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support searching arbitrary bytes.
+
 `dotnet/*` does not support searching arbitrary bytes.
 
 `icu` does not support searching arbitrary bytes.
@@ -83,6 +85,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support searching arbitrary bytes.
+
 `dotnet/*` does not support searching arbitrary bytes.
 
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
@@ -120,6 +124,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support searching arbitrary bytes.
+
 `dotnet/*` does not support searching arbitrary bytes.
 
 `icu` does not support searching arbitrary bytes.
@@ -173,6 +179,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support searching arbitrary bytes.
+
 `dotnet/*` does not support searching arbitrary bytes.
 
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
@@ -209,6 +217,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support searching arbitrary bytes.
+
 `dotnet/*` does not support searching arbitrary bytes.
 
 `icu` does not support searching arbitrary bytes.

@@ -45,6 +45,8 @@ regex = { path = "wild/date.txt" }
 case-insensitive = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
+  # Unknown why the count span differs here.
+  { engine = 'dlang/std', count = 111_841 },
   # .NET counts spans of UTF-16 code units, which is the likely reason for
   # the difference here.
   { engine = 'dotnet.*', count = 111_825 },
@@ -79,6 +81,7 @@ count = [
   { engine = '.*', count = 111_817 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'go/regexp',
   'hyperscan',
@@ -116,6 +119,7 @@ count = [
   { engine = '.*', count = 111_841 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'icu',
   'java/hotspot',
@@ -161,6 +165,7 @@ count = [
   { engine = '.*', count = 5 },
 ]
 engines = [
+  'dlang/std',
   'go/regexp',
   'hyperscan',
   'icu',
@@ -195,6 +200,7 @@ count = [
   { engine = '.*', count = 5 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'icu',
   'pcre2',

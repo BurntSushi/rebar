@@ -108,6 +108,7 @@ regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = 
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'go/regexp',
   'icu',
@@ -154,6 +155,7 @@ regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = 
 haystack = "Zubeneschamali's"
 count = 1
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'go/regexp',
   'icu',

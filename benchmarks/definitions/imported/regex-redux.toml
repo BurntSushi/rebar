@@ -20,6 +20,7 @@ regex = [] # many regexes are used, but are hard-coded into the model
 haystack = { path = "imported/regex-redux-100000.fasta" }
 count = 547_899
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

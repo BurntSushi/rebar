@@ -18,6 +18,7 @@ haystack = "zygotes"
 unicode = true
 count = 1
 engines = [
+  # 'dlang/std', # pattern to long
   'rust/regex',
   'rust/regex/ast',
   'rust/regex/hir',
@@ -33,6 +34,7 @@ haystack = "Zubeneschamali's"
 unicode = true
 count = 1
 engines = [
+  # 'dlang/std', # pattern to long
   'go/regexp',
   're2',
   'rust/regex',
@@ -50,6 +52,7 @@ haystack = "Zubeneschamali's"
 unicode = true
 count = 1
 engines = [
+  'dlang/std',
   'go/regexp',
   're2',
   'regress',

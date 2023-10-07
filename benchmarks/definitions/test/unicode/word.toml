@@ -21,6 +21,8 @@ name = "ascii-only"
 regex = '\w'
 haystack = 'δ'
 count = [
+  # D's std.regex doesn't permit disabling the Unicode variant of \w.
+  { engine = 'dlang/std', count = 1 },
   # .NET doesn't permit disabling the Unicode variant of \w.
   { engine = 'dotnet.*', count = 1 },
   # ICU doesn't permit disabling the Unicode variant of \w.
@@ -28,6 +30,7 @@ count = [
   { engine = '.*', count = 0 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -59,6 +62,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -88,10 +92,11 @@ count = [
   # None of these regex engines support the Unicode variant of \w.
   { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   # None of these include \p{Join_Control} in their definition of \w.
-  { engine = 'dotnet.*|hyperscan|pcre2.*|python/re', count = 0 },
+  { engine = 'dotnet.*|hyperscan|pcre2.*|python/re|dlang/std', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -125,6 +130,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -156,6 +162,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -191,6 +198,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

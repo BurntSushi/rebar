@@ -70,6 +70,7 @@ count = [
   { engine = '.*', count = 107 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -99,6 +100,7 @@ count = [
   { engine = '.*', count = 102 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -128,6 +130,7 @@ count = [
   { engine = '.*', count = 10000 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

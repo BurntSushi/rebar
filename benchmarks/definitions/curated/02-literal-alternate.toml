@@ -67,6 +67,7 @@ regex = 'Sherlock Holmes|John Watson|Irene Adler|Inspector Lestrade|Professor Mo
 haystack = { path = "opensubtitles/en-sampled.txt" }
 count = 714
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -94,6 +95,7 @@ case-insensitive = true
 haystack = { path = "opensubtitles/en-sampled.txt" }
 count = 725
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -121,6 +123,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt" }
 count = 899
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -149,6 +152,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt" }
 count = 971
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -179,6 +183,7 @@ unicode = true
 haystack = { path = "opensubtitles/zh-sampled.txt" }
 count = 207
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

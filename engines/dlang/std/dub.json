@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"mai"
+	],
+	"copyright": "Copyright © 2023, mai",
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "main"
+}

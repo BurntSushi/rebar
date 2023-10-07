@@ -34,12 +34,14 @@ name = "all-english"
 regex = '\b[0-9A-Za-z_]+\b'
 haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
 count = [
+  { engine = 'dlang/std', count = 56_601 },
   { engine = 'dotnet/compiled', count = 56_601 },
   { engine = 'dotnet/nobacktrack', count = 56_601 },
   { engine = 'icu', count = 56_601 },
   { engine = '.*', count = 56_691 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -65,6 +67,7 @@ doesn't appear to be any easy way of disabling it.
 
 Also, the .NET engine makes `\b` Unicode-aware, which also appears impossible
 to disable. To account for that, we permit a different count.
+The same goes for D's std.regex here.
 '''
 
 [[bench]]
@@ -81,6 +84,7 @@ count = [
   { engine = '.*', count = 107_391 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'icu',
@@ -115,6 +119,7 @@ regex = '\b[0-9A-Za-z_]{12,}\b'
 haystack = { path = "opensubtitles/en-sampled.txt", line-end = 2_500 }
 count = 839
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -156,6 +161,7 @@ count = [
   { engine = '.*', count = 5481 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'icu',

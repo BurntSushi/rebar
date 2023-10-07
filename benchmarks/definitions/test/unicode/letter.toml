@@ -24,6 +24,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'dlang/std',
   'go/regexp',
   'hyperscan',
   'java/hotspot',
@@ -56,6 +57,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -93,6 +95,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -138,6 +141,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'dlang/std',
   'icu',
   'javascript/v8',
   'perl',
@@ -171,6 +175,7 @@ unicode = true
 haystack = 'δ'
 count = 1
 engines = [
+  'dlang/std',
   'icu',
   'perl',
   'python/regex',
@@ -218,6 +223,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support `\p{Letter}` syntax.
+
 `dotnet/*` does not support `\p{Letter}` syntax.
 
 `go/regexp` does not support `\p{Letter}` syntax.
@@ -248,6 +255,8 @@ engines = [
   'rust/regex',
 ]
 analysis = '''
+`dlang/std` does not support `\p{Letter}` syntax.
+
 `dotnet/*` does not support `\p{Letter}` syntax.
 
 `go/regexp` does not support `\p{Letter}` syntax.

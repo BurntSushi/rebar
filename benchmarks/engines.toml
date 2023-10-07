@@ -736,3 +736,16 @@
   [[engine.clean]]
     bin = "cargo"
     args = ["clean"]
+
+# D-langs std.regex
+[[engine]]
+  name = "dlang/std"
+  cwd = "../engines/dlang/std"
+  [engine.version]
+    bin = "./main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./main"
+  [[engine.build]]
+    bin = "dub"
+    args = ["build", "-b", "release"]

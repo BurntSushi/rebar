@@ -20,6 +20,7 @@ regex = 'sam|samwise'
 haystack = 'samwise'
 count = 3
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -48,10 +49,11 @@ name = "dollar-only-matches-end"
 regex = '$'
 haystack = "\n\n"
 count = [
-  { engine = 'go/regexp|re2|regress|rust/regex.*', count = 1 },
+  { engine = 'go/regexp|re2|regress|rust/regex.*|dlang/std', count = 1 },
   { engine = '.*', count = 2 },
 ]
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -84,6 +86,7 @@ regex = '[a-z]+?'
 haystack = 'abc'
 count = 3
 engines = [
+  'dlang/std',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',

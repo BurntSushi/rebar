@@ -17,6 +17,7 @@ regex = 'Sherlock'
 haystack = { path = "sherlock.txt" }
 count = 776
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -36,6 +37,7 @@ regex = 'Holmes'
 haystack = { path = "sherlock.txt" }
 count = 2766
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -55,6 +57,7 @@ regex = 'Sherlock Holmes'
 haystack = { path = "sherlock.txt" }
 count = 1365
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -75,6 +78,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 816
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -94,6 +98,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 2802
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -113,6 +118,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 1440
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -132,6 +138,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = false
 count = 1461
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -150,6 +157,7 @@ regex = 'Sherlock|Street'
 haystack = { path = "sherlock.txt" }
 count = 1142
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -168,6 +176,7 @@ regex = 'Sherlock|Holmes'
 haystack = { path = "sherlock.txt" }
 count = 3542
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -186,6 +195,7 @@ regex = 'Sherlock|Holmes|Watson|Irene|Adler|John|Baker'
 haystack = { path = "sherlock.txt" }
 count = 4507
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -205,6 +215,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 4593
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -223,6 +234,7 @@ regex = 'Sher[a-z]+|Hol[a-z]+'
 haystack = { path = "sherlock.txt" }
 count = 3686
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -242,6 +254,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 4254
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -260,6 +273,7 @@ regex = 'Sherlock|Holmes|Watson'
 haystack = { path = "sherlock.txt" }
 count = 4028
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -279,6 +293,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 4104
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -297,6 +312,7 @@ regex = 'zqj'
 haystack = { path = "sherlock.txt" }
 count = 0
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -315,6 +331,7 @@ regex = 'aqj'
 haystack = { path = "sherlock.txt" }
 count = 0
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -333,6 +350,7 @@ regex = 'aei'
 haystack = { path = "sherlock.txt" }
 count = 0
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -351,6 +369,7 @@ regex = 'the'
 haystack = { path = "sherlock.txt" }
 count = 21654
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -370,6 +389,7 @@ regex = 'The'
 haystack = { path = "sherlock.txt" }
 count = 2223
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -390,6 +410,7 @@ haystack = { path = "sherlock.txt" }
 case-insensitive = true
 count = 23961
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -409,11 +430,14 @@ regex = '.*'
 haystack = { path = "sherlock.txt" }
 unicode = true
 count = [
+  # Not sure why count differs.
+  { engine = 'dlang/std', count = 568_829 },
   # Not sure what's going on with regress here.
   { engine = 'regress', count = 568_829 },
   { engine = '.*', count = 581_881 },
 ]
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2/jit',
   'python/re',
@@ -446,6 +470,7 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 594_933
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -464,6 +489,7 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 447_175
 engines = [
+  'dlang/std',
   'go/regexp',
   # 'pcre2', # timeout, why?
   'pcre2/jit',
@@ -481,6 +507,7 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 14_180
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -498,6 +525,7 @@ haystack = { path = "sherlock.txt" }
 unicode = true
 count = 432_995
 engines = [
+  'dlang/std',
   'go/regexp',
   # 'pcre2', # timeout, why?
   'pcre2/jit',
@@ -514,6 +542,7 @@ regex = '\w+'
 haystack = { path = "sherlock.txt" }
 count = 447_639
 engines = [
+  # 'dlang/std', # other count
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -532,6 +561,7 @@ regex = '\w+\s+Holmes'
 haystack = { path = "sherlock.txt" }
 count = 4073
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -550,6 +580,7 @@ regex = '\w+\s+Holmes\s+\w+'
 haystack = { path = "sherlock.txt" }
 count = 2593
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -568,6 +599,7 @@ regex = 'Holmes.{0,25}Watson|Watson.{0,25}Holmes'
 haystack = { path = "sherlock.txt" }
 count = 150
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -586,6 +618,7 @@ regex = 'Holmes(?:\s*.+\s*){0,10}Watson|Watson(?:\s*.+\s*){0,10}Holmes'
 haystack = { path = "sherlock.txt" }
 count = 14_309
 engines = [
+  'dlang/std',
   'go/regexp',
   're2',
   # 'regress', # timeout
@@ -600,6 +633,7 @@ regex = '''["'][^"']{0,30}[?!.]["']'''
 haystack = { path = "sherlock.txt" }
 count = 14_437
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -617,6 +651,7 @@ regex = '(?m)^Sherlock Holmes|Sherlock Holmes$'
 haystack = { path = "sherlock.txt" }
 count = 510
 engines = [
+  # 'dlang/std', # other count
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -634,6 +669,7 @@ regex = '\b\w+n\b'
 haystack = { path = "sherlock.txt" }
 count = 35_297
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -651,6 +687,7 @@ regex = '[a-q][^u-z]{13}x'
 haystack = { path = "sherlock.txt" }
 count = 2130
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -669,6 +706,7 @@ regex = '[a-zA-Z]+ing'
 haystack = { path = "sherlock.txt" }
 count = 20_547
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',
@@ -687,6 +725,7 @@ regex = '\s[a-zA-Z]{0,12}ing\s'
 haystack = { path = "sherlock.txt" }
 count = 19_658
 engines = [
+  'dlang/std',
   'go/regexp',
   'pcre2',
   'pcre2/jit',

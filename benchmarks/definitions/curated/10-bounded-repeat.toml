@@ -45,6 +45,7 @@ count = [
   { engine = '.*', count = 1833 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -75,6 +76,7 @@ count = [
   { engine = '.*', count = 3475 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -102,6 +104,7 @@ count = [
   { engine = '.*', count = 53 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -131,6 +134,7 @@ count = [
   { engine = '.*', count = 11 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',
@@ -182,6 +186,7 @@ count = [
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'dlang/std',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

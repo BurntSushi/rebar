@@ -15,6 +15,7 @@ unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 45_315
 engines = [
+  # 'dlang/std', # pattern to long
   'rust/regex',
   # 'rust/regexold', # timeout
 ]
@@ -27,6 +28,7 @@ unicode = true
 haystack = { path = "opensubtitles/en-tiny.txt" }
 count = 87
 engines = [
+  # 'dlang/std', # pattern to long
   'rust/regex',
   'rust/regexold',
 ]
@@ -39,6 +41,7 @@ unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 690
 engines = [
+  # 'dlang/std', # pattern to long
   're2',
   'rust/regex',
   # 'rust/regexold', # timeout
@@ -52,6 +55,7 @@ unicode = true
 haystack = { path = "opensubtitles/en-medium.txt" }
 count = 15
 engines = [
+  'dlang/std',
   'go/regexp',
   'python/re',
   're2',
