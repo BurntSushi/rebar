@@ -27,4 +27,4 @@ pkg-config = "0.3.26"
 [profile.release]
 debug = true
 codegen-units = 1
-lto = "thin"
+lto = "fat"

@@ -32,4 +32,4 @@ path = "../../shared/timer"
 [profile.release]
 debug = true
 codegen-units = 1
-lto = "thin"
+lto = "fat"

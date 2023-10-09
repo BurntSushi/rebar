@@ -26,4 +26,4 @@ cc = { version = "1.0.73", features = ["parallel"] }
 [profile.release]
 debug = true
 codegen-units = 1
-lto = "thin"
+lto = "fat"
