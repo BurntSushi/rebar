@@ -4,6 +4,6 @@
 	],
 	"copyright": "Copyright © 2023, mai",
 	"description": "A minimal D application.",
-	"license": "proprietary",
+	"license": "UNLICENSE",
 	"name": "main"
 }
