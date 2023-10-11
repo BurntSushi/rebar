@@ -1,7 +1,7 @@
 [package]
 publish = false
 name = "rebar"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Andrew Gallant <jamslam@gmail.com>"]
 description = """
 A biased barometer for gauging the relative speed of some regex engines on a
