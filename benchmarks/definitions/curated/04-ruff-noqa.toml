@@ -128,7 +128,6 @@ regex = '(\s*)((?:# [Nn][Oo][Qq][Aa])(?::\s?(([A-Z]+[0-9]+(?:[,\s]+)?)+))?)'
 haystack = '# noqa'
 count = 1
 engines = [
-  'd/ldc/std-regex',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

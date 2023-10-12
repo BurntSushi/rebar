@@ -13,7 +13,6 @@ curated/03-date/ascii,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,
 curated/03-date/unicode,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,268796,9,5.06s,357.52ms,0.00ns,358.95ms,4.01ms,357.09ms,370.23ms
 curated/04-ruff-noqa/real,grep-captures,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,32514634,6,4.61s,500.19ms,442.92us,500.25ms,556.07us,499.66ms,500.99ms
 curated/04-ruff-noqa/tweaked,grep-captures,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,32514634,12,4.81s,262.41ms,47.62us,262.50ms,506.82us,261.79ms,263.91ms
-curated/04-ruff-noqa/compile-real,compile,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,,1000000,2.74s,88.00ns,0.00ns,90.00ns,24.00ns,73.00ns,4.74us
 curated/06-cloud-flare-redos/original,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,107,525572,4.59s,5.61us,0.00ns,5.65us,235.00ns,5.35us,70.05us
 curated/06-cloud-flare-redos/simplified-short,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,102,930199,4.59s,3.13us,0.00ns,3.17us,140.00ns,2.91us,8.05us
 curated/06-cloud-flare-redos/simplified-long,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,10001,10626,4.51s,278.65us,1.00ns,282.27us,11.31us,262.13us,337.72us
@@ -23,8 +22,6 @@ curated/08-words/long-english,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex
 curated/08-words/long-russian,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,123942,2578,4.51s,1.16ms,8.00ns,1.16ms,30.89us,1.08ms,1.25ms
 curated/09-aws-keys/full,grep-captures,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,32514634,2,6.12s,2.00s,316.50us,2.00s,316.50us,2.00s,2.00s
 curated/09-aws-keys/quick,grep,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,32514634,44,4.66s,69.21ms,4.60us,69.23ms,299.06us,68.58ms,70.18ms
-curated/09-aws-keys/compile-full,compile,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,,259984,4.57s,124.00ns,0.00ns,127.00ns,20.00ns,104.00ns,2.22us
-curated/09-aws-keys/compile-quick,compile,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,,1000000,2.79s,69.00ns,0.00ns,73.00ns,25.00ns,59.00ns,3.67us
 curated/10-bounded-repeat/letters-en,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,151522,4811,4.51s,626.53us,0.00ns,623.59us,28.64us,557.45us,853.74us
 curated/10-bounded-repeat/letters-ru,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,248919,889,4.51s,3.40ms,0.00ns,3.37ms,103.62us,3.00ms,3.64ms
 curated/10-bounded-repeat/context,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,7384531,67,4.61s,45.44ms,0.00ns,45.40ms,282.31us,44.73ms,46.01ms
@@ -33,7 +30,6 @@ curated/12-dictionary/single,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,
 curated/14-quadratic/1x,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,100,36540,4.51s,82.12us,0.00ns,82.04us,4.33us,64.00us,284.04us
 curated/14-quadratic/2x,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,200,9341,4.51s,322.52us,0.00ns,321.11us,16.29us,254.98us,537.36us
 curated/14-quadratic/10x,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,1000,382,4.56s,7.90ms,232.00ns,7.87ms,237.65us,7.05ms,8.64ms
-dictionary/compile/english-15,compile,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,,2706,4.51s,16.07us,0.00ns,16.12us,206.00ns,15.86us,18.82us
 dictionary/search/english-15,count-spans,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,61436,2236,4.56s,1.34ms,4.00ns,1.34ms,8.34us,1.33ms,1.42ms
 imported/leipzig/twain,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,16013977,4796,4.56s,623.05us,0.00ns,625.53us,15.42us,612.66us,851.94us
 imported/leipzig/twain-insensitive,count,0.1.0 (rev bb7ae7904f),d/ldc/std-regex,2.104,,16013977,474,4.56s,6.32ms,29.00ns,6.34ms,47.54us,6.29ms,6.57ms
