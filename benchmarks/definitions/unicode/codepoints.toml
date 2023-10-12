@@ -54,8 +54,8 @@ regex = '\p{L}{100}'
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
-  # Maybe a different version of Unicode?
-  { engine = 'go/regexp', count = 1201 },
+  # Very likely due to update to Unicode 15.1 (a month old at time of writing).
+  { engine = 'python/regex', count = 1250 },
   # Maybe a different version of Unicode?
   { engine = 'pcre2/jit', count = 1203 },
   { engine = '.*', count = 1244 },
@@ -98,7 +98,11 @@ regex = '''(?x)(?:
 ){100}'''
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
-count = 1244
+count = [
+  # Very likely due to update to Unicode 15.1 (a month old at time of writing).
+  { engine = 'python/regex', count = 1250 },
+  { engine = '.*', count = 1244 },
+]
 engines = [
   'rust/regex',
   'rust/regexold',
