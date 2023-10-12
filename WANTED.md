@@ -7,7 +7,6 @@ has a reasonable build process with stable tooling:
 * Ruby's regex engine, or perhaps just [Onigmo](https://github.com/k-takata/Onigmo)
 directly.
 * [`nim-regex`](https://github.com/nitely/nim-regex)
-* [D's std.regex](https://dlang.org/phobos/std_regex.html)
 * [CTRE](https://github.com/hanickadot/compile-time-regular-expressions). (This
 one may prove tricky since "compile a regex" probably means "compile a C++
 program." The rebar tool supports this, but it will be annoying. If you want
