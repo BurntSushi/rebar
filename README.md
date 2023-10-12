@@ -155,20 +155,19 @@ performance profile of any specific regex engine or workload.
 
 | Engine | Version | Geometric mean of speed ratios | Benchmark count |
 | ------ | ------- | ------------------------------ | --------------- |
-| [d/ldc/std-regex](benchmarks/../engines/d) | 2.104 | 1.00 | 3 |
-| [pcre2](benchmarks/../engines/pcre2) | 10.42 2022-12-11 | 3.22 | 10 |
-| [rust/regex/lite](benchmarks/../engines/rust/regex-lite) | 0.1.1 | 5.52 | 10 |
-| [regress](benchmarks/../engines/regress) | 0.7.1 | 7.88 | 9 |
-| [icu](benchmarks/../engines/icu) | 72.1.0 | 7.91 | 11 |
-| [pcre2/jit](benchmarks/../engines/pcre2) | 10.42 2022-12-11 | 12.98 | 11 |
-| [go/regexp](benchmarks/../engines/go) | 1.21.0 | 13.62 | 10 |
-| [rust/regex](benchmarks/../engines/rust/regex) | 1.10.0 | 22.33 | 14 |
-| [re2](benchmarks/../engines/re2) | 2023-08-01 | 29.82 | 10 |
-| [dotnet/compiled](benchmarks/../engines/dotnet) | 7.0.10 | 52.79 | 10 |
-| [python/re](benchmarks/../engines/python) | 3.11.5 | 81.99 | 11 |
-| [python/regex](benchmarks/../engines/python) | 2023.10.3 | 226.79 | 11 |
-| [dotnet/nobacktrack](benchmarks/../engines/dotnet) | 7.0.10 | 390.33 | 6 |
-| [hyperscan](benchmarks/../engines/hyperscan) | 5.4.2 2023-04-22 | 798.05 | 7 |
+| [pcre2](benchmarks/../engines/pcre2) | 10.42 2022-12-11 | 1.38 | 10 |
+| [rust/regex/lite](benchmarks/../engines/rust/regex-lite) | 0.1.1 | 2.36 | 10 |
+| [regress](benchmarks/../engines/regress) | 0.7.1 | 3.07 | 9 |
+| [icu](benchmarks/../engines/icu) | 72.1.0 | 3.66 | 11 |
+| [go/regexp](benchmarks/../engines/go) | 1.21.0 | 5.83 | 10 |
+| [pcre2/jit](benchmarks/../engines/pcre2) | 10.42 2022-12-11 | 6.01 | 11 |
+| [rust/regex](benchmarks/../engines/rust/regex) | 1.10.0 | 12.19 | 14 |
+| [re2](benchmarks/../engines/re2) | 2023-08-01 | 12.77 | 10 |
+| [dotnet/compiled](benchmarks/../engines/dotnet) | 7.0.10 | 22.61 | 10 |
+| [python/re](benchmarks/../engines/python) | 3.11.5 | 37.93 | 11 |
+| [python/regex](benchmarks/../engines/python) | 2023.10.3 | 104.91 | 11 |
+| [dotnet/nobacktrack](benchmarks/../engines/dotnet) | 7.0.10 | 166.81 | 6 |
+| [hyperscan](benchmarks/../engines/hyperscan) | 5.4.2 2023-04-22 | 557.30 | 7 |
 
 ### Benchmark Groups
 
@@ -699,14 +698,14 @@ position.
 
 | Engine | real | tweaked | compile-real |
 | - | - | - | - |
-| d/ldc/std-regex | 62.0 MB/s | 118.2 MB/s | **88.00ns** |
+| d/ldc/std-regex | 62.0 MB/s | 118.2 MB/s | - |
 | dotnet/compiled | 151.5 MB/s | 499.6 MB/s | 46.48us |
 | dotnet/nobacktrack | 242.9 MB/s | 456.1 MB/s | 412.26us |
 | go/regexp | 34.5 MB/s | 707.6 MB/s | 3.00us |
 | icu | 30.1 MB/s | 354.1 MB/s | 7.99us |
 | java/hotspot | 38.5 MB/s | 205.6 MB/s | - |
 | javascript/v8 | 130.7 MB/s | 292.8 MB/s | - |
-| pcre2 | 122.8 MB/s | 1404.4 MB/s | 1.17us |
+| pcre2 | 122.8 MB/s | 1404.4 MB/s | **1.17us** |
 | pcre2/jit | 572.2 MB/s | **1505.3 MB/s** | 6.84us |
 | perl | 101.2 MB/s | 128.1 MB/s | - |
 | python/re | 30.1 MB/s | 118.3 MB/s | 66.75us |
@@ -1335,7 +1334,7 @@ CPython source code contains a very small amount of invalid UTF-8.)
 
 | Engine | full | quick | compile-full | compile-quick |
 | - | - | - | - | - |
-| d/ldc/std-regex | 15.5 MB/s | 448.0 MB/s | **124.00ns** | **69.00ns** |
+| d/ldc/std-regex | 15.5 MB/s | 448.0 MB/s | - | - |
 | dotnet/compiled | 506.3 MB/s | 761.9 MB/s | 104.72us | 41.52us |
 | dotnet/nobacktrack | - | 687.2 MB/s | - | 212.78us |
 | go/regexp | 113.4 MB/s | 860.1 MB/s | 19.05us | 2.86us |
@@ -1343,7 +1342,7 @@ CPython source code contains a very small amount of invalid UTF-8.)
 | icu | 195.1 MB/s | 334.2 MB/s | 11.62us | 2.94us |
 | java/hotspot | 39.7 MB/s | 122.6 MB/s | - | - |
 | javascript/v8 | 295.0 MB/s | 326.5 MB/s | - | - |
-| pcre2 | 966.9 MB/s | 1480.8 MB/s | 3.64us | 852.00ns |
+| pcre2 | 966.9 MB/s | 1480.8 MB/s | **3.64us** | **852.00ns** |
 | pcre2/jit | 1226.1 MB/s | 1019.7 MB/s | 22.45us | 4.76us |
 | perl | 100.9 MB/s | 136.6 MB/s | - | - |
 | python/re | 103.2 MB/s | 174.5 MB/s | 167.27us | 39.92us |
