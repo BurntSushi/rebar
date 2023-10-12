@@ -1,0 +1,10 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+imported/regex-redux/regex-redux,regex-redux,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,,14,4.81s,217.43ms,39.24us,217.98ms,1.22ms,216.52ms,220.56ms
+reported/i1095-word-repetition/unicode-compile,compile,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,,819833,4.94s,1.16us,0.00ns,1.22us,594.00ns,1.06us,184.23us
+reported/i1095-word-repetition/unicode-search,count-spans,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,512,1000000,4.55s,2.55us,0.00ns,2.56us,1.84us,2.40us,1.69ms
+reported/i1095-word-repetition/ascii-compile,compile,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,,1000000,3.84s,1.22us,0.00ns,1.30us,1.36us,1.14us,0.98ms
+reported/i1095-word-repetition/ascii-search,count-spans,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,256,1000000,1.49s,445.00ns,0.00ns,462.00ns,1.80us,424.00ns,1.69ms
+slow/quadratic-regex-1x,count,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,99,935046,4.94s,3.16us,0.00ns,3.17us,89.00ns,3.00us,21.60us
+slow/quadratic-regex-2x,count,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,198,471955,4.78s,6.30us,0.00ns,6.31us,150.00ns,6.00us,13.84us
+slow/quadratic-haystack-1x,count,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,100,67336,4.61s,44.52us,0.00ns,44.50us,0.96us,41.01us,52.06us
+slow/quadratic-haystack-2x,count,0.1.0 (rev bb7ae7904f),dotnet,7.0.10,,200,19557,4.61s,152.75us,0.00ns,153.32us,2.57us,149.21us,176.45us

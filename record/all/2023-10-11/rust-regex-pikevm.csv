@@ -1,0 +1,17 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+opt/backtrack/words-english,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,613357,164,4.56s,18.39ms,760.00ns,18.40ms,77.57us,18.23ms,18.69ms
+opt/backtrack/words-russian,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,613423,142,4.56s,21.23ms,1.70us,21.24ms,91.70us,20.99ms,21.62ms
+opt/literal-alt/one-pattern,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,123,757169,4.94s,3.93us,0.00ns,3.93us,141.00ns,3.63us,67.60us
+opt/literal-alt/pattern-per-word,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,123,5,6.47s,740.31ms,0.00ns,740.09ms,389.46us,739.37ms,740.44ms
+opt/nfa-sparse/small-repeated-class-bytes,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,96004,39,4.61s,78.72ms,0.00ns,78.75ms,375.81us,77.87ms,79.61ms
+opt/nfa-sparse/small-repeated-class-unicode,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,96004,38,4.56s,79.69ms,24.07us,79.66ms,343.30us,78.71ms,80.41ms
+opt/onepass/fn-predicate,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,7384531,97,4.56s,30.93ms,0.00ns,30.94ms,177.46us,30.50ms,31.44ms
+opt/onepass/first-three-words-english,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,613357,636,4.51s,4.71ms,110.00ns,4.72ms,65.44us,4.57ms,5.00ms
+opt/onepass/first-three-words-russian,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,613423,760,4.51s,3.94ms,81.00ns,3.95ms,42.86us,3.86ms,4.18ms
+opt/onepass/word-boundary-english,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,613357,1998,4.51s,1.50ms,4.00ns,1.50ms,20.08us,1.46ms,1.59ms
+opt/onepass/word-boundary-russian,grep-captures,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,613423,2050,4.51s,1.46ms,6.00ns,1.46ms,19.45us,1.41ms,1.54ms
+slow/quadratic-regex-1x,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,99,1149,4.51s,2.60ms,0.00ns,2.61ms,51.56us,2.51ms,2.96ms
+slow/quadratic-regex-2x,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,198,148,4.56s,20.23ms,501.00ns,20.28ms,263.47us,19.85ms,21.41ms
+slow/quadratic-haystack-1x,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,100,37886,4.56s,79.09us,0.00ns,79.16us,1.52us,74.18us,86.38us
+slow/quadratic-haystack-2x,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,200,9996,4.51s,299.94us,2.00ns,300.10us,4.89us,282.54us,366.73us
+wild/grapheme/codepoints,count,0.1.0 (rev bb7ae7904f),rust/regex/pikevm,0.4.0,,4382592,6,5.26s,580.47ms,505.49us,580.37ms,1.00ms,578.94ms,581.61ms
