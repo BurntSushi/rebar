@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
 
-// The configuration of a benchmark, as parsed from the incoming KLV data.
-public struct Config
+/// <summary>The configuration of a benchmark, as parsed from the incoming KLV data.</summary>
+struct Config
 {
     public string engine;
     public string? name;
@@ -24,19 +23,9 @@ public struct Config
     public long maxTime;
     public long maxWarmupTime;
 
-    public Config(string engineName) {
-        engine = engineName;
-        caseInsensitive = false;
-        unicode = false;
-        maxIters = 0;
-        maxWarmupIters = 0;
-        maxTime = 0;
-        maxWarmupTime = 0;
-    }
+    public Config(string engineName) => engine = engineName;
 
-    public Regex CompileRegex() {
-        return CompilePattern(pattern!);
-    }
+    public Regex CompileRegex() => CompilePattern(pattern!);
 
     public Regex CompilePattern(string pat) {
         // We enable the invariant culture to avoid any sort of tailoring.
@@ -46,33 +35,34 @@ public struct Config
         if (caseInsensitive) {
             options |= RegexOptions.IgnoreCase;
         }
-        if (engine == "interp") {
-            // nothing to do here
-        } else if (engine == "compiled") {
-            options |= RegexOptions.Compiled;
-        } else if (engine == "nobacktrack") {
-            options |= RegexOptions.NonBacktracking;
-        } else {
-            throw new Exception($"unrecognized engine '${engine}'");
-        }
+        options |= engine switch
+        {
+            "interp" => RegexOptions.None,
+            "compiled" => RegexOptions.Compiled,
+            "nobacktrack" => RegexOptions.NonBacktracking,
+            _ => throw new Exception($"unrecognized engine '${engine}'"),
+        };
+
         return new Regex(pat, options);
     }
 }
 
-// A single Key-Length-Value item.
-public struct OneKLV
+/// <summary>A single Key-Length-Value item.</summary>
+struct OneKLV
 {
-    // The key name.
+    /// <summary>The key name.</summary>
     public string key;
-    // The value contents.
+    /// <summary>The value contents.</summary>
     public string value;
-    // The length, in bytes, used up by this KLV item.
-    // This is useful for parsing a sequence of KLV items.
-    // This length says how much to skip ahead to start
-    // parsing the next KLV item.
+    /// <summary>
+    /// The length, in bytes, used up by this KLV item.
+    /// This is useful for parsing a sequence of KLV items.
+    /// This length says how much to skip ahead to start
+    /// parsing the next KLV item.
+    /// </summary>
     public int len;
 
-    public OneKLV(List<byte> raw) {
+    public OneKLV(ReadOnlySpan<byte> raw) {
         // The default for the UTF-8 encoding is to lossily decode bytes.
         // But we really don't want to do that here. We want to return an
         // error, since otherwise, this runner could silently search a slightly
@@ -83,57 +73,48 @@ public struct OneKLV
         // tell, C#'s regex engine only works on String or ReadOnlySpan<char>,
         // both of which are Unicode strings and incapable of representing
         // arbitrary bytes.
-        System.Text.Encoding utf8 = System.Text.Encoding.GetEncoding(
-                "utf-8",
-                new System.Text.EncoderExceptionFallback(),
-                new System.Text.DecoderExceptionFallback()
+        Encoding utf8 = Encoding.GetEncoding(
+            "utf-8",
+            new EncoderExceptionFallback(),
+            new DecoderExceptionFallback()
         );
 
         var keyEnd = raw.IndexOf((byte)':');
-        if (keyEnd == -1) {
+        if (keyEnd < 0) {
             throw new Exception("invalid KLV item: could not find first ':'");
         }
-        key = utf8.GetString(raw.GetRange(0, keyEnd).ToArray());
+        key = utf8.GetString(raw.Slice(0, keyEnd));
+        raw = raw.Slice(keyEnd + 1);
 
-        var valueLenEnd = raw.IndexOf((byte)':', keyEnd + 1);
-        if (valueLenEnd == -1) {
+        var valueLenEnd = raw.IndexOf((byte)':');
+        if (valueLenEnd < 0) {
             throw new Exception("invalid KLV item: could not find second ':'");
         }
-        string valueLenStr = utf8.GetString(
-            raw.GetRange(keyEnd + 1, valueLenEnd - (keyEnd + 1)).ToArray()
-        );
-        int valueLen = int.Parse(valueLenStr);
+        int valueLen = int.Parse(utf8.GetString(raw.Slice(0, valueLenEnd)));
 
-        if (raw[valueLenEnd + 1 + valueLen] != (byte)'\n') {
+        if (raw[valueLenEnd + 1 + valueLen] != '\n') {
             throw new Exception("invalid KLV item: no line terminator");
         }
-        value = utf8.GetString(
-            raw.GetRange(valueLenEnd + 1, valueLen).ToArray()
-        );
-        len = valueLenEnd + 1 + valueLen + 1;
+        value = utf8.GetString(raw.Slice(valueLenEnd + 1, valueLen));
+        len = keyEnd + 1 + valueLenEnd + 1 + valueLen + 1;
     }
 }
 
-// A representation of the data we gather from a single
-// benchmark execution. That is, the time it took to run
-// and the count reported for verification.
-public struct Sample
-{
-    // The duration, in nanoseconds. This might not always
-    // have nanosecond resolution, but its units are always
-    // nanoseconds.
-    public long duration;
-    // The count reported by the benchmark. This is checked
-    // against what is expected in the benchmark definition
-    // by rebar.
-    public int count;
-
-    public Sample(long durationNanos, int benchCount)
-    {
-        duration = durationNanos;
-        count = benchCount;
-    }
-}
+/// <summary>
+/// A representation of the data we gather from a single benchmark execution. That is, the time it took to run
+/// and the count reported for verification.
+/// </summary>
+/// <param name="duration">
+/// The duration, in nanoseconds. This might not always
+/// have nanosecond resolution, but its units are always
+/// nanoseconds.
+/// </param>
+/// <param name="count">
+/// The count reported by the benchmark. This is checked
+/// against what is expected in the benchmark definition
+/// by rebar.
+/// </param>
+record struct Sample(long duration, int count);
 
 class Program
 {
@@ -145,84 +126,79 @@ class Program
             );
         }
         if (args[0] == "version") {
-            Console.WriteLine(Environment.Version.ToString());
+            Console.WriteLine(Environment.Version);
             return;
         }
-        // This is pretty brutal, but 'Console.In' is actually a 'TextReader',
-        // and that in turn automatically applies an encoding before returning
-        // a Unicode string. But our KLV format really wants to be treated as
-        // raw bytes. In particular, the "length" in the key-length-value of
-        // each item is the number of UTF-8 encoded bytes in the value field.
-        // By the time we get to that point when using 'Console.In', we already
-        // have strings and the actual number of bytes we need to account for
-        // has been lost.
-        //
-        // So we do this dance with raw bytes, which is just amazingly
-        // inconvenient, because C# doesn't have byte string support.
-        Stream stdin = Console.OpenStandardInput();
-        List<byte> raw = new List<byte>();
-        byte[] buf = new byte[8192];
-        int nread = 0;
-        while ((nread = stdin.Read(buf, 0, buf.Length)) > 0) {
-            for (int i = 0; i < nread; i++) {
-                raw.Add(buf[i]);
-            }
+
+        // Read all of stdin into a span of bytes
+        MemoryStream stdinCopy = new();
+        using (Stream stdin = Console.OpenStandardInput()) {
+            stdin.CopyTo(stdinCopy);
         }
+        ReadOnlySpan<byte> raw = stdinCopy.GetBuffer().AsSpan(0, (int)stdinCopy.Length);
+
         // OK, now read each of our KLV items and build up our config.
-        Config config = new Config(args[0]);
-        while (raw.Count > 0) {
+        Config config = new(args[0]);
+        while (!raw.IsEmpty) {
             var klv = new OneKLV(raw);
-            raw = raw.GetRange(klv.len, raw.Count - klv.len);
-            if (klv.key == "name") {
-                config.name = klv.value;
-            } else if (klv.key == "model") {
-                config.model = klv.value;
-            } else if (klv.key == "pattern") {
-                if (config.pattern != null) {
-                    throw new Exception("only one pattern is supported");
-                }
-                config.pattern = klv.value;
-            } else if (klv.key == "case-insensitive") {
-                config.caseInsensitive = klv.value == "true";
-            } else if (klv.key == "unicode") {
-                config.unicode = klv.value == "unicode";
-            } else if (klv.key == "haystack") {
-                config.haystack = klv.value;
-            } else if (klv.key == "max-iters") {
-                config.maxIters = int.Parse(klv.value);
-            } else if (klv.key == "max-warmup-iters") {
-                config.maxWarmupIters = int.Parse(klv.value);
-            } else if (klv.key == "max-time") {
-                config.maxTime = long.Parse(klv.value);
-            } else if (klv.key == "max-warmup-time") {
-                config.maxWarmupTime = long.Parse(klv.value);
-            } else {
-                throw new Exception($"unrecognized KLV key {klv.key}");
+            raw = raw.Slice(klv.len);
+            switch (klv.key)
+            {
+                case "name":
+                    config.name = klv.value;
+                    break;
+                case "model":
+                    config.model = klv.value;
+                    break;
+                case "pattern":
+                    if (config.pattern != null) {
+                        throw new Exception("only one pattern is supported");
+                    }
+                    config.pattern = klv.value;
+                    break;
+                case "case-insensitive":
+                    config.caseInsensitive = klv.value == "true";
+                    break;
+                case "unicode":
+                    config.unicode = klv.value == "unicode";
+                    break;
+                case "haystack":
+                    config.haystack = klv.value;
+                    break;
+                case "max-iters":
+                    config.maxIters = int.Parse(klv.value);
+                    break;
+                case "max-warmup-iters":
+                    config.maxWarmupIters = int.Parse(klv.value);
+                    break;
+                case "max-time":
+                    config.maxTime = long.Parse(klv.value);
+                    break;
+                case "max-warmup-time":
+                    config.maxWarmupTime = long.Parse(klv.value);
+                    break;
+                default:
+                    throw new Exception($"unrecognized KLV key {klv.key}");
             }
         }
+
         if (config.model != "regex-redux" && config.pattern == null) {
             throw new Exception("missing pattern, must be provided once");
         }
 
         // Run our selected model and print the samples.
-        List<Sample> samples;
-        if (config.model == "compile") {
-            samples = ModelCompile(config);
-        } else if (config.model == "count") {
-            samples = ModelCount(config);
-        } else if (config.model == "count-spans") {
-            samples = ModelCountSpans(config);
-        } else if (config.model == "count-captures") {
-            samples = ModelCountCaptures(config);
-        } else if (config.model == "grep") {
-            samples = ModelGrep(config);
-        } else if (config.model == "grep-captures") {
-            samples = ModelGrepCaptures(config);
-        } else if (config.model == "regex-redux") {
-            samples = ModelRegexRedux(config);
-        } else {
-            throw new Exception($"unknown benchmark model {config.model}");
-        }
+        List<Sample> samples = config.model switch
+        {
+            "compile" => ModelCompile(config),
+            "count" => ModelCount(config),
+            "count-spans" => ModelCountSpans(config),
+            "count-captures" => ModelCountCaptures(config),
+            "grep" => ModelGrep(config),
+            "grep-captures" => ModelGrepCaptures(config),
+            "regex-redux" => ModelRegexRedux(config),
+            _ => throw new Exception($"unknown benchmark model {config.model}"),
+        };
+            
         foreach (Sample s in samples) {
             Console.WriteLine($"{s.duration},{s.count}");
         }
@@ -233,7 +209,7 @@ class Program
         return RunAndCount(
             config,
             re => re.Count(config.haystack!),
-            () => config.CompileRegex()
+            config.CompileRegex
         );
     }
 
@@ -255,13 +231,13 @@ class Program
             n => n,
             () => {
                 int count = 0;
-                foreach (Match m in re.Matches(config.haystack!)) {
+                foreach (ValueMatch m in re.EnumerateMatches(config.haystack!)) {
                     // This is not quite the same as most other regex
                     // engines, which report span lengths in terms of
                     // number of bytes. This is in terms of UTF-16 code
                     // units. We deal this by permitting different counts
                     // for .NET regex engines in the benchmark definition.
-                    count += m.ValueSpan.Length;
+                    count += m.Length;
                 }
                 return count;
             }
@@ -276,12 +252,14 @@ class Program
             n => n,
             () => {
                 int count = 0;
-                foreach (Match m in re.Matches(config.haystack!)) {
+                Match m = re.Match(config.haystack!);
+                while (m.Success) {
                     foreach (Group g in m.Groups) {
                         if (g.Success) {
-                            count += 1;
+                            count++;
                         }
                     }
+                    m = m.NextMatch();
                 }
                 return count;
             }
@@ -295,12 +273,10 @@ class Program
             config,
             n => n,
             () => {
-                StringReader rdr = new StringReader(config.haystack!);
                 int count = 0;
-                string? line;
-                while ((line = rdr.ReadLine()) != null) {
+                foreach (ReadOnlySpan<char> line in config.haystack.AsSpan().EnumerateLines()) {
                     if (re.IsMatch(line)) {
-                        count += 1;
+                        count++;
                     }
                 }
                 return count;
@@ -315,16 +291,16 @@ class Program
             config,
             n => n,
             () => {
-                StringReader rdr = new StringReader(config.haystack!);
                 int count = 0;
-                string? line;
-                while ((line = rdr.ReadLine()) != null) {
-                    foreach (Match m in re.Matches(line)) {
+                foreach (ReadOnlySpan<char> line in config.haystack.AsSpan().EnumerateLines()) {
+                    Match m = re.Match(line.ToString());
+                    while (m.Success) {
                         foreach (Group g in m.Groups) {
                             if (g.Success) {
-                                count += 1;
+                                count++;
                             }
                         }
+                        m = m.NextMatch();
                     }
                 }
                 return count;
@@ -354,7 +330,7 @@ agggtaa[cgt]|[acg]ttaccct 43
 547899
 
 """;
-                var result = new System.Text.StringBuilder();
+                var result = new StringBuilder();
                 var seq = config.haystack!;
                 var ilen = seq.Length;
                 seq = config.CompilePattern(@">[^\n]*\n|\n").Replace(seq, "");
@@ -395,11 +371,6 @@ agggtaa[cgt]|[acg]ttaccct 43
         );
     }
 
-    // Does C# really not have anonymous closure types? I couldn't find it in
-    // their sections on delegates or lambda expressions. Oh well.
-    public delegate int Count<T>(T t);
-    public delegate T Bench<T>();
-
     // Takes in a benchmark config, a closure that returns the count from the
     // benchmark function and a benchmark function that returns a result that
     // can be converted into a count. As output, it returns a list of samples
@@ -414,44 +385,31 @@ agggtaa[cgt]|[acg]ttaccct 43
     // The 'count' function is not part of the measurement.
     static List<Sample> RunAndCount<T>(
         Config config,
-        Count<T> count,
-        Bench<T> bench
+        Func<T, int> count,
+        Func<T> bench
     )
     {
         Stopwatch warmupTimer = Stopwatch.StartNew();
         for (int i = 0; i < config.maxWarmupIters; i++) {
             var result = bench();
             count(result);
-            if (ElapsedNanos(warmupTimer) >= config.maxWarmupTime) {
+            if (warmupTimer.Elapsed.TotalNanoseconds >= config.maxWarmupTime) {
                 break;
             }
         }
 
-        List<Sample> samples = new List<Sample>();
+        List<Sample> samples = new();
         Stopwatch runTimer = Stopwatch.StartNew();
         for (int i = 0; i < config.maxIters; i++) {
             Stopwatch benchTimer = Stopwatch.StartNew();
             var result = bench();
-            var elapsed = ElapsedNanos(benchTimer);
+            var elapsed = benchTimer.Elapsed.TotalNanoseconds;
             var n = count(result);
-            samples.Add(new Sample(elapsed, n));
-            if (ElapsedNanos(runTimer) >= config.maxTime) {
+            samples.Add(new Sample((long)elapsed, n));
+            if (runTimer.Elapsed.TotalNanoseconds >= config.maxTime) {
                 break;
             }
         }
         return samples;
-    }
-
-    // Return the elapsed time on the given stop watch in terms of
-    // nano-seconds.
-    //
-    // Note that .NET doesn't guarantee that the stop-watch uses nanosecond
-    // resolution. So this might only be, for example, capable of returning
-    // nanoseconds in intervals of 100. But the units returned are indeed
-    // always nanoseconds.
-    static long ElapsedNanos(Stopwatch sw)
-    {
-        long nanosPerTick = (1000L * 1000L * 1000L) / Stopwatch.Frequency;
-        return nanosPerTick * sw.ElapsedTicks;
     }
 }
