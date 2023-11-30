@@ -285,7 +285,7 @@
   [[engine.dependency]]
     bin = "dotnet"
     args = ["--list-sdks"]
-    regex = '(?m)^7\.'
+    regex = '(?m)^8\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -310,7 +310,7 @@
   [[engine.dependency]]
     bin = "dotnet"
     args = ["--list-sdks"]
-    regex = '(?m)^7\.'
+    regex = '(?m)^8\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -337,7 +337,7 @@
   [[engine.dependency]]
     bin = "dotnet"
     args = ["--list-sdks"]
-    regex = '(?m)^7\.'
+    regex = '(?m)^8\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
