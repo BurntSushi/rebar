@@ -277,10 +277,10 @@
   name = "dotnet"
   cwd = "../engines/dotnet"
   [engine.version]
-    bin = "bin/Release/net7.0/main"
+    bin = "bin/Release/net8.0/main"
     args = ["version"]
   [engine.run]
-    bin = "bin/Release/net7.0/main"
+    bin = "bin/Release/net8.0/main"
     args = ["interp"]
   [[engine.dependency]]
     bin = "dotnet"
@@ -302,10 +302,10 @@
   name = "dotnet/compiled"
   cwd = "../engines/dotnet"
   [engine.version]
-    bin = "bin/Release/net7.0/main"
+    bin = "bin/Release/net8.0/main"
     args = ["version"]
   [engine.run]
-    bin = "bin/Release/net7.0/main"
+    bin = "bin/Release/net8.0/main"
     args = ["compiled"]
   [[engine.dependency]]
     bin = "dotnet"
@@ -329,10 +329,10 @@
   name = "dotnet/nobacktrack"
   cwd = "../engines/dotnet"
   [engine.version]
-    bin = "bin/Release/net7.0/main"
+    bin = "bin/Release/net8.0/main"
     args = ["version"]
   [engine.run]
-    bin = "bin/Release/net7.0/main"
+    bin = "bin/Release/net8.0/main"
     args = ["nobacktrack"]
   [[engine.dependency]]
     bin = "dotnet"
