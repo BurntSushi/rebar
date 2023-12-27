@@ -852,7 +852,9 @@ fn median(xs: &[f64]) -> Option<f64> {
 
 fn mad(xs: &[f64]) -> Option<f64> {
     let xmed = median(xs)?;
-    median(&xs.iter().map(|x| (x - xmed).abs()).collect::<Vec<f64>>())
+    let mut devs = xs.iter().map(|x| (x - xmed).abs()).collect::<Vec<f64>>();
+    devs.sort_unstable_by(|x, y| x.partial_cmp(y).unwrap());
+    median(&devs)
 }
 
 fn min(xs: &[f64]) -> Option<f64> {
