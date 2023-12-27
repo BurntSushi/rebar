@@ -71,9 +71,9 @@ dependencies = [
 
 [[package]]
 name = "regex-lite"
-version = "0.1.1"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4eb8d80c930cd6040f3fc57a4c437282bd675186ecaceef85d78d9b54a69827d"
+checksum = "30b661b2f27137bdbc16f00eda72866a92bb28af1753ffbd56744fb6e2e9cd8e"
 
 [[package]]
 name = "regexredux"
