@@ -418,7 +418,7 @@
   [[engine.dependency]]
     bin = "pkg-config"
     args = ["--libs", "--cflags", "icu-uc", "icu-i18n"]
-    regex = '(?m)^-licui18n -licuuc -licudata\b'
+    regex = '(?m)^\s*-licui18n -licuuc -licudata\b'
   [[engine.build]]
     bin = "cargo"
     args = ["build", "--release"]
