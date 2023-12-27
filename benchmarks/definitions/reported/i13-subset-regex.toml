@@ -1,0 +1,296 @@
+analysis = '''
+These benchmarks come from a user that [reported an
+interesting case][reported-i13-source] from a [paper out of
+Microsoft][microsoft-regex-paper]. Specifically, this paragraph from the
+paper is referenced:
+
+> Incidentally, the result for Rust further highlights the importance of
+> avoiding outliers, as it would be a clear winner if not for the pattern
+> [a-q][ˆu-z]{13}x. The crux of the pattern is that [a-q] denotes a subset of
+> [ˆu-z] much like in the classical example a.{13}. This pattern is challenging
+> for DFA based engines, as the loop can be entered multiple times, leading
+> to a 213 factor in number of states. While lazy exploration of the state
+> space with derivatives helps, this pattern is still the slowest one for SRM
+> 2.0.0-alpha2. Optimizations in NonBacktracking have made this pattern no
+> longer visible as an outlier. SRM cached states in a fixed-size array and a
+> dictionary for overflow. NonBacktracking instead grows the array on-demand,
+> avoiding expensive dictionary lookups and improving performance for patterns
+> that create many states.
+
+The regex mentioned above, `[a-q][^u-z]{13}x`, was not crafted by the paper
+authors, but is cited from having come from [Herczeg's benchmarks for
+`sljit`][herczeg-bench] (the author of PCRE2's JIT). In fact, this regex
+appears to come from [John Maddock's benchmarks][maddock-bench] as part of
+measuring the performance of boost's regex engine. The regex also shows up in
+the benchmarks made by [Rust Leipzig User Group][leipzig-bench], but these were
+just adapted from Herczeg's benchmark.
+
+[reported-i13-source]: https://github.com/BurntSushi/rebar/issues/13
+[microsoft-regex-paper]: https://dl.acm.org/doi/pdf/10.1145/3591262
+[herczeg-bench]: https://zherczeg.github.io/sljit/regex_perf.html
+[maddock-bench]: https://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html
+[leipzig-bench]: https://github.com/rust-leipzig/regex-performance
+'''
+
+[[bench]]
+model = "count"
+name = "original-ascii"
+regex = '[a-q][^u-z]{13}x'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 4094
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+This is the original benchmark. The haystack is nearly all ASCII, except for
+the presence of the codepoints `✓` and `∞`. (Those codepoints are in the
+haystack for use with other benchmarks that make use of the same haystack.)
+The regex is also specifically not compiled in Unicode mode whenever possible.
+While it may not look like the regex uses Unicode, it does by virtue of
+`[^u-z]`. When Unicode is not enabled, `[^u-z]` matches any *byte* that isn't
+in the ASCII range `u-z`. However, when Unicode is enabled, `[^u-z]` matches
+the UTF-8 encoding of any *codepoint* that isn't in the range `u-z`. The latter
+class is much bigger and more complicated.
+'''
+
+[[bench]]
+model = "count"
+name = "original-unicode"
+regex = '[a-q][^u-z]{13}x'
+unicode = true
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 4094
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+This is like `original-ascii`, but enables Unicode mode so that the `[^u-z]`
+character class will match codepoints instead of bytes.
+'''
+
+[[bench]]
+model = "count"
+name = "big-ascii"
+regex = '[a-q][^u-z]{23}x'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 1955
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+Like `original-ascii`, but increases the repetition size a bit.
+'''
+
+[[bench]]
+model = "count"
+name = "big-unicode"
+regex = '[a-q][^u-z]{23}x'
+unicode = true
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 1955
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+Like `original-unicode`, but increases the repetition size a bit.
+'''
+
+[[bench]]
+model = "count"
+name = "huge-ascii"
+regex = '[a-q][^u-z]{80}x'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 55
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+Like `original-ascii`, but increases the repetition size a lot.
+'''
+
+[[bench]]
+model = "count"
+name = "huge-unicode"
+regex = '[a-q][^u-z]{80}x'
+unicode = true
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 55
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+Like `original-unicode`, but increases the repetition size a lot.
+
+* `hyperscan` is not included because the pattern is too big.
+'''
+
+[[bench]]
+model = "count"
+name = "huge-ascii-nosuffixlit"
+regex = '[a-q][^u-z]{80}[x\xE0-\xFF]'
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 55
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+Like `original-ascii`, but increases the repetition size a lot.
+'''
+
+[[bench]]
+model = "count"
+name = "huge-unicode-nosuffixlit"
+regex = '[a-q][^u-z]{80}[x\xE0-\xFF]'
+unicode = true
+haystack = { path = "imported/leipzig-3200.txt" }
+count = 55
+engines = [
+  'd/dmd/std-regex',
+  'd/ldc/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regexold',
+]
+analysis = '''
+Like `original-unicode`, but increases the repetition size a lot.
+
+* `hyperscan` is not included because the pattern is too big.
+'''
