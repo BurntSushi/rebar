@@ -55,7 +55,7 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
   # Very likely due to update to Unicode 15.1 (a month old at time of writing).
-  { engine = 'python/regex', count = 1250 },
+  { engine = '^(python/regex|re2)$', count = 1250 },
   # Maybe a different version of Unicode?
   { engine = 'pcre2/jit', count = 1203 },
   { engine = '.*', count = 1244 },

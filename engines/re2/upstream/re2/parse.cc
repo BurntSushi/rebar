@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "absl/base/macros.h"
+#include "absl/strings/ascii.h"
 #include "util/logging.h"
 #include "util/utf.h"
 #include "re2/pod_array.h"
@@ -1322,14 +1323,14 @@ bool Regexp::ParseState::MaybeConcatString(int r, ParseFlags flags) {
 // Parses a decimal integer, storing it in *np.
 // Sets *s to span the remainder of the string.
 static bool ParseInteger(absl::string_view* s, int* np) {
-  if (s->empty() || !isdigit((*s)[0] & 0xFF))
+  if (s->empty() || !absl::ascii_isdigit((*s)[0] & 0xFF))
     return false;
   // Disallow leading zeros.
-  if (s->size() >= 2 && (*s)[0] == '0' && isdigit((*s)[1] & 0xFF))
+  if (s->size() >= 2 && (*s)[0] == '0' && absl::ascii_isdigit((*s)[1] & 0xFF))
     return false;
   int n = 0;
   int c;
-  while (!s->empty() && isdigit(c = (*s)[0] & 0xFF)) {
+  while (!s->empty() && absl::ascii_isdigit(c = (*s)[0] & 0xFF)) {
     // Avoid overflow.
     if (n >= 100000000)
       return false;
@@ -1468,7 +1469,7 @@ static bool ParseEscape(absl::string_view* s, Rune* rp,
   int code;
   switch (c) {
     default:
-      if (c < Runeself && !isalpha(c) && !isdigit(c)) {
+      if (c < Runeself && !absl::ascii_isalnum(c)) {
         // Escaped non-word characters are always themselves.
         // PCRE is not quite so rigorous: it accepts things like
         // \q, but we don't.  We once rejected \_, but too many
@@ -2059,8 +2060,6 @@ bool Regexp::ParseState::ParsePerlFlags(absl::string_view* s) {
     return false;
   }
 
-  t.remove_prefix(2);  // "(?"
-
   // Check for named captures, first introduced in Python's regexp library.
   // As usual, there are three slightly different syntaxes:
   //
@@ -2074,22 +2073,23 @@ bool Regexp::ParseState::ParsePerlFlags(absl::string_view* s) {
   // support all three as well.  EcmaScript 4 uses only the Python form.
   //
   // In both the open source world (via Code Search) and the
-  // Google source tree, (?P<expr>name) is the dominant form,
-  // so that's the one we implement.  One is enough.
-  if (t.size() > 2 && t[0] == 'P' && t[1] == '<') {
+  // Google source tree, (?P<name>expr) and (?<name>expr) are the
+  // dominant forms of named captures and both are supported.
+  if ((t.size() > 4 && t[2] == 'P' && t[3] == '<') ||
+      (t.size() > 3 && t[2] == '<')) {
     // Pull out name.
-    size_t end = t.find('>', 2);
+    size_t begin = t[2] == 'P' ? 4 : 3;
+    size_t end = t.find('>', begin);
     if (end == absl::string_view::npos) {
-      if (!IsValidUTF8(*s, status_))
+      if (!IsValidUTF8(t, status_))
         return false;
       status_->set_code(kRegexpBadNamedCapture);
-      status_->set_error_arg(*s);
+      status_->set_error_arg(t);
       return false;
     }
 
-    // t is "P<name>...", t[end] == '>'
-    absl::string_view capture(t.data()-2, end+3);  // "(?P<name>"
-    absl::string_view name(t.data()+2, end-2);     // "name"
+    absl::string_view capture(t.data(), end+1);
+    absl::string_view name(t.data()+begin, end-begin);
     if (!IsValidUTF8(name, status_))
       return false;
     if (!IsValidCaptureName(name)) {
@@ -2103,10 +2103,11 @@ bool Regexp::ParseState::ParsePerlFlags(absl::string_view* s) {
       return false;
     }
 
-    s->remove_prefix(
-        static_cast<size_t>(capture.data() + capture.size() - s->data()));
+    s->remove_prefix(capture.size());
     return true;
   }
+
+  t.remove_prefix(2);  // "(?"
 
   bool negated = false;
   bool sawflags = false;
