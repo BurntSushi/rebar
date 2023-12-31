@@ -1,0 +1,18 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+imported/regex-redux/regex-redux,regex-redux,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,,17,4.71s,179.96ms,0.00ns,180.33ms,1.10ms,178.83ms,182.28ms
+reported/i1095-word-repetition/unicode-compile,compile,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,,943093,4.99s,1.30us,0.00ns,1.39us,862.00ns,1.20us,560.00us
+reported/i1095-word-repetition/unicode-search,count-spans,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,512,1000000,3.79s,1.60us,0.00ns,1.63us,144.00ns,1.50us,121.10us
+reported/i1095-word-repetition/ascii-compile,compile,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,,572132,4.83s,4.70us,0.00ns,4.71us,1.39us,4.20us,810.50us
+reported/i1095-word-repetition/ascii-search,count-spans,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,256,1000000,1.38s,300.00ns,0.00ns,304.00ns,52.00ns,300.00ns,24.60us
+reported/i13-subset-regex/original-ascii,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,2610,4.61s,1.15ms,0.00ns,1.15ms,17.50us,1.11ms,1.25ms
+reported/i13-subset-regex/original-unicode,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,2723,4.61s,1.09ms,0.00ns,1.10ms,25.76us,1.06ms,1.32ms
+reported/i13-subset-regex/big-ascii,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,9,5.06s,350.90ms,0.00ns,350.61ms,1.32ms,348.11ms,352.18ms
+reported/i13-subset-regex/big-unicode,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,9,5.11s,350.46ms,0.00ns,350.72ms,1.20ms,348.59ms,352.28ms
+reported/i13-subset-regex/huge-ascii,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,8,4.81s,384.47ms,15.65us,384.62ms,1.01ms,382.66ms,386.29ms
+reported/i13-subset-regex/huge-unicode,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,8,4.91s,392.14ms,273.40us,392.04ms,1.54ms,389.42ms,394.94ms
+reported/i13-subset-regex/huge-ascii-nosuffixlit,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,8,4.81s,383.70ms,87.30us,383.26ms,1.50ms,379.53ms,384.68ms
+reported/i13-subset-regex/huge-unicode-nosuffixlit,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,16013977,8,4.81s,383.96ms,44.15us,384.06ms,1.69ms,382.26ms,387.61ms
+slow/quadratic-regex-1x,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,99,1000000,4.94s,2.80us,0.00ns,2.81us,99.00ns,2.60us,14.20us
+slow/quadratic-regex-2x,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,198,526316,4.88s,5.60us,0.00ns,5.59us,574.00ns,5.40us,408.80us
+slow/quadratic-haystack-1x,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,100,90985,4.67s,32.70us,0.00ns,32.86us,880.00ns,30.80us,54.00us
+slow/quadratic-haystack-2x,count,0.1.0 (rev 79305bcb5f),dotnet,8.0.0,,200,24563,4.61s,121.50us,0.00ns,122.02us,3.44us,114.30us,240.30us
