@@ -1,0 +1,258 @@
+analysis = '''
+These benchmarks test what `.` does and how it is impacted by inline flags.
+
+In general, we keep any Unicode modes disabled here (and only use ASCII
+haystacks). For Unicode tests related to `.`, see `test/unicode/utf8.toml`.
+'''
+
+[[bench]]
+model = "count"
+name = "default-new-line"
+regex = '.'
+haystack = "\n"
+count = 0
+engines = [
+  'd/dmd/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does not match a `\n` by default.
+'''
+
+[[bench]]
+model = "count"
+name = "default-carriage-return"
+regex = '.'
+haystack = "\r"
+count = [
+  { engine = '^(d/dmd/std-regex|icu|java/hotspot|javascript/v8|regress)$', count = 0 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'd/dmd/std-regex',
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does match a `\r` by default.
+'''
+
+[[bench]]
+model = "count"
+name = "dotall-new-line"
+regex = '(?s:.)'
+haystack = "\n"
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does match a `\n` when the `s` flag is enabled.
+
+* `d/dmd/std-regex` does not support inline flags.
+* `java/hotspot` does not support inline flags.
+* `javascript/v8` does not support inline flags.
+* `regress` does not support inline flags.
+'''
+
+[[bench]]
+model = "count"
+name = "dotall-carriage-return"
+regex = '(?s:.)'
+haystack = "\r"
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does match a `\r` when the `s` flag is enabled.
+
+* `d/dmd/std-regex` does not support inline flags.
+* `java/hotspot` does not support inline flags.
+* `javascript/v8` does not support inline flags.
+* `regress` does not support inline flags.
+'''
+
+[[bench]]
+model = "count"
+name = "multiline-new-line"
+regex = '(?m:.)'
+haystack = "\n"
+count = 0
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does not match a `\n` when the `m` flag is enabled.
+
+* `d/dmd/std-regex` does not support inline flags.
+* `java/hotspot` does not support inline flags.
+* `javascript/v8` does not support inline flags.
+* `regress` does not support inline flags.
+'''
+
+[[bench]]
+model = "count"
+name = "multiline-carriage-return"
+regex = '(?m:.)'
+haystack = "\r"
+count = [
+  { engine = '^(icu)$', count = 0 },
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does match a `\r` when the `m` flag is enabled.
+
+* `d/dmd/std-regex` does not support inline flags.
+* `java/hotspot` does not support inline flags.
+* `javascript/v8` does not support inline flags.
+* `regress` does not support inline flags.
+'''
+
+[[bench]]
+model = "count"
+name = "dotall-multiline-new-line"
+regex = '(?sm:.)'
+haystack = "\n"
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does match a `\n` when the `s` and `m` flags are enabled.
+
+* `d/dmd/std-regex` does not support inline flags.
+* `java/hotspot` does not support inline flags.
+* `javascript/v8` does not support inline flags.
+* `regress` does not support inline flags.
+'''
+
+[[bench]]
+model = "count"
+name = "dotall-multiline-carriage-return"
+regex = '(?sm:.)'
+haystack = "\r"
+count = 1
+engines = [
+  'dotnet',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'rust/regex',
+  'rust/regex/lite',
+]
+analysis = '''
+This tests that `.` does match a `\r` when the `s` and `m` flags are enabled.
+
+* `d/dmd/std-regex` does not support inline flags.
+* `java/hotspot` does not support inline flags.
+* `javascript/v8` does not support inline flags.
+* `regress` does not support inline flags.
+'''
