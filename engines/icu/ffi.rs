@@ -30,7 +30,7 @@ impl std::fmt::Debug for Regex {
 impl Drop for Regex {
     fn drop(&mut self) {
         // SAFETY: By construction, the ICU regex is valid.
-        unsafe { uregex_close_73(self.ure.as_ptr()) }
+        unsafe { uregex_close_74(self.ure.as_ptr()) }
     }
 }
 
@@ -45,7 +45,7 @@ impl Regex {
         // the ICU docs specifically state that the pattern is copied and
         // saved, so we don't need to keep around a reference to it.
         let ure = unsafe {
-            uregex_open_73(
+            uregex_open_74(
                 pattern.as_ptr(),
                 len,
                 opts.as_flags(),
@@ -74,7 +74,7 @@ impl Regex {
         // SAFETY: There are no documented preconditions, but we know our regex
         // pointer is valid.
         let mut ec = 0;
-        let len = unsafe { uregex_groupCount_73(self.ure.as_ptr(), &mut ec) };
+        let len = unsafe { uregex_groupCount_74(self.ure.as_ptr(), &mut ec) };
         error_code_check(ec)?;
         usize::try_from(len + 1).context("invalid group count")
     }
@@ -118,7 +118,7 @@ impl<'r, 'h> Matcher<'r, 'h> {
         // haystack state. That way, we don't leave an ICU regex hanging on to
         // a haystack that has potentially been freed.
         unsafe {
-            uregex_setText_73(re.ure.as_ptr(), haystack.as_ptr(), len, &mut ec)
+            uregex_setText_74(re.ure.as_ptr(), haystack.as_ptr(), len, &mut ec)
         }
         // There are no documented error conditions, but we check anyway.
         error_code_check(ec)?;
@@ -137,7 +137,7 @@ impl<'r, 'h> Matcher<'r, 'h> {
         // SAFETY: There are no documented preconditions, but we know our regex
         // pointer is valid.
         let matched =
-            unsafe { uregex_findNext_73(self.re.ure.as_ptr(), &mut ec) };
+            unsafe { uregex_findNext_74(self.re.ure.as_ptr(), &mut ec) };
         error_code_check(ec)?;
         Ok(matched)
     }
@@ -161,7 +161,7 @@ impl<'r, 'h> Matcher<'r, 'h> {
         // SAFETY: There are no documented preconditions, but we know our regex
         // pointer is valid.
         let i =
-            unsafe { uregex_start_73(self.re.ure.as_ptr(), group, &mut ec) };
+            unsafe { uregex_start_74(self.re.ure.as_ptr(), group, &mut ec) };
         error_code_check(ec)?;
         if i == -1 {
             Ok(None)
@@ -179,7 +179,7 @@ impl<'r, 'h> Matcher<'r, 'h> {
         let mut ec = 0;
         // SAFETY: There are no documented preconditions, but we know our regex
         // pointer is valid.
-        let i = unsafe { uregex_end_73(self.re.ure.as_ptr(), group, &mut ec) };
+        let i = unsafe { uregex_end_74(self.re.ure.as_ptr(), group, &mut ec) };
         error_code_check(ec)?;
         if i == -1 {
             Ok(None)
@@ -195,7 +195,7 @@ impl<'r, 'h> Matcher<'r, 'h> {
         // SAFETY: There are no documented preconditions, but we know our regex
         // pointer is valid.
         unsafe {
-            uregex_reset_73(self.re.ure.as_ptr(), 0, &mut ec);
+            uregex_reset_74(self.re.ure.as_ptr(), 0, &mut ec);
         }
         error_code_check(ec)
     }
@@ -218,7 +218,7 @@ impl<'r, 'h> Drop for Matcher<'r, 'h> {
         // and always alive.
         unsafe {
             const EMPTY: &[u16] = &[];
-            uregex_setText_73(self.re.ure.as_ptr(), EMPTY.as_ptr(), 0, &mut ec)
+            uregex_setText_74(self.re.ure.as_ptr(), EMPTY.as_ptr(), 0, &mut ec)
         }
         // There are no documented error conditions, but we check anyway.
         error_code_check(ec).unwrap();
@@ -264,7 +264,7 @@ fn error_code_check(ec: UErrorCode) -> anyhow::Result<()> {
 fn error_code_to_string(ec: UErrorCode) -> anyhow::Result<String> {
     // SAFETY: There aren't any safety contracts on u_errorName, so we
     // assume it's fine to call with any value.
-    let name = unsafe { u_errorName_73(ec) };
+    let name = unsafe { u_errorName_74(ec) };
     anyhow::ensure!(
         !name.is_null(),
         "got null pointer from u_errorName, error code is probably wrong"
@@ -299,18 +299,18 @@ const U_REGEXP_FLAG_CASE_INSENSITIVE: URegexpFlag = 2;
 
 extern "C" {
     // Regex constructor and destructor.
-    fn uregex_open_73(
+    fn uregex_open_74(
         pattern: *const UChar,
         pattern_len: i32,
         flags: URegexpFlag,
         pe: *mut c_void, // we don't use this currently
         ec: *mut UErrorCode,
     ) -> *mut URegularExpression;
-    fn uregex_close_73(re: *mut URegularExpression);
+    fn uregex_close_74(re: *mut URegularExpression);
 
     // Sets the text to search on the regex object itself.
     // Yes, it is as weird as it sounds.
-    fn uregex_setText_73(
+    fn uregex_setText_74(
         re: *mut URegularExpression,
         haystack: *const UChar,
         haystack_len: i32,
@@ -318,13 +318,13 @@ extern "C" {
     );
 
     // Finds the next match. Returns false if none were found.
-    fn uregex_findNext_73(
+    fn uregex_findNext_74(
         re: *mut URegularExpression,
         ec: *mut UErrorCode,
     ) -> bool;
 
     // Resets the given regex's internal search state.
-    fn uregex_reset_73(
+    fn uregex_reset_74(
         re: *mut URegularExpression,
         index: i32,
         ec: *mut UErrorCode,
@@ -332,7 +332,7 @@ extern "C" {
 
     // Returns the start offset of the current match for
     // the given group, or an error if no match exists.
-    fn uregex_start_73(
+    fn uregex_start_74(
         re: *mut URegularExpression,
         group_num: i32,
         ec: *mut UErrorCode,
@@ -340,7 +340,7 @@ extern "C" {
 
     // Returns the end offset of the current match for
     // the given group, or an error if no match exists.
-    fn uregex_end_73(
+    fn uregex_end_74(
         re: *mut URegularExpression,
         group_num: i32,
         ec: *mut UErrorCode,
@@ -348,13 +348,13 @@ extern "C" {
 
     // Return the total number of capture groups in this
     // regex pattern.
-    fn uregex_groupCount_73(
+    fn uregex_groupCount_74(
         re: *mut URegularExpression,
         ec: *mut UErrorCode,
     ) -> i32;
 
     // Utility routines.
-    fn u_errorName_73(ec: UErrorCode) -> *const c_char;
+    fn u_errorName_74(ec: UErrorCode) -> *const c_char;
 }
 
 #[cfg(test)]
