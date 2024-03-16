@@ -8,7 +8,7 @@ results to favor that regex engine.
 The following is a list of biases that I was able to think of. Contributions
 expanding this list are welcome.
 
-* As mentioned above, I ([@BurntSushi]) authored both this baromer and the
+* As mentioned above, I ([@BurntSushi]) authored both this barometer and the
 [Rust regex crate]. The fact that the regex crate does well in this barometer
 should perhaps be treated suspiciously. For example, even assuming good faith,
 I may have selected a set of benchmarks that I knew well, and have thus spent
