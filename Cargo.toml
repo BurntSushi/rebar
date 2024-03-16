@@ -38,6 +38,7 @@ exclude = [
   "engines/rust/memchr",
   "engines/rust/regex",
   "engines/rust/regex-automata",
+  "engines/rust/regex-init",
   "engines/rust/regex-lite",
   "engines/rust/regex-old",
   "engines/rust/regex-syntax",
