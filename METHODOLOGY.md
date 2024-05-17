@@ -227,6 +227,8 @@ parsing it would be a mistake because the "length" in key-length-value is the
 number of bytes in `value`. But if you convert it to a Java `String` first,
 then since the length-in-bytes and the length of a Java `String` (UTF-16 code
 units) aren't the same, it becomes more difficult to take a correct substring.
+(Arguably, this implies that the KLV format is actually a binary format
+masquerading as a plain text format. Or some hybrid of them.)
 
 ### Defining Benchmarks
 
