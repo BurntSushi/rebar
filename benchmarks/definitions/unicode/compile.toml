@@ -16,6 +16,7 @@ count = 53
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'python/regex',
   're2',
@@ -70,6 +71,7 @@ haystack = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 unicode = false
 count = [
   { engine = 'hyperscan', count = 3},
+  { engine = 'vectorscan', count = 3},
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -82,6 +84,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   'hyperscan',
+  'vectorscan',
 ]
 analysis = '''
 This just provides a baseline comparison point with `\pL{50}` to demonstate
@@ -128,6 +131,7 @@ engines = [
   'pcre2/jit',
   'python/regex',
   'hyperscan',
+  'vectorscan',
 ]
 analysis = '''
 This is like `match-every-line`, but disables Unicode mode and permits `.`
@@ -145,6 +149,7 @@ count = 1
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2',
   'pcre2/jit',
   'python/re',

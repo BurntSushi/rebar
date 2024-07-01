@@ -128,6 +128,8 @@ analysis = '''
 
 `hyperscan` is omitted because the regex is too large.
 
+`vectorscan` is omitted because the regex is too large.
+
 `pcre2/*` are omitted because the regex is too large.
 '''
 
@@ -139,6 +141,7 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
 ]
 analysis = '''
@@ -173,6 +176,8 @@ analysis = '''
 
 `hyperscan` is omitted because the regex is too large.
 
+`vectorscan` is omitted because the regex is too large.
+
 `java/hotspot` is omitted because we currently don't benchmark Perl regex
 compilation.
 
@@ -192,6 +197,7 @@ haystack = "Zubeneschamali's"
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
 ]
 analysis = '''

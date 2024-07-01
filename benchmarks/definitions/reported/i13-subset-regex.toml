@@ -46,6 +46,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -86,6 +87,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -118,6 +120,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -150,6 +153,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -181,6 +185,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -229,6 +234,7 @@ analysis = '''
 Like `original-unicode`, but increases the repetition size a lot.
 
 * `hyperscan` is not included because the pattern is too big.
+  `vectorscan` is not included because the pattern is too big.
 '''
 
 [[bench]]
@@ -245,6 +251,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -293,4 +300,5 @@ analysis = '''
 Like `original-unicode`, but increases the repetition size a lot.
 
 * `hyperscan` is not included because the pattern is too big.
+  `vectorscan` is not included because the pattern is too big.
 '''

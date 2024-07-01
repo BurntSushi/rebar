@@ -1,0 +1,30 @@
+[package]
+name = "main"
+version = "0.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+
+[dependencies]
+anyhow = "1.0.69"
+bstr = { version = "1.2.0", default-features = false, features = ["std"] }
+lexopt = "0.3.0"
+vectorscan-async = "0.0.2"
+
+
+[dependencies.klv]
+path = "../../shared/klv"
+[dependencies.regexredux]
+path = "../../shared/regexredux"
+[dependencies.timer]
+path = "../../shared/timer"
+
+[profile.release]
+debug = true
+codegen-units = 1
+lto = "fat"

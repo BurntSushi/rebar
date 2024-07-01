@@ -27,6 +27,7 @@ engines = [
   'd/dmd/std-regex',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'java/hotspot',
   'pcre2',
   'pcre2/jit',
@@ -63,6 +64,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -101,6 +103,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -156,6 +159,8 @@ analysis = '''
 
 `hyperscan` does not support `\p{Letter}` syntax.
 
+`vectorscan` does not support `\p{Letter}` syntax.
+
 `java/*` does not support `\p{Letter}` syntax.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
@@ -187,6 +192,8 @@ analysis = '''
 `go/regexp` does not support `\p{Letter}` syntax.
 
 `hyperscan` does not support `\p{Letter}` syntax.
+
+`vectorscan` does not support `\p{gc=Letter}` syntax.
 
 `java/*` does not support `\p{Letter}` syntax.
 
@@ -231,6 +238,8 @@ analysis = '''
 
 `hyperscan` does not support `\p{gc=Letter}` syntax.
 
+`vectorscan` does not support `\p{gc=Letter}` syntax.
+
 `java/*` does not support `\p{gc=Letter}` syntax.
 
 `pcre2/*` does not support `\p{gc=Letter}` syntax.
@@ -262,6 +271,8 @@ analysis = '''
 `go/regexp` does not support `\p{gc:Letter}` syntax.
 
 `hyperscan` does not support `\p{gc:Letter}` syntax.
+
+`vectorscan` does not support `\p{gc:Letter}` syntax.
 
 `icu` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
 

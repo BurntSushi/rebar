@@ -48,6 +48,7 @@ count = 1
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'python/re',
   'python/regex',
@@ -69,6 +70,7 @@ count = 5_674
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'python/re',
   'python/regex',
@@ -101,6 +103,7 @@ count = 5_674
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'python/re',
   'python/regex',
