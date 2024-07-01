@@ -270,6 +270,30 @@
     bin = "cargo"
     args = ["clean"]
 
+#
+# URL: https://github.com/cosmicexplorer/spack-rs
+[[engine]]
+  name = "vectorscan"
+  cwd = "../engines/vectorscan"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.dependency]]
+    bin = "cc"
+    args = ["--version"]
+  [[engine.dependency]]
+    bin = "c++"
+    args = ["--version"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
+
 # .NET's default or interpreter regex engine.
 #
 # URL: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions

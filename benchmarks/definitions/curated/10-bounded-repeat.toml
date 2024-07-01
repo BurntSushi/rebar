@@ -42,6 +42,7 @@ regex = '[A-Za-z]{8,13}'
 haystack = { path = "opensubtitles/en-sampled.txt", line-end = 5_000 }
 count = [
   { engine = 'hyperscan', count = 3724 },
+  { engine = 'vectorscan', count = 3724 },
   { engine = '.*', count = 1833 },
 ]
 engines = [
@@ -50,6 +51,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -73,6 +75,7 @@ unicode = true
 haystack = { path = "opensubtitles/ru-sampled.txt", line-end = 5_000 }
 count = [
   { engine = 'hyperscan', count = 8570 },
+  { engine = 'vectorscan', count = 8570 },
   { engine = '.*', count = 3475 },
 ]
 engines = [
@@ -81,6 +84,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -101,6 +105,7 @@ regex = '[A-Za-z]{10}\s+[\s\S]{0,100}Result[\s\S]{0,100}\s+[A-Za-z]{10}'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = [
   { engine = 'hyperscan', count = 109 },
+  { engine = 'vectorscan', count = 109 },
   { engine = '.*', count = 53 },
 ]
 engines = [
@@ -109,6 +114,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -131,6 +137,7 @@ regex = '(?:[A-Z][a-z]+\s*){10,100}'
 haystack = { path = "rust-src-tools-3b0d4813.txt" }
 count = [
   { engine = 'hyperscan', count = 237 },
+  { engine = 'vectorscan', count = 237 },  
   { engine = '.*', count = 11 },
 ]
 engines = [
@@ -139,6 +146,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -165,6 +173,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'pcre2',
   'pcre2/jit',
@@ -186,6 +195,7 @@ regex = '(?:[A-Z][a-z]+\s*){10,100}'
 haystack = 'Crazy Janey Mission Man Wild Billy Greasy Lake Hazy Davy Killer Joe'
 count = [
   { engine = 'hyperscan', count = 12 },
+  { engine = 'vectorscan', count = 12 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -193,6 +203,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'pcre2',
   'pcre2/jit',

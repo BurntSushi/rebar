@@ -30,6 +30,7 @@ members = [
 exclude = [
   "byob/runner",
   "engines/hyperscan",
+  "engines/vectorscan",
   "engines/icu",
   "engines/pcre2",
   "engines/re2",

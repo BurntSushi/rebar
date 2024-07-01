@@ -15,6 +15,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -27,6 +28,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 15
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -40,6 +42,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -53,6 +56,7 @@ haystack = { path = "opensubtitles/en-huge.txt" }
 count = 15
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -66,6 +70,7 @@ unicode = true
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -79,6 +84,7 @@ unicode = true
 count = 23
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -93,6 +99,7 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -107,6 +114,7 @@ haystack = { path = "opensubtitles/ru-huge.txt" }
 count = 23
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -119,6 +127,7 @@ haystack = { path = "sherlock.txt" }
 count = 319
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -131,6 +140,7 @@ haystack = { path = "sherlock.txt" }
 count = 4073
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -147,6 +157,7 @@ haystack = { path = "sherlock.txt" }
 count = 137
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -159,6 +170,7 @@ haystack = { path = "sherlock.txt" }
 count = 2593
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -173,6 +185,7 @@ haystack = { path = "sherlock.txt" }
 count = 120
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -185,6 +198,7 @@ haystack = { path = "sherlock.txt" }
 count = 2400
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]
@@ -202,6 +216,7 @@ haystack = { path = "sherlock.txt" }
 count = 120
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
   'rust/regexold',
 ]

@@ -18,11 +18,13 @@ haystack = 'https://google.com'
 case-insensitive = true
 count = [
   { engine = 'hyperscan', count = 2 },
+  { engine = 'vectorscan', count = 2 },
   { engine = '.*', count = 1 },
 ]
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2',
   'pcre2/jit',
   'python/re',

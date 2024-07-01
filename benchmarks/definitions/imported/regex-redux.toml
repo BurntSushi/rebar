@@ -27,6 +27,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'java/hotspot',
   'javascript/v8',
   'pcre2',

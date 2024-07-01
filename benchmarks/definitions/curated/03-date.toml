@@ -52,6 +52,7 @@ count = [
   { engine = 'dotnet.*', count = 111_825 },
   # Hyperscan reports all possible matches, so its total span count is higher.
   { engine = 'hyperscan', count = 547_662 },
+  { engine = 'vectorscan', count = 547_662 },
   # ICU doesn't provide a way to disable Unicode.
   { engine = 'icu', count = 111_825 },
   # I don't know why the count span differs here. Note that this matches
@@ -85,6 +86,7 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -163,11 +165,13 @@ case-insensitive = true
 haystack = "2010-03-14"
 count = [
   { engine = 'hyperscan', count = 10 },
+  { engine = 'vectorscan', count = 10 },
   { engine = '.*', count = 5 },
 ]
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'pcre2',
   'pcre2/jit',

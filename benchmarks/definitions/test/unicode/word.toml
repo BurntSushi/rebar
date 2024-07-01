@@ -36,6 +36,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -68,6 +69,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -92,7 +94,7 @@ count = [
   # None of these regex engines support the Unicode variant of \w.
   { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   # None of these include \p{Join_Control} in their definition of \w.
-  { engine = 'd/dmd/std-regex|dotnet.*|hyperscan|pcre2.*|python/re', count = 0 },
+  { engine = 'd/dmd/std-regex|dotnet.*|hyperscan|vectorscan|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -102,6 +104,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -126,7 +129,7 @@ count = [
   # None of these regex engines support the Unicode variant of \w.
   { engine = 'go/regexp|javascript.*|re2|regress|rust/regex/lite', count = 0 },
   # None of these include \p{gc=Mark} in their definition of \w.
-  { engine = 'hyperscan|pcre2.*|python/re', count = 0 },
+  { engine = 'hyperscan|vectorscan|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -136,6 +139,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -168,6 +172,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -194,7 +199,7 @@ count = [
   # None of these include \p{gc=Connector_Punctuation} in their definition
   # of \w, although, they all at least include `_`, which is part of
   # `Connector_Punctuation`.
-  { engine = 'hyperscan|pcre2.*|python/re', count = 0 },
+  { engine = 'hyperscan|vectorscan|pcre2.*|python/re', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -204,6 +209,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
