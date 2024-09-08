@@ -496,6 +496,24 @@
     bin = "rm"
     args = ["-f", "main-ldc"]
 
+[[engine]]
+  name = "lean"
+  cwd = "../engines/lean"
+  [engine.version]
+    bin = "./.lake/build/bin/lean_runner"
+    args = ["--version"]
+  [engine.run]
+    bin = "./.lake/build/bin/lean_runner"
+  [[engine.dependency]]
+    bin = "elan"
+    args = ["--version"]
+  [[engine.build]]
+    bin = "lake"
+    args = ["build", "lean_runner"]
+  [[engine.clean]]
+    bin = "lake"
+    args = ["clean"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and
