@@ -51,7 +51,7 @@ haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
   # Maybe a different version of Unicode?
-  { engine = 'python/regex', count = 1_109_104 },
+  { engine = '^(python/regex|rust/regex(/.*)?)$', count = 1_109_104 },
   { engine = '.*', count = 1_109_158 },
 ]
 engines = [
