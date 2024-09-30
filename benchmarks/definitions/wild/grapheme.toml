@@ -49,7 +49,11 @@ name = "codepoints"
 regex = { path = "wild/grapheme.txt" }
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
-count = 1109158
+count = [
+  # Maybe a different version of Unicode?
+  { engine = 'python/regex', count = 1_109_104 },
+  { engine = '.*', count = 1_109_158 },
+]
 engines = [
   'rust/regex',
   'rust/regex/dense',
