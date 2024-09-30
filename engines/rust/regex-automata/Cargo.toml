@@ -1,6 +1,6 @@
 [package]
 name = "main"
-version = "0.4.3"
+version = "0.4.8"
 edition = "2021"
 
 [[bin]]
@@ -24,7 +24,7 @@ lexopt = "0.3.0"
 # parsing the Cargo.lock file would be inappropriate as that doesn't mean the
 # engine is available to run. Otherwise, it would be fine to just rely on
 # 'Cargo.lock' for version pinning and we could drop the '=' constraint here.
-regex-automata = { version = "=0.4.3", features = ["logging"] }
+regex-automata = { version = "=0.4.8", features = ["logging"] }
 regex-syntax = "0.8.2"
 
 [dependencies.klv]
