@@ -41,6 +41,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -69,6 +70,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -96,6 +98,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -117,6 +120,7 @@ regex = 'Huck[a-zA-Z]+|Saw[a-zA-Z]+'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = [
   { engine = 'hyperscan', count = 977 },
+  { engine = 'vectorscan', count = 977 },  
   { engine = '.*', count = 262 },
 ]
 engines = [
@@ -126,6 +130,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -153,6 +158,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -180,6 +186,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -207,6 +214,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -235,6 +243,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -262,6 +271,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -283,6 +293,7 @@ regex = '.{2,4}(Tom|Sawyer|Huckleberry|Finn)'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = [
   { engine = 'hyperscan', count = 2128 },
+  { engine = 'vectorscan', count = 2128 },
   { engine = '.*', count = 1976 },
 ]
 engines = [
@@ -292,6 +303,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -319,6 +331,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -340,6 +353,7 @@ regex = '[a-zA-Z]+ing'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = [
   { engine = 'hyperscan', count = 78_872 },
+  { engine = 'vectorscan', count = 78_872 },
   { engine = '.*', count = 78_424 },
 ]
 engines = [
@@ -349,6 +363,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -370,6 +385,7 @@ regex = '\s[a-zA-Z]{0,12}ing\s'
 haystack = { path = "imported/leipzig-3200.txt" }
 count = [
   { engine = 'hyperscan', count = 55_640 },
+  { engine = 'vectorscan', count = 55_640 },
   { engine = '.*', count = 55_248 },
 ]
 engines = [
@@ -379,6 +395,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -406,6 +423,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -427,6 +445,7 @@ regex = '''["'][^"']{0,30}[?!\.]["']'''
 haystack = { path = "imported/leipzig-3200.txt" }
 count = [
   { engine = 'hyperscan', count = 8_898 },
+  { engine = 'vectorscan', count = 8_898 },
   { engine = '.*', count = 8_886 },
 ]
 engines = [
@@ -436,6 +455,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -464,6 +484,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -492,6 +513,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -521,6 +543,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   # 'icu', # timeout
   'java/hotspot',
   'javascript/v8',

@@ -33,6 +33,7 @@ regex = '[\w\.+-]+@[\w\.-]+\.[\w\.-]+'
 haystack = { path = "imported/mariomka.txt" }
 count = [
   { engine = 'hyperscan', count = 351 },
+  { engine = 'vectorscan', count = 351 },
   { engine = '.*', count = 92 },
 ]
 engines = [
@@ -42,6 +43,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -63,6 +65,7 @@ regex = '[\w]+://[^/\s?#]+[^\s?#]+(?:\?[^\s#]*)?(?:#[^\s]*)?'
 haystack = { path = "imported/mariomka.txt" }
 count = [
   { engine = 'hyperscan', count = 171_720 },
+  { engine = 'vectorscan', count = 171_720 },
   { engine = '.*', count = 5301 },
 ]
 engines = [
@@ -72,6 +75,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -99,6 +103,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',

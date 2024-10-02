@@ -33,6 +33,7 @@ count = 1
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -92,6 +93,9 @@ analysis = '''
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
+`vectorscan` does not support searching invalid UTF-8 when Unicode mode is
+enabled.
+
 `icu` does not support searching arbitrary bytes.
 
 `java/*` does not support searching arbitrary bytes.
@@ -115,6 +119,7 @@ count = 3
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -186,6 +191,10 @@ analysis = '''
 `hyperscan` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
+`vectorscan` does not support searching invalid UTF-8 when Unicode mode is
+enabled.
+
+
 `icu` does not support searching arbitrary bytes.
 
 `java/*` does not support searching arbitrary bytes.
@@ -208,6 +217,7 @@ haystack = { path = "one-byte-xFF.txt" }
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'pcre2',
   'pcre2/jit',
   'perl',
