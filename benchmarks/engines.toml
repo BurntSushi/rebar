@@ -277,15 +277,15 @@
   name = "dotnet"
   cwd = "../engines/dotnet"
   [engine.version]
-    bin = "bin/Release/net8.0/main"
+    bin = "bin/Release/net9.0/main"
     args = ["version"]
   [engine.run]
-    bin = "bin/Release/net8.0/main"
+    bin = "bin/Release/net9.0/main"
     args = ["interp"]
   [[engine.dependency]]
     bin = "dotnet"
     args = ["--list-sdks"]
-    regex = '(?m)^8\.'
+    regex = '(?m)^9\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -302,15 +302,15 @@
   name = "dotnet/compiled"
   cwd = "../engines/dotnet"
   [engine.version]
-    bin = "bin/Release/net8.0/main"
+    bin = "bin/Release/net9.0/main"
     args = ["version"]
   [engine.run]
-    bin = "bin/Release/net8.0/main"
+    bin = "bin/Release/net9.0/main"
     args = ["compiled"]
   [[engine.dependency]]
     bin = "dotnet"
     args = ["--list-sdks"]
-    regex = '(?m)^8\.'
+    regex = '(?m)^9\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
@@ -329,15 +329,15 @@
   name = "dotnet/nobacktrack"
   cwd = "../engines/dotnet"
   [engine.version]
-    bin = "bin/Release/net8.0/main"
+    bin = "bin/Release/net9.0/main"
     args = ["version"]
   [engine.run]
-    bin = "bin/Release/net8.0/main"
+    bin = "bin/Release/net9.0/main"
     args = ["nobacktrack"]
   [[engine.dependency]]
     bin = "dotnet"
     args = ["--list-sdks"]
-    regex = '(?m)^8\.'
+    regex = '(?m)^9\.'
   [[engine.build]]
     bin = "dotnet"
     args = ["build", "-c", "Release"]
