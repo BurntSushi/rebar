@@ -497,7 +497,7 @@
     args = ["-f", "main-ldc"]
 
 # A regex engine for nim from a nimble package.
-# 
+#
 # URL: https://github.com/nitely/nim-regex
 [[engine]]
   name = "nim/nitely-regex"
@@ -520,7 +520,7 @@
     args = ["-f", "main"]
   [[engine.build]]
     bin = "nimble"
-    args = ["build", "-d:debug", "--opt:speed"]
+    args = ["build", "-d:release", "--opt:speed"]
   [[engine.clean]]
     bin = "rm"
     args = ["-f", "main"]
