@@ -101,6 +101,8 @@ it is either buggy or something funny is going on.
 `hyperscan` is excluded because it doesn't support the `count-captures`
 benchmark model. It is included in the `multiple` benchmark below, which
 doesn't require capture groups.
+
+`nim/nitely-regex` is excluded because it gives an "value out of range" error.
 '''
 
 [[bench]]
@@ -113,6 +115,7 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'icu',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'python/re',

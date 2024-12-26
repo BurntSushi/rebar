@@ -73,6 +73,8 @@ limit.
 * `icu` is omitted because it times out.
 * `java/hotspot` is omitted because it times out.
 * `javascript/v8` is omitted because it doesn't support inline flags.
+* `nim/nitely-regex` is omitted because it only supports 100 nim/nitely-regex
+or less.
 * `pcre2` is omitted because it times out.
 * `perl` is omitted because it times out.
 * `python/*` is omitted because it times out.

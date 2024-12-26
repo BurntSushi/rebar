@@ -25,6 +25,7 @@ count = 1
 engines = [
   'go/regexp',
   'hyperscan',
+  'nim/nitely-regex',
   'pcre2/jit',
   're2',
   'rust/regex',
@@ -52,6 +53,7 @@ count = 0
 engines = [
   'go/regexp',
   'hyperscan',
+  'nim/nitely-regex',
   'pcre2/jit',
   're2',
   # This is what the regex crate uses internally, but we include it here
@@ -83,6 +85,7 @@ count = 0
 engines = [
   'go/regexp',
   'hyperscan',
+  'nim/nitely-regex',
   'pcre2/jit',
   're2',
   # This is what the regex crate uses internally, but we include it here
@@ -116,6 +119,7 @@ count = 1
 engines = [
   'go/regexp',
   'hyperscan',
+  'nim/nitely-regex',
   'pcre2/jit',
   're2',
   'rust/memchr/memmem',
