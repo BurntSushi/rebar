@@ -78,6 +78,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # Failed to parse regex
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -139,6 +141,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'lean',
   'pcre2',
   'pcre2/jit',
   'perl',

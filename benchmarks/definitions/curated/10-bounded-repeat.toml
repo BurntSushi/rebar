@@ -53,6 +53,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # "count mismatch, expected 1833, got 52"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -112,6 +114,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # "count mismatch, expected 53, got 0"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -142,6 +146,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # "count mismatch, expected 11, got 0"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -166,6 +172,8 @@ engines = [
   'go/regexp',
   'hyperscan',
   'icu',
+  # "count mismatch, expected 1, got 0"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -194,6 +202,8 @@ engines = [
   'go/regexp',
   'hyperscan',
   'icu',
+  # "count mismatch, expected 1, got 0"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'python/re',

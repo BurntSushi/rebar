@@ -81,6 +81,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # Failed to parse regex
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -113,6 +115,8 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'icu',
+  # Failed to parse regex
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'python/re',

@@ -80,6 +80,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # "count mismatch, expected 84, got 5"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -109,6 +111,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  # "count mismatch, expected 44, got 3"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -132,6 +136,8 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'icu',
+  # "count mismatch, expected 1, got 0"
+  # 'lean',
   'pcre2',
   'pcre2/jit',
   'python/re',

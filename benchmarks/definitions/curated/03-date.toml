@@ -65,6 +65,7 @@ count = [
   { engine = 'javascript/v8', count = 111_825 },
   # Unknown why the count span differs here.
   { engine = 'regress', count = 111_841 },
+  { engine = 'lean', count = 105_667 },
   # Why does Java report the same count as engines that work on UTF-8 despite
   # Java using UTF-16 code units? My thinking here is that since Unicode mode
   # is disabled here, Java only finds ASCII matches (as is consistent with the
@@ -88,6 +89,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'lean',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -116,6 +118,7 @@ haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-en
 count = [
   # These engines all count spans of UTF-16 code units.
   { engine = 'dotnet/compiled|icu|java/hotspot|javascript/v8', count = 111_825 },
+  { engine = 'lean', count = 105_667 },
   { engine = '.*', count = 111_841 },
 ]
 engines = [
@@ -124,6 +127,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'lean',
   'pcre2',
   'pcre2/jit',
   'python/re',
