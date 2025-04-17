@@ -53,6 +53,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -84,6 +85,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -123,6 +125,9 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+* `nim/nitely-regex` is omitted because it times out.
+'''
 
 [[bench]]
 model = "count"
@@ -142,6 +147,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -166,6 +172,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'icu',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -194,6 +201,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'icu',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'python/re',

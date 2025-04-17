@@ -28,6 +28,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'java/hotspot',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -66,6 +67,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -104,6 +106,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -158,6 +161,8 @@ analysis = '''
 
 `java/*` does not support `\p{Letter}` syntax.
 
+`nim/nitely-regex` does not support `\p{Letter}` syntax.
+
 `pcre2/*` does not support `\p{Letter}` syntax.
 
 `python/re` doesn't support Unicode character classes at all.
@@ -193,6 +198,8 @@ analysis = '''
 `javascript/*` has support for Unicode character classes, but doesn't
 support the "loose matching" required by UTS#18. I believe this is due to an
 intentional ECMAScript restriction.
+
+`nim/nitely-regex` does not support `\p{Letter}` syntax.
 
 `pcre2/*` does not support `\p{Letter}` syntax.
 
@@ -233,6 +240,8 @@ analysis = '''
 
 `java/*` does not support `\p{gc=Letter}` syntax.
 
+`nim/nitely-regex` does not support `\p{gc=Letter}` syntax.
+
 `pcre2/*` does not support `\p{gc=Letter}` syntax.
 
 `python/re` does not support Unicode character classes.
@@ -268,6 +277,8 @@ analysis = '''
 `java/*` does not support `\p{gc:Letter}` syntax.
 
 `javascript/*` supports `\p{gc=Letter}` but not `\p{gc:Letter}`.
+
+`nim/nitely-regex` does not support `\p{gc:Letter}` syntax.
 
 `pcre2/*` does not support `\p{gc:Letter}` syntax.
 

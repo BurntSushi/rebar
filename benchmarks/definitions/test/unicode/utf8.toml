@@ -29,6 +29,9 @@ count = [
   # Javascript, when Unicode mode is disabled, treats the UTF-16 code unit as
   # the fundamental atom of matching.
   { engine = 'javascript.*', count = 2 },
+  # While nim-regex has an `regexAscii` flag, it seems to not disable unicode
+  # entirely.
+  { engine = 'nim/nitely-regex', count = 1 },
   # regress seems to differ from Javascript here (where Unicode mode is
   # disabled). It seems to always treats the fundamental atom matching
   # as one codepoint (quite sensibly), but ECMAScript RegExps require that
@@ -49,6 +52,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -86,6 +90,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',

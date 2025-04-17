@@ -28,6 +28,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -49,7 +50,7 @@ name = "dollar-only-matches-end"
 regex = '$'
 haystack = "\n\n"
 count = [
-  { engine = 'd/dmd/std-regex|go/regexp|re2|regress|rust/regex.*', count = 1 },
+  { engine = 'd/dmd/std-regex|go/regexp|nim/nitely-regex|re2|regress|rust/regex.*', count = 1 },
   { engine = '.*', count = 2 },
 ]
 engines = [
@@ -62,6 +63,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -95,6 +97,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',

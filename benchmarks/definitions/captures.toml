@@ -26,6 +26,7 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 count = 81_494
 engines = [
   'go/regexp',
+  'nim/nitely-regex',
   'pcre2/jit',
   'python/re',
   're2',

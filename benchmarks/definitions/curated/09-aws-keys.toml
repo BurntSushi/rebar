@@ -63,6 +63,9 @@ engines = [
   'rust/regex/lite',
   'rust/regexold',
 ]
+analysis = '''
+* `nim/nitely-regex` is omitted because it times out.
+'''
 
 [[bench]]
 model = 'grep'
@@ -79,6 +82,7 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'perl',
@@ -101,6 +105,7 @@ engines = [
   'dotnet/compiled',
   'go/regexp',
   'icu',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'python/re',
@@ -124,6 +129,7 @@ engines = [
   'go/regexp',
   'hyperscan',
   'icu',
+  'nim/nitely-regex',
   'pcre2',
   'pcre2/jit',
   'python/re',
