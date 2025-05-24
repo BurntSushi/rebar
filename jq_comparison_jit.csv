@@ -1,0 +1,11 @@
+name,model,rebar_version,engine,engine_version,err,haystack_len,iters,total,median,mad,mean,stddev,min,max
+curated/01-literal/sherlock-en,count,0.1.0 (rev 19aa8e8e3b),pcre2/jit,ERROR,invalid version for regex engine,,0,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns
+curated/01-literal/sherlock-en,count,0.1.0 (rev 19aa8e8e3b),rust/regex,1.11.0,,899232,65860,4.57s,43.62us,125.00ns,45.48us,46.25us,43.17us,10.74ms
+curated/01-literal/sherlock-casei-en,count,0.1.0 (rev 19aa8e8e3b),pcre2/jit,ERROR,invalid version for regex engine,,0,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns
+curated/01-literal/sherlock-casei-en,count,0.1.0 (rev 19aa8e8e3b),rust/regex,1.11.0,,899232,18868,4.54s,155.96us,125.00ns,158.92us,15.76us,155.58us,891.58us
+curated/01-literal/sherlock-ru,count,0.1.0 (rev 19aa8e8e3b),pcre2/jit,ERROR,invalid version for regex engine,,0,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns
+curated/01-literal/sherlock-ru,count,0.1.0 (rev 19aa8e8e3b),rust/regex,1.11.0,,1570556,38819,4.57s,74.88us,125.00ns,77.21us,23.44us,74.42us,1.20ms
+curated/01-literal/sherlock-casei-ru,count,0.1.0 (rev 19aa8e8e3b),pcre2/jit,ERROR,invalid version for regex engine,,0,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns
+curated/01-literal/sherlock-casei-ru,count,0.1.0 (rev 19aa8e8e3b),rust/regex,1.11.0,,1570556,8900,4.54s,326.96us,625.00ns,337.01us,466.03us,325.71us,43.94ms
+curated/01-literal/sherlock-zh,count,0.1.0 (rev 19aa8e8e3b),pcre2/jit,ERROR,invalid version for regex engine,,0,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns,0.00ns
+curated/01-literal/sherlock-zh,count,0.1.0 (rev 19aa8e8e3b),rust/regex,1.11.0,,813478,87209,4.58s,33.62us,83.00ns,34.33us,9.12us,33.38us,745.88us
