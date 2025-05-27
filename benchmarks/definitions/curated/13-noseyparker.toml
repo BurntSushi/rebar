@@ -59,6 +59,7 @@ count = [
   { engine = '.*', count = 55 },
 ]
 engines = [
+  'ruby/onigmo',
   'hyperscan',
   'pcre2/jit',
   'rust/regex',
@@ -92,6 +93,7 @@ count = [
 ]
 engines = [
   'hyperscan',
+  'ruby/onigmo',
   'rust/regex',
 ]
 analysis = '''
@@ -110,6 +112,7 @@ count = 1
 engines = [
   'hyperscan',
   'pcre2/jit',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regexold',
 ]
@@ -125,6 +128,7 @@ haystack = "TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'"
 count = 1
 engines = [
   'hyperscan',
+  'ruby/onigmo',
   'rust/regex',
 ]
 analysis = '''

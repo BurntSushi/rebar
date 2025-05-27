@@ -119,6 +119,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
@@ -139,6 +140,7 @@ haystack = { path = "opensubtitles/en-medium.txt" }
 count = 1
 engines = [
   'hyperscan',
+  'ruby/onigmo',
   'rust/regex',
 ]
 analysis = '''
@@ -162,6 +164,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
@@ -192,6 +195,7 @@ haystack = "Zubeneschamali's"
 count = 1
 engines = [
   'hyperscan',
+  'ruby/onigmo',
   'rust/regex',
 ]
 analysis = '''
