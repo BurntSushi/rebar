@@ -24,12 +24,6 @@ benchmarks.
 See also the discussion in [the Java runner program's](../java) README. For
 anyone with more experience with v8 and irregexp, I would welcome feedback.
 
-## No support for inline flags
-
-Like the `regress` engine (another ECMAScript regex engine), this regex engine
-has no support for inline flags. So for example, syntax like `(?s:.)` or
-`(?i:abc)` is not allowed.
-
 ## Unicode
 
 Javascript's regex engine does okay with Unicode support, but only when Unicode
