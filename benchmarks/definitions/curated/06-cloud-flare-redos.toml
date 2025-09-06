@@ -67,6 +67,7 @@ regex = '''(?:(?:"|'|\]|\}|\\|\d|(?:nan|infinity|true|false|null|undefined|symbo
 haystack = 'math x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 count = [
   { engine = 'hyperscan', count = 5757 },
+  { engine = 'vectorscan', count = 5757 },
   { engine = '.*', count = 107 },
 ]
 engines = [
@@ -75,6 +76,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -97,6 +99,7 @@ regex = '.*.*=.*'
 haystack = 'x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 count = [
   { engine = 'hyperscan', count = 5252 },
+  { engine = 'vectorscan', count = 5252 },
   { engine = '.*', count = 102 },
 ]
 engines = [
@@ -105,6 +108,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -127,6 +131,7 @@ regex = '.*.*=.*'
 haystack = { path = "cloud-flare-redos.txt" }
 count = [
   { engine = 'hyperscan', count = 50004999 },
+  { engine = 'vectorscan', count = 50004999 },
   { engine = '.*', count = 10000 },
 ]
 engines = [
@@ -135,6 +140,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',

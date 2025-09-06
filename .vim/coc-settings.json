@@ -2,6 +2,7 @@
   "rust-analyzer.linkedProjects": [
     "byob/runner/Cargo.toml",
     "engines/hyperscan/Cargo.toml",
+    "engines/vectorscan/Cargo.toml",
     "engines/icu/Cargo.toml",
     "engines/pcre2/Cargo.toml",
     "engines/re2/Cargo.toml",

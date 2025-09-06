@@ -37,6 +37,7 @@ count = 5073
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'python/regex',
   're2',

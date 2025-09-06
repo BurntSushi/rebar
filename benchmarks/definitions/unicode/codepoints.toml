@@ -16,6 +16,7 @@ count = 1_112_064
 engines = [
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'python/regex',
   're2',

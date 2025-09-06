@@ -99,6 +99,7 @@ engines = [
 ]
 analysis = '''
 `hyperscan` doesn't support regexes that are this big.
+`vectorscan` doesn't support regexes that are this big.
 
 `python/re` doesn't support Unicode character classes at all.
 
@@ -135,6 +136,8 @@ engines = [
 ]
 analysis = '''
 `hyperscan` doesn't support regexes that are this big.
+`vectorscan` doesn't support regexes that are this big.
+
 
 `python/re` doesn't support Unicode character classes at all.
 
@@ -154,6 +157,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',
@@ -182,6 +186,7 @@ engines = [
   'dotnet/nobacktrack',
   'go/regexp',
   'hyperscan',
+  'vectorscan',
   'icu',
   'java/hotspot',
   'javascript/v8',

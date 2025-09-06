@@ -56,10 +56,12 @@ regex = { path = "wild/noseyparker.txt", per-line = "alternate" }
 haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = [
   { engine = 'hyperscan', count = 241 },
+  { engine = 'vectorscan', count = 241 },
   { engine = '.*', count = 55 },
 ]
 engines = [
   'hyperscan',
+  'vectorscan',
   'pcre2/jit',
   'rust/regex',
   'rust/regexold',
@@ -88,10 +90,12 @@ regex = { path = "wild/noseyparker.txt", per-line = "pattern" }
 haystack = { path = 'wild/cpython-226484e4.py', utf8-lossy = true }
 count = [
   { engine = 'hyperscan', count = 241 },
+  { engine = 'vectorscan', count = 241 },
   { engine = '.*', count = 55 },
 ]
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
 ]
 analysis = '''
@@ -109,6 +113,7 @@ haystack = "TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'"
 count = 1
 engines = [
   'hyperscan',
+  'Vectorscan',
   'pcre2/jit',
   'rust/regex',
   'rust/regexold',
@@ -125,6 +130,7 @@ haystack = "TWITTER_API_KEY = 'UZYoBAfBzNace3mBwPOGYw'"
 count = 1
 engines = [
   'hyperscan',
+  'vectorscan',
   'rust/regex',
 ]
 analysis = '''
