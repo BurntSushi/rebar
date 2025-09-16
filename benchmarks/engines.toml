@@ -496,6 +496,35 @@
     bin = "rm"
     args = ["-f", "main-ldc"]
 
+# A regex engine for nim from a nimble package.
+#
+# URL: https://github.com/nitely/nim-regex
+[[engine]]
+  name = "nim/nitely-regex"
+  cwd = "../engines/nim/nitely-regex"
+  [engine.version]
+    bin = "./main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./main"
+  [[engine.dependency]]
+    bin = "nim"
+    args = ["--version"]
+    regex = '(?m)Version (?P<version>[\d\.]+)'
+  [[engine.dependency]]
+    bin = "nimble"
+    args = ["--version"]
+    regex = '(?m)^nimble v(?P<version>[\d\.]+)'
+  [[engine.build]]
+    bin = "rm"
+    args = ["-f", "main"]
+  [[engine.build]]
+    bin = "nimble"
+    args = ["build", "-d:release", "--opt:speed"]
+  [[engine.clean]]
+    bin = "rm"
+    args = ["-f", "main"]
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and
