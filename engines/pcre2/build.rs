@@ -56,30 +56,25 @@ fn main() {
     builder.compile("libpcre2.a");
 }
 
-// On `aarch64-apple-ios` clang fails with the following error.
+// Historically, PCRE2 JIT compilation was problematic on Apple Silicon due to
+// missing ___clear_cache symbol, but this appears to be resolved in current
+// toolchains (tested successfully on macOS 14.6 with Xcode 15+).
 //
+// Previous linker errors on Apple platforms looked like:
 //   Undefined symbols for architecture arm64:
 //     "___clear_cache", referenced from:
 //         _sljit_generate_code in libforeign.a(pcre2_jit_compile.o)
 //   ld: symbol(s) not found for architecture arm64
 //
-// aarch64-apple-tvos         https://bugreports.qt.io/browse/QTBUG-62993?gerritReviewStatus=All
+// Previous issues documented:
+// aarch64-apple-tvos         https://bugreports.qt.io/browse/QTBUG-62993
 // aarch64-apple-darwin       https://github.com/Homebrew/homebrew-core/pull/57419
-// x86_64-apple-ios           disabled for device–simulator consistency (not tested)
-// x86_64-apple-tvos          disabled for device–simulator consistency (not tested)
-// armv7-apple-ios            assumed equivalent to aarch64-apple-ios (not tested)
-// armv7s-apple-ios           assumed equivalent to aarch64-apple-ios (not tested)
-// i386-apple-ios             assumed equivalent to aarch64-apple-ios (not tested)
-// x86_64-apple-ios-macabi    disabled out of caution (not tested) (needs attention)
 //
-// We may want to monitor developments on the `aarch64-apple-darwin` front as
-// they may end up propagating to all `aarch64`-based targets and the `x86_64`
-// equivalents.
+// JIT remains disabled for iOS/tvOS out of caution as these haven't been tested.
 fn enable_jit(target: &str, builder: &mut cc::Build) {
-    if !target.starts_with("aarch64-apple")
-        && !target.contains("apple-ios")
-        && !target.contains("apple-tvos")
-    {
+    // Try enabling JIT on aarch64-apple-darwin (macOS) to see if the issue
+    // has been resolved in newer toolchains. Keep it disabled for iOS/tvOS.
+    if !target.contains("apple-ios") && !target.contains("apple-tvos") {
         builder.define("SUPPORT_JIT", "1");
     }
 }
