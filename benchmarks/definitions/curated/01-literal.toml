@@ -54,6 +54,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 
@@ -82,6 +83,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 
@@ -110,6 +112,7 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
 
@@ -138,6 +141,7 @@ engines = [
   're2',
   'regress',
   'rust/regex',
+  'rust/regexinit',
   'rust/regexold',
 ]
 analysis = '''
@@ -170,5 +174,6 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regex/lite',
+  'rust/regexinit',
   'rust/regexold',
 ]
