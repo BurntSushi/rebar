@@ -4,7 +4,7 @@ It would be great to add more regex engines to this barometer. I am thinking
 of at least the following, but I'm generally open to any regex engine that
 has a reasonable build process with stable tooling:
 
-* Ruby's regex engine, or perhaps just [Onigmo](https://github.com/k-takata/Onigmo)
+* [Onigmo](https://github.com/k-takata/Onigmo)
 directly.
 * [`nim-regex`](https://github.com/nitely/nim-regex)
 * [CTRE](https://github.com/hanickadot/compile-time-regular-expressions). (This
