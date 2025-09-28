@@ -16,6 +16,7 @@ to add this, please file an issue to discuss an implementation path.)
 * Lisp's [CL-PPCRE](https://github.com/edicl/cl-ppcre/).
 * A selected subset of the [mess that is regex libraries for
 Haskell](https://wiki.haskell.org/Regular_expressions).
+* An hybrid pyahocorasick (in C) and Python multiple regex engine https://github.com/Quantco/multiregex by @jonashaag
 
 Here are some other regex engines I'm aware of, but I have reservations about
 including them:
