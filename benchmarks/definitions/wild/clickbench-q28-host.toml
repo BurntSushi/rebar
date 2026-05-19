@@ -1,0 +1,76 @@
+analysis = '''
+This benchmark comes from [ClickBench Q28][clickbench-q28], which extracts
+the URL host out of HTTP `Referer` values:
+
+```
+REGEXP_REPLACE("Referer", '^https?://(?:www\.)?([^/]+)/.*$', '\1')
+```
+
+The regex is anchored at both ends, the prefix reduces to a finite set of
+literal byte alternatives (`http://`, `https://`, `http://www.`,
+`https://www.`), the capture is a single `[^/]+`, and the tail is a literal
+`/` followed by `.*$`. Patterns of this shape are common for "extract a
+field bounded by a known delimiter" tasks — host extraction here, but also
+parsing log fields, comma-separated values, path components, and so on.
+
+Capture-1's bounds are structurally trivial in this shape: skip the prefix,
+find the terminator with `memchr`. The Rust regex crate exploits this in
+its meta engine since 1.12.x via a dedicated literal-prefix capture
+extraction strategy; engines that handle this shape with their general
+backtracking or NFA simulation path tend to be substantially slower.
+
+The haystack is 16,239 randomly sampled non-empty `Referer` values from
+the ClickBench `hits` parquet dataset, taken with duckdb via
+`USING SAMPLE 20000 ROWS (reservoir, 42)` and dropping rows whose
+`Referer` contains an embedded `\n` or `\r` (which would split into
+extra grep-captures lines). About 82% match the regex.
+
+[clickbench-q28]: https://github.com/ClickHouse/ClickBench/blob/main/queries.sql
+'''
+
+[[bench]]
+model = "grep-captures"
+name = "extract-host"
+regex = { path = "wild/clickbench-q28-host.txt" }
+haystack = { path = "wild/clickbench-q28-referers.txt" }
+count = 26_618
+engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+
+[[bench]]
+model = "compile"
+name = "compile"
+regex = { path = "wild/clickbench-q28-host.txt" }
+haystack = 'http://example.com/path'
+count = 1
+engines = [
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'icu',
+  'pcre2',
+  'pcre2/jit',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
