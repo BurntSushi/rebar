@@ -43,19 +43,12 @@ final class Config {
     }
 }
 
-// A single Key-Length-Value item.
-final class OneKLV {
-    // The key name.
+final class KLVItem {
     public String key;
-    // The value contents.
-    public String value;
-    // The length, in bytes, used up by this KLV item.
-    // This is useful for parsing a sequence of KLV items.
-    // This length says how much to skip ahead to start
-    // parsing the next KLV item.
     public int length;
+    public String value;
 
-    public OneKLV(CharsetDecoder decoder, List<Byte> raw) throws Exception {
+    public KLVItem(CharsetDecoder decoder, List<Byte> raw) throws Exception {
         int keyEnd = raw.indexOf((byte)':');
         if (keyEnd == -1) {
             throw new Exception("invalid KLV item: could not find first ':'");
@@ -142,7 +135,7 @@ public final class Main {
         List<Byte> raw = readStdin();
         Config config = new Config();
         while (raw.size() > 0) {
-            OneKLV klv = new OneKLV(decoder, raw);
+            KLVItem klv = new KLVItem(decoder, raw);
             raw = raw.subList(klv.length, raw.size());
             if (klv.key.equals("name")) {
                 config.name = klv.value;
