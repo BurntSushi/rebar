@@ -75,3 +75,79 @@ behavior. There isn't too much downside to just trying and bailing out when we
 detect it, other than code complexity. But the upside is that the optimization
 will apply even when there is overlap.
 '''
+
+[[bench]]
+model = "count"
+name = "unsound-leftmost-first"
+regex = '.abb|b'
+haystack = { contents = "zabb" }
+count = [
+  # Hyperscan correctly reports 2 here because its semantics report matches
+  # only as they are seen. This is different from most regex engines, but
+  # reflects the more classical construction of an automaton (which doesn't
+  # care about offsets).
+  { engine = 'hyperscan', count = 2 },
+  # All other engines should report this. At one point, Rust's regex crate
+  # *incorrectly* reported 2.
+  # See: https://github.com/rust-lang/regex/issues/1354
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'd/ldc/std-regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = ''
+
+[[bench]]
+model = "count"
+name = "unsound-start-literal-order-mismatch"
+regex = '(?:[A-Za-z]ab)?b'
+haystack = { contents = "zabb" }
+count = [
+  # Hyperscan correctly reports 2 here because its semantics report matches
+  # only as they are seen. This is different from most regex engines, but
+  # reflects the more classical construction of an automaton (which doesn't
+  # care about offsets).
+  { engine = 'hyperscan', count = 2 },
+  # All other engines should report this. At one point, Rust's regex crate
+  # *incorrectly* reported 2.
+  # See: https://github.com/rust-lang/regex/issues/1354
+  { engine = '.*', count = 1 },
+]
+engines = [
+  'd/ldc/std-regex',
+  'dotnet/compiled',
+  'dotnet/nobacktrack',
+  'go/regexp',
+  'hyperscan',
+  'icu',
+  'java/hotspot',
+  'javascript/v8',
+  'pcre2',
+  'pcre2/jit',
+  'perl',
+  'python/re',
+  'python/regex',
+  're2',
+  'regress',
+  'rust/regex',
+  'rust/regex/lite',
+  'rust/regexold',
+]
+analysis = ''
