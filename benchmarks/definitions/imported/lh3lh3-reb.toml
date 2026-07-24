@@ -41,6 +41,10 @@ engines = [
   'rust/regex',
   'rust/regexold',
 ]
+analysis = '''
+* `nim/nitely-regex` is omitted because its match count, `4`, differs from
+everything else. It's not clear whether it has a bug or not.
+'''
 
 [[bench]]
 model = "grep"
@@ -68,6 +72,10 @@ engines = [
   'rust/regex',
   'rust/regexold',
 ]
+analysis = '''
+* `nim/nitely-regex` is omitted because its match count, `31`, differs from
+everything else. It's not clear whether it has a bug or not.
+'''
 
 [[bench]]
 model = "grep"
@@ -95,6 +103,10 @@ engines = [
   'rust/regex',
   'rust/regexold',
 ]
+analysis = '''
+* `nim/nitely-regex` is omitted because its match count, `0`, differs from
+everything else. It's not clear whether it has a bug or not.
+'''
 
 [[bench]]
 model = "grep"
@@ -122,3 +134,7 @@ engines = [
   'rust/regex',
   'rust/regexold',
 ]
+analysis = '''
+* `nim/nitely-regex` is omitted because its match count, `35`, differs from
+everything else. It's not clear whether it has a bug or not.
+'''

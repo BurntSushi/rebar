@@ -52,6 +52,8 @@ analysis = '''
 
 `javascript/*` does not support searching arbitrary bytes.
 
+`nim/nitely-regex` does not support searching arbitrary bytes.
+
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
 
 `rust/regex/lite` does not support searching arbitrary bytes, only valid UTF-8.
@@ -98,6 +100,8 @@ enabled.
 
 `javascript/*` does not support searching arbitrary bytes.
 
+`nim/nitely-regex` does not support searching arbitrary bytes.
+
 `python/*` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
@@ -133,6 +137,8 @@ analysis = '''
 `java/*` does not support searching arbitrary bytes.
 
 `javascript/*` does not support searching arbitrary bytes.
+
+`nim/nitely-regex` does not support searching arbitrary bytes.
 
 `regress` does not support searching arbitrary bytes, only valid UTF-8.
 
@@ -192,6 +198,8 @@ enabled.
 
 `javascript/*` does not support searching arbitrary bytes.
 
+`nim/nitely-regex` does not support searching arbitrary bytes.
+
 `python/*` does not support searching invalid UTF-8 when Unicode mode is
 enabled.
 
@@ -226,6 +234,8 @@ analysis = '''
 `java/*` does not support searching arbitrary bytes.
 
 `javascript/*` does not support searching arbitrary bytes.
+
+`nim/nitely-regex` does not support searching arbitrary bytes.
 
 `go/regexp` supports searching invalid UTF-8, but does not support searching
 for specific invalid UTF-8 bytes.
