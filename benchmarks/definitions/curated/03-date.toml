@@ -95,6 +95,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
@@ -141,7 +142,7 @@ impact the match count.
 
 However, neither `re2` nor `go/regexp` are included here because neither `\d`
 nor `\s` are Unicode-aware, and the `\s` being ASCII-only does impact the match
-count.
+count. `ruby/onigmo` is also excluded because its `\d` is ASCII-only.
 
 `hyperscan` is excluded here because the pattern results in a "too large"
 compilation error. As far as I know, Hyperscan doesn't expose any knobs for
@@ -175,6 +176,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
@@ -213,5 +215,6 @@ engines = [
 analysis = '''
 We use "extended arabic-indic digits" to represent the same date, `2010-03-14`,
 that we use for verification in `compile-ascii`. These digits are part of `\d`
-when it is Unicode aware.
+when it is Unicode aware. `ruby/onigmo` is excluded because its `\d` is
+ASCII-only and won't match these Unicode digits.
 '''

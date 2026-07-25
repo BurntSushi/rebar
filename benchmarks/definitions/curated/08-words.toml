@@ -56,6 +56,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
@@ -100,7 +101,8 @@ engines = [
 analysis = '''
 `rust/regex/lite`, `regress`, `re2` and `go/regexp` are excluded because `\w`
 is not Unicode aware. `hyperscan` is exclude because it doesn't support a
-Unicode aware `\b`.
+Unicode aware `\b`. `ruby/onigmo` is excluded because its `\w` and `\b` are
+not Unicode aware.
 
 For `dotnet/compiled`, since the length of matching spans is in the number of
 UTF-16 code units, its expected count is smaller.
@@ -134,6 +136,7 @@ engines = [
   'python/regex',
   're2',
   'regress',
+  'ruby/onigmo',
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
@@ -177,7 +180,8 @@ engines = [
 analysis = '''
 `rust/regex/lite`, `regress`, `re2` and `go/regexp` are excluded because `\w`
 is not Unicode aware. `hyperscan` is exclude because it doesn't support a
-Unicode aware `\b`.
+Unicode aware `\b`. `ruby/onigmo` is excluded because its `\w` and `\b` are
+not Unicode aware.
 
 For `dotnet/compiled`, since the length of matching spans is in the number of
 UTF-16 code units, its expected count is smaller.

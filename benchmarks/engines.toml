@@ -229,6 +229,24 @@
     bin = "rm"
     args = ["-rf", "./ve"]
 
+# Ruby's regex engine, which uses Onigmo (a fork of Oniguruma).
+#
+# URL: https://github.com/k-takata/Onigmo
+[[engine]]
+  name = "ruby/onigmo"
+  cwd = "../engines/ruby"
+  [engine.version]
+    bin = "/opt/homebrew/opt/ruby/bin/ruby"
+    args = ["--version"]
+    regex = '(?m)^ruby (?P<version>[0-9]+\.[0-9]+\.[0-9]+)'
+  [engine.run]
+    bin = "/opt/homebrew/opt/ruby/bin/ruby"
+    args = ["main.rb", "onigmo"]
+  [[engine.dependency]]
+    bin = "/opt/homebrew/opt/ruby/bin/ruby"
+    args = ["--version"]
+    regex = '(?m)^ruby'
+
 # The venerable Hyperscan regex engine. Notable for its best-in-class literal
 # optimizations, support for stream searching and excellent support for
 # searching for many regexes at once with good scaling properties. Its main
