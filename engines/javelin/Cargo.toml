@@ -1,0 +1,25 @@
+[package]
+name = "main"
+version = "0.1.2"
+edition = "2021"
+rust-version = "1.85"
+publish = false
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+[dependencies]
+anyhow = "1.0.69"
+bstr = { version = "1.2.0", default-features = false, features = ["std"] }
+lexopt = "0.3.0"
+# Keep the package version in sync with this pin for --version.
+javelin-pattern = "=0.1.2"
+klv = { path = "../../shared/klv" }
+regexredux = { path = "../../shared/regexredux" }
+timer = { path = "../../shared/timer" }
+
+[profile.release]
+debug = true
+codegen-units = 1
+lto = "fat"

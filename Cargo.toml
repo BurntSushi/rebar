@@ -31,6 +31,7 @@ exclude = [
   "byob/runner",
   "engines/hyperscan",
   "engines/icu",
+  "engines/javelin",
   "engines/pcre2",
   "engines/re2",
   "engines/regress",

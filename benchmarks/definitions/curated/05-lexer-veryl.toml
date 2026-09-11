@@ -81,6 +81,8 @@ engines = [
   'icu',
   'java/hotspot',
   'javascript/v8',
+  'javelin',
+  'javelin/bt',
   'pcre2',
   'pcre2/jit',
   'perl',
