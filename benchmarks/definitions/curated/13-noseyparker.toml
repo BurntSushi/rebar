@@ -60,6 +60,8 @@ count = [
 ]
 engines = [
   'hyperscan',
+  'javelin',
+  'javelin/bt',
   'pcre2/jit',
   'rust/regex',
   'rust/regexold',

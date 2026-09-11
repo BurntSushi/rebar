@@ -496,6 +496,45 @@
     bin = "rm"
     args = ["-f", "main-ldc"]
 
+# Jeffrey Lim's fast and feature-rich C++ regex engine.
+#
+# URL: https://github.com/9cel/JavelinPattern
+#
+# This is a fork of https://github.com/jthlim/JavelinPattern with some bugfixes
+# and vibecoded performance improvements.
+#
+# Note: javelin/bt runs the same binary, but sets the JP_OPTION_PREFER_BACK_TRACKING flag.
+[[engine]]
+  name = "javelin"
+  cwd = "../engines/javelin"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+[[engine]]
+  name = "javelin/bt"
+  cwd = "../engines/javelin"
+  [engine.version]
+    bin = "./target/release/main"
+    args = ["--version"]
+  [engine.run]
+    bin = "./target/release/main"
+    args = ["--backtracking"]
+  [[engine.build]]
+    bin = "cargo"
+    args = ["build", "--release"]
+  [[engine.clean]]
+    bin = "cargo"
+    args = ["clean"]
+
+
 # RUST REGEX CRATE INTERNAL REGEX ENGINES
 #
 # These reflect different regex engines used by 'rust/regex' internally, and
