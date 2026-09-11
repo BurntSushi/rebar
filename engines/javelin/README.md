@@ -2,7 +2,7 @@ This directory provides a Rust runner for JavelinPattern using the
 [`javelin-pattern` crate](https://crates.io/javelin-pattern). The runner is
 invoked by `javelin` and `javelin/bt` engines. The only difference in the
 latter case is that the `--backtracking` option is enabled, which corresponds
-to setting the `JP_OPTION_PREFER_BACKTRACKING` flag when compiling the pattern.
+to setting the `JP_OPTION_PREFER_BACK_TRACKING` flag when compiling the pattern.
 
 When Unicode is requested, the following additional flags are set:
 
