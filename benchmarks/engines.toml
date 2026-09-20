@@ -368,9 +368,12 @@
   [engine.version]
     bin = "java"
     args = ["Main", "version"]
-    # We specifically require a mention of 'HotSpot' to avoid accidentally
-    # benchmarking something other than what we advertise.
-    regex = '^Java HotSpot.*VM (?P<version>.*)'
+    # We specifically require a HotSpot VM name to avoid accidentally
+    # benchmarking something other than what we advertise. Oracle calls it
+    # "Java HotSpot..." while OpenJDK-derived HotSpot builds (Temurin,
+    # Corretto, Zulu, Liberica, Microsoft, and distro OpenJDK) call it
+    # "OpenJDK 64-Bit Server VM".
+    regex = '^(?:Java HotSpot.*|OpenJDK 64-Bit Server) VM (?P<version>.*)'
   [engine.run]
     bin = "java"
     args = ["Main"]
