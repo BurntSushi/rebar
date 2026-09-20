@@ -52,6 +52,10 @@ fn main() {
         if path.ends_with("pcre2_jit_match.c")
             || path.ends_with("pcre2_jit_misc.c")
             || path.ends_with("pcre2_ucptables.c")
+            // The POSIX compatibility layer is not used by this runner, and
+            // its optional pcre2posix.h header is not part of the vendored
+            // source tree.
+            || path.ends_with("pcre2posix.c")
         {
             continue;
         }
