@@ -260,8 +260,7 @@ public final class Main {
                 Matcher m = re.matcher(config.haystack);
                 while (m.find()) {
                     for (int i = 0; i < m.groupCount() + 1; i++) {
-                        String cap = m.group(i);
-                        if (cap != null) {
+                        if (m.start(i) >= 0) {
                             count++;
                         }
                     }
@@ -302,8 +301,7 @@ public final class Main {
                     Matcher m = re.matcher(line);
                     while (m.find()) {
                         for (int i = 0; i < m.groupCount() + 1; i++) {
-                            String cap = m.group(i);
-                            if (cap != null) {
+                            if (m.start(i) >= 0) {
                                 count[0]++;
                             }
                         }
