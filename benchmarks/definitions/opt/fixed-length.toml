@@ -37,6 +37,9 @@ engines = [
   're2',
   # Does do it!
   'go/regexp',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This benchmark tests that the regex engine fails very quickly when it knows
@@ -91,6 +94,9 @@ engines = [
   # Does not do it.
   # See: https://github.com/golang/go/issues/33484
   'go/regexp',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This checks that we bail early when we know the haystack is too big to match.
@@ -109,6 +115,9 @@ engines = [
 	'rust/regex/hybrid',
   # Does not do it.
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 Same idea as `too-big-ascii`, but for Unicode.
@@ -128,6 +137,9 @@ engines = [
   'rust/regexold',
   're2',
   'go/regexp',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This comes from: https://github.com/golang/go/issues/33484
@@ -147,6 +159,9 @@ engines = [
   'rust/regexold',
   're2',
   'go/regexp',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This comes from: https://github.com/golang/go/issues/33484
@@ -169,6 +184,9 @@ engines = [
   're2',
   # Does not do it.
   'go/regexp',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This comes from: https://github.com/golang/go/issues/33484

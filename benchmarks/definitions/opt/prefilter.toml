@@ -54,6 +54,9 @@ engines = [
   'rust/memchr/memmem',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -72,6 +75,9 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -91,6 +97,9 @@ engines = [
   'rust/memchr/memmem',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This measures a non-ASCII literal on a non-ASCII haystack. Regex engines that
@@ -116,6 +125,9 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -132,6 +144,9 @@ engines = [
   'regress',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This is a mostly silly little benchmark that looks for a couple different

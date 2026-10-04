@@ -38,6 +38,9 @@ engines = [
   'go/regexp',
   # Does not do it.
   'pcre2/jit',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 A regex that looks for any words preceding and following `Holmes`. The reverse
@@ -64,6 +67,9 @@ engines = [
   'go/regexp',
   # Does not do it.
   'pcre2/jit',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 A very simple regex for matching things that might be email addresses. The
@@ -89,6 +95,9 @@ engines = [
   're2',
   'go/regexp',
   'pcre2/jit',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This benchmark also uses the reverse inner optimization, and does despite
@@ -122,6 +131,9 @@ engines = [
   're2',
   'go/regexp',
   'pcre2/jit',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This benchmark checks that the reverse inner optimization does not result
@@ -152,6 +164,9 @@ engines = [
   're2',
   'go/regexp',
   'pcre2/jit',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This benchmark also checks that quadratic behavior does not occur. Unlike

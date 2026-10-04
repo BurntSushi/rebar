@@ -17,6 +17,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -29,6 +32,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -42,6 +48,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -55,6 +64,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -68,6 +80,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -76,8 +91,15 @@ name = "literal-russian-som"
 regex = 'Шерлок Холмс'
 haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
-count = 23
+count = [
+  # SafeRE's String API reports UTF-16 code units.
+  { engine = 'safere/string', count = 12 },
+  { engine = '.*', count = 23 },
+]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'hyperscan',
   'rust/regex',
   'rust/regexold',
@@ -95,6 +117,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -104,8 +129,15 @@ regex = 'Шерлок Холмс'
 case-insensitive = true
 unicode = true
 haystack = { path = "opensubtitles/ru-huge.txt" }
-count = 23
+count = [
+  # SafeRE's String API reports UTF-16 code units.
+  { engine = 'safere/string', count = 12 },
+  { engine = '.*', count = 23 },
+]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'hyperscan',
   'rust/regex',
   'rust/regexold',
@@ -121,6 +153,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -133,6 +168,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 # The 'literal-inner' benchmarks test how Hyperscan does with a literal that is
@@ -149,6 +187,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -161,6 +202,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 # The 'fixed-length-words' benchmarks are specifically designed to omit any
@@ -175,6 +219,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -187,6 +234,9 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 # This one enables Unicode mode, which slows Hyperscan down quite a bit.
@@ -204,4 +254,7 @@ engines = [
   'hyperscan',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]

@@ -381,6 +381,61 @@
     bin = "sh"
     args = ["-c", "rm -f *.class"]
 
+# SafeRE over Java strings, with UTF-16 match offsets.
+# URL: https://github.com/eaftan/safere
+[[engine]]
+  name = "safere/string"
+  cwd = "../engines/safere"
+  [engine.version]
+    bin = "java"
+    args = ["-cp", "target/classes:target/dependency/*", "org.rebar.safere.Main", "string", "version"]
+    regex = '^SafeRE (?P<version>[0-9]+\.[0-9]+\.[0-9]+(?:-SNAPSHOT)? \([^\n]+\))'
+  [engine.run]
+    bin = "java"
+    args = ["-cp", "target/classes:target/dependency/*", "org.rebar.safere.Main", "string"]
+  [[engine.build]]
+    bin = "mvn"
+    args = ["-q", "clean", "verify"]
+  [[engine.clean]]
+    bin = "mvn"
+    args = ["-q", "clean"]
+
+# SafeRE over UTF-8 bytes, with byte-relative match offsets.
+[[engine]]
+  name = "safere/utf8"
+  cwd = "../engines/safere"
+  [engine.version]
+    bin = "java"
+    args = ["-cp", "target/classes:target/dependency/*", "org.rebar.safere.Main", "utf8", "version"]
+    regex = '^SafeRE (?P<version>[0-9]+\.[0-9]+\.[0-9]+(?:-SNAPSHOT)? \([^\n]+\))'
+  [engine.run]
+    bin = "java"
+    args = ["-cp", "target/classes:target/dependency/*", "org.rebar.safere.Main", "utf8"]
+  [[engine.build]]
+    bin = "mvn"
+    args = ["-q", "clean", "verify"]
+  [[engine.clean]]
+    bin = "mvn"
+    args = ["-q", "clean"]
+
+# SafeRE over UTF-8 bytes with the experimental Vector API scanner enabled.
+[[engine]]
+  name = "safere/utf8-vector"
+  cwd = "../engines/safere"
+  [engine.version]
+    bin = "java"
+    args = ["--add-modules=jdk.incubator.vector", "-Dorg.safere.experimental.vectorScanProvider=vector", "-cp", "target/classes:target/dependency/*", "org.rebar.safere.Main", "utf8", "version"]
+    regex = '^SafeRE (?P<version>[0-9]+\.[0-9]+\.[0-9]+(?:-SNAPSHOT)? \([^\n]+\))'
+  [engine.run]
+    bin = "java"
+    args = ["--add-modules=jdk.incubator.vector", "-Dorg.safere.experimental.vectorScanProvider=vector", "-cp", "target/classes:target/dependency/*", "org.rebar.safere.Main", "utf8"]
+  [[engine.build]]
+    bin = "mvn"
+    args = ["-q", "clean", "verify"]
+  [[engine.clean]]
+    bin = "mvn"
+    args = ["-q", "clean"]
+
 # Javascript's regex engine from v8.
 #
 # URL: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp

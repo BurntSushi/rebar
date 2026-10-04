@@ -34,6 +34,9 @@ engines = [
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -42,8 +45,15 @@ name = "boundary-any-russian"
 regex = '\b\w+\b'
 haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
-count = 529_194
+count = [
+  # String spans use UTF-16 units; UTF-8 modes retain the byte count.
+  { engine = 'safere/string', count = 264916 },
+  { engine = '.*', count = 529_194 },
+]
 engines = [
+  "safere/string",
+  "safere/utf8",
+  "safere/utf8-vector",
   # 'pcre2', # times out(!)
   'pcre2/jit',
   'python/regex',
@@ -69,6 +79,9 @@ engines = [
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]
@@ -77,8 +90,15 @@ name = "boundary-long-russian"
 regex = '\b\w{12,}\b'
 haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
-count = 21_332
+count = [
+  # String spans use UTF-16 units; UTF-8 modes retain the byte count.
+  { engine = 'safere/string', count = 10666 },
+  { engine = '.*', count = 21_332 },
+]
 engines = [
+  "safere/string",
+  "safere/utf8",
+  "safere/utf8-vector",
   'pcre2/jit',
   'python/regex',
   'rust/regex',
@@ -104,6 +124,9 @@ engines = [
   'rust/regex',
   'rust/regex/lite',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 Looks for occurrences of `Holmes` and the words surrounding them while
@@ -116,8 +139,15 @@ name = "around-holmes-russian"
 regex = '\b\w+\s+Холмс\s+\w+\b'
 haystack = { path = "opensubtitles/ru-huge.txt" }
 unicode = true
-count = 44
+count = [
+  # String spans use UTF-16 units; UTF-8 modes retain the byte count.
+  { engine = 'safere/string', count = 23 },
+  { engine = '.*', count = 44 },
+]
 engines = [
+  "safere/string",
+  "safere/utf8",
+  "safere/utf8-vector",
   'pcre2/jit',
   'python/regex',
   'rust/regex',

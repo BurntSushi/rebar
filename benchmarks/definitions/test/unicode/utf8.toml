@@ -23,9 +23,9 @@ count = [
   # ICU always treats a single codepoint as the fundamental atom of matching
   # and there is no way to disable it.
   { engine = 'icu', count = 1 },
-  # Java does seem to always treat the fundamental atom of matching as a single
+  # Java and SafeRE treat the fundamental atom of matching as a single
   # codepoint, and not a UTF-16 code unit (unlike .NET).
-  { engine = 'java/.*', count = 1 },
+  { engine = 'java/.*|safere/string|safere/utf8(?:-vector)?', count = 1 },
   # Javascript, when Unicode mode is disabled, treats the UTF-16 code unit as
   # the fundamental atom of matching.
   { engine = 'javascript.*', count = 2 },
@@ -48,6 +48,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -85,6 +88,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',

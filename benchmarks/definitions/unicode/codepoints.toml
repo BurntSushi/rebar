@@ -22,6 +22,9 @@ engines = [
   'rust/regex',
   'rust/regexold',
   'rust/regex/lite',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 A simple benchmark that matches each individual codepoint.
@@ -33,8 +36,15 @@ name = "any-all"
 regex = '(?s:.)+'
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
-count = 4_382_592
+count = [
+  # SafeRE's String API reports UTF-16 code units.
+  { engine = 'safere/string', count = 2160640 },
+  { engine = '.*', count = 4_382_592 },
+]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
@@ -54,6 +64,8 @@ regex = '\p{L}{100}'
 haystack = { path = "unicode/allcodepoints.txt" }
 unicode = true
 count = [
+  # SafeRE uses bundled Unicode property tables independent of the running JDK.
+  { engine = 'safere/.*', count = 1333 },
   # Very likely due to update to Unicode 15.1.
   { engine = '^re2$', count = 1250 },
   # Very likely due to update to Unicode 16.
@@ -63,6 +75,9 @@ count = [
   { engine = '.*', count = 1244 },
 ]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'go/regexp',
   'pcre2/jit',
   'python/regex',
