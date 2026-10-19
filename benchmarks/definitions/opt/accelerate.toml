@@ -45,6 +45,9 @@ engines = [
   'rust/regexold',
   're2',
   'pcre2/jit',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This regex was taken from the `regex-redux` benchmark. It is used at the

@@ -112,11 +112,16 @@ regex = '\p{L}{256}'
 unicode = true
 haystack = { contents = 'δ', repeat = 256 }
 count = [
+  # SafeRE's String API reports UTF-16 code units.
+  { engine = 'safere/string', count = 256 },
   # Spans are counted as either UTF-16 code units or Unicode scalar values.
   { engine = 'dotnet.*|icu|javascript.*|java/.*|perl', count = 256 },
   { engine = '.*', count = 512 },
 ]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -184,6 +189,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',

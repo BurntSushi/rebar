@@ -35,6 +35,9 @@ engines = [
   'go/regexp',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -59,6 +62,9 @@ regex = { path = "wild/ucd-parse.txt" }
 haystack = '249D;PARENTHESIZED LATIN SMALL LETTER B;So;0;L;<compat> 0028 0062 0029;;;;N;;;;;'
 count = 1
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

@@ -42,6 +42,9 @@ engines = [
   # Appears to fall back to PikeVM. Perhaps because it exceeds the lazy DFA
   # memory budget.
   're2',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 
 [[bench]]

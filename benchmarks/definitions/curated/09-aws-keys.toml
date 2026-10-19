@@ -51,6 +51,9 @@ engines = [
   'go/regexp',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -78,6 +81,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -98,6 +104,9 @@ regex = '''(('|")((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))('|").*?(\n^.*?){0,4}(('
 haystack = '"AIDAABCDEFGHIJKLMNOP""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"'
 count = 1
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet/compiled',
   'go/regexp',
   'icu',
@@ -119,6 +128,9 @@ regex = '((?:ASIA|AKIA|AROA|AIDA)([A-Z0-7]{16}))'
 haystack = 'AIDAABCDEFGHIJKLMNOP'
 count = 1
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet/compiled',
   'dotnet/nobacktrack',
   'go/regexp',

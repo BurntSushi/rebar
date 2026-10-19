@@ -20,6 +20,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -41,7 +44,7 @@ name = "default-carriage-return"
 regex = '.'
 haystack = "\r"
 count = [
-  { engine = '^(d/dmd/std-regex|icu|java/hotspot|javascript/v8|regress)$', count = 0 },
+  { engine = '^(d/dmd/std-regex|icu|java/hotspot|javascript/v8|regress|safere/string|safere/utf8(?:-vector)?)$', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
@@ -53,6 +56,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -89,6 +95,9 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This tests that `.` does match a `\n` when the `s` flag is enabled.
@@ -120,6 +129,9 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This tests that `.` does match a `\r` when the `s` flag is enabled.
@@ -151,6 +163,9 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This tests that `.` does not match a `\n` when the `m` flag is enabled.
@@ -167,10 +182,13 @@ name = "multiline-carriage-return"
 regex = '(?m:.)'
 haystack = "\r"
 count = [
-  { engine = '^(icu)$', count = 0 },
+  { engine = '^(icu|safere/.*)$', count = 0 },
   { engine = '.*', count = 1 },
 ]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet',
   'dotnet/compiled',
   'dotnet/nobacktrack',
@@ -216,6 +234,9 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This tests that `.` does match a `\n` when the `s` and `m` flags are enabled.
@@ -247,6 +268,9 @@ engines = [
   're2',
   'rust/regex',
   'rust/regex/lite',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This tests that `.` does match a `\r` when the `s` and `m` flags are enabled.

@@ -87,6 +87,9 @@ engines = [
   'hyperscan',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -115,7 +118,7 @@ unicode = true
 haystack = { path = "rust-src-tools-3b0d4813.txt", line-start = 190_000, line-end = 200_000 }
 count = [
   # These engines all count spans of UTF-16 code units.
-  { engine = 'dotnet/compiled|icu|java/hotspot|javascript/v8', count = 111_825 },
+  { engine = 'dotnet/compiled|icu|java/hotspot|javascript/v8|safere/string', count = 111_825 },
   { engine = '.*', count = 111_841 },
 ]
 engines = [
@@ -123,6 +126,9 @@ engines = [
   'dotnet/compiled',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'pcre2',
   'pcre2/jit',
@@ -166,6 +172,9 @@ count = [
   { engine = '.*', count = 5 },
 ]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'go/regexp',
   'hyperscan',
   'icu',
@@ -200,6 +209,9 @@ count = [
   { engine = '.*', count = 5 },
 ]
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet/compiled',
   'icu',
   'pcre2',

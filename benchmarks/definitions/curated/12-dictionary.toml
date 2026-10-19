@@ -113,6 +113,9 @@ engines = [
   'go/regexp',
   'icu',
   'java/hotspot',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'javascript/v8',
   'perl',
   'python/re',
@@ -155,6 +158,9 @@ regex = { path = "dictionary/english/length-15.txt", literal = true, per-line = 
 haystack = "Zubeneschamali's"
 count = 1
 engines = [
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
   'dotnet/compiled',
   'go/regexp',
   'icu',

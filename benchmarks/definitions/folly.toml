@@ -29,6 +29,9 @@ engines = [
   're2',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This one causes the Rust regex engine to look for matches of `awyer|inn`,
@@ -60,6 +63,9 @@ engines = [
   'rust/memchr/memmem',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This benchmark is a good example of how even the most basic literal
@@ -91,6 +97,9 @@ engines = [
   'rust/memchr/memmem',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 You might read the description for 'literal-never-match-rare' above and
@@ -121,6 +130,9 @@ engines = [
   'rust/memchr/memmem',
   'rust/regex',
   'rust/regexold',
+  'safere/string',
+  'safere/utf8',
+  'safere/utf8-vector',
 ]
 analysis = '''
 This benchmark is an attempt to make the regex crate's uses of memmem slow
