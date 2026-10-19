@@ -52,29 +52,35 @@ public final class Main {
     if (config.model().equals("compile")) {
       Utf8Input utf8Input =
           mode == InputMode.UTF8 ? Utf8Input.validated(config.haystackBytes()) : null;
-      for (Sample sample :
-          sampleDirect(
-              config,
-              config::compileRegex,
-              pattern ->
-                  mode == InputMode.UTF8
-                      ? Utf8Workloads.countMatches(pattern, utf8Input)
-                      : StringWorkloads.countMatches(pattern, config.haystack()))) {
-        System.out.printf("%d,%d%n", sample.duration(), sample.count());
-      }
-      return;
+      ToIntFunction<Pattern> count =
+          pattern ->
+              mode == InputMode.UTF8
+                  ? Utf8Workloads.countMatches(pattern, utf8Input)
+                  : StringWorkloads.countMatches(pattern, config.haystack());
+      runBenchmark(raw, config, mode, config::compileRegex, count);
+    } else {
+      Workloads.Workload workload = Workloads.create(config, mode);
+      runBenchmark(raw, config, mode, workload::run, Integer::intValue);
     }
+  }
 
-    Workloads.Workload workload = Workloads.create(config, mode);
+  private static <T> void runBenchmark(
+      byte[] raw,
+      BenchmarkConfig config,
+      InputMode mode,
+      Callable<T> operation,
+      ToIntFunction<T> count)
+      throws Exception {
     // A zero measurement budget still runs one operation for its count.
     if (config.maxTime() == 0) {
-      for (Sample sample : sampleDirect(config, workload::run, Integer::intValue)) {
+      for (Sample sample : sampleDirect(config, operation, count)) {
         System.out.printf("%d,%d%n", sample.duration(), sample.count());
       }
-      return;
+    } else {
+      T result = operation.call();
+      int expectedCount = count.applyAsInt(result);
+      runJmh(raw, config, mode, expectedCount);
     }
-    int count = workload.run();
-    runJmh(raw, config, mode, count);
   }
 
   private static void printVersion() throws Exception {
@@ -105,9 +111,10 @@ public final class Main {
     try {
       Files.write(input, raw);
       int warmupIterations = config.maxWarmupIters() > 0 && config.maxWarmupTime() > 0 ? 1 : 0;
+      String method = config.model().equals("compile") ? "compile" : "run";
       var optionsBuilder =
           new OptionsBuilder()
-              .include("^" + SafeReBenchmark.class.getName() + ".run$")
+              .include("^" + SafeReBenchmark.class.getName() + "." + method + "$")
               .mode(Mode.SampleTime)
               .timeUnit(TimeUnit.NANOSECONDS)
               .forks(1)

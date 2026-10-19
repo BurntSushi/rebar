@@ -3,7 +3,7 @@ engines. `safere/string` searches Java strings with `org.safere.Matcher` and
 reports UTF-16 match offsets. `safere/utf8` searches the original UTF-8 bytes
 with `org.safere.Utf8Matcher` and reports byte offsets. `safere/utf8-vector`
 uses the same UTF-8 API with SafeRE's experimental Vector API scanner enabled.
-All three use [JMH] for search measurements and share one Maven build.
+All three use [JMH] for measurements and share one Maven build.
 
 ## Build toolchain
 
@@ -42,11 +42,11 @@ line-terminator semantics.
 `count-spans` sums UTF-16 code units for the String engine and bytes for the
 UTF-8 engines, so Rebar uses engine-specific expected counts where needed.
 
-Search measurements use JMH to provide a generated measurement harness,
-explicit JVM warmup, and a separate JVM for each workload. JMH consumes each
-invocation's result to prevent dead-code elimination. This reduces sensitivity
-to JIT compilation and the runner's own timing loop, although results can
-still vary between JVM runs.
+Measurements use JMH to provide a generated measurement harness, explicit JVM
+warmup, and a separate JVM for each workload. JMH consumes
+each invocation's result to prevent dead-code elimination. This reduces
+sensitivity to JIT compilation and the runner's own timing loop, although
+results can still vary between JVM runs.
 
 For normal measurements, the runner uses JMH `SampleTime` with one fork and one
 thread. It uses one warmup iteration for Rebar's full warmup time budget when
@@ -63,7 +63,6 @@ iteration when the warmup time budget is positive. Neither iteration limit
 bounds the number of invocations JMH performs within an iteration. With a zero
 measurement time budget, as in `rebar measure --test`, the runner uses the
 direct loop and still runs any configured warmup before its one measurement.
-The compilation model also uses the direct Rebar timing loop.
 
 The default 3-second measurement and 1.5-second warmup budgets yield one
 3-second measurement iteration and one 1.5-second warmup iteration. One fork
@@ -73,10 +72,11 @@ Rebar aggregates the JMH sampled invocations, so its summary statistics do not
 reflect variation across forks.
 
 Supported single-pattern curated compilation benchmarks are included.
-Compilation uses the direct timing loop to measure `Pattern.compile`, with
-match-count verification outside the measured interval. These measurements
-report warmed compilation costs; SafeRE parses and compiles a new pattern
-on each invocation. Nosey Parker's compilation pattern exceeds SafeRE's
+Compilation uses a separate JMH benchmark method that returns the result of
+`Pattern.compile` for JMH to consume. Match-count verification runs in the
+parent process and the fork's setup, outside the measured method. These
+measurements report warmed compilation costs; SafeRE parses and compiles a new
+pattern on each invocation. Nosey Parker's compilation pattern exceeds SafeRE's
 supported repetition limit and remains excluded. Patterns using unsupported
 syntax, such as backreferences or lookaround, are also excluded.
 

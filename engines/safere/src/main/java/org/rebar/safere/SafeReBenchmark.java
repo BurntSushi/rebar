@@ -7,6 +7,8 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.safere.Pattern;
+import org.safere.Utf8Input;
 
 /** JMH state that prepares and measures one SafeRE workload in a fork. */
 @State(Scope.Thread)
@@ -23,6 +25,7 @@ public class SafeReBenchmark {
   @Param("0")
   public int expectedCount;
 
+  private BenchmarkConfig config;
   private Workloads.Workload workload;
 
   /**
@@ -33,9 +36,18 @@ public class SafeReBenchmark {
   @Setup
   public void setup() throws Exception {
     InputMode mode = InputMode.parse(inputMode);
-    workload =
-        Workloads.create(BenchmarkConfig.parse(Files.readAllBytes(Path.of(inputPath)), mode), mode);
-    int actual = workload.run();
+    config = BenchmarkConfig.parse(Files.readAllBytes(Path.of(inputPath)), mode);
+    int actual;
+    if (config.model().equals("compile")) {
+      Pattern pattern = config.compileRegex();
+      actual =
+          mode == InputMode.UTF8
+              ? Utf8Workloads.countMatches(pattern, Utf8Input.validated(config.haystackBytes()))
+              : StringWorkloads.countMatches(pattern, config.haystack());
+    } else {
+      workload = Workloads.create(config, mode);
+      actual = workload.run();
+    }
     if (actual != expectedCount) {
       throw new IllegalStateException(
           "JMH fork count " + actual + " differed from " + expectedCount);
@@ -51,5 +63,15 @@ public class SafeReBenchmark {
   @Benchmark
   public int run() throws Exception {
     return workload.run();
+  }
+
+  /**
+   * Compiles a fresh pattern without searching the verification haystack.
+   *
+   * @return the compiled pattern consumed by JMH
+   */
+  @Benchmark
+  public Pattern compile() {
+    return config.compileRegex();
   }
 }
